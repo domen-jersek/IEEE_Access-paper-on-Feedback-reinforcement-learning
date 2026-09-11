@@ -220,10 +220,25 @@ by `search.py` with routing-aware positive/negative counts.
 
 | File | Purpose |
 |------|---------|
-| `lift.py` | Lift formulas: `laplace`, `tanh`, `bayesian_lcb`, with clamping and `positive_only` support. |
+| `lift.py` | Lift formulas: `laplace`, `tanh`, `bayesian_lcb`, with clamping and `positive_only` support. Works on float `pos`/`neg` — continuous scores flow through naturally. |
 | `judge.py` | `FeedbackJudge` — batches candidate pairs through the LLM client and parses 0–1 scores. |
-| `loader.py` | `FeedbackDB` (SQLite schema + insert/count) and `aggregate_feedback_scores` (raw scores → nested `{candidate: {scope: {pos, neg}}}` dict). Binarization: `score ≥ 0.80` positive, `≤ 0.40` negative. |
-| `builder.py` | `FeedbackBuilder` — orchestrates per-query FAISS top-100 retrieval -> binned judge calls -> DB writes. |
+| `loader.py` | `FeedbackDB` (SQLite schema + insert/count) and `aggregate_feedback_scores` (raw scores → nested `{candidate: {scope: {pos, neg}}}` dict). Supports two aggregation modes (see below). |
+| `builder.py` | `FeedbackBuilder` — orchestrates per-query FAISS top-75 retrieval -> batched judge calls -> DB writes. Also includes `validate_feedback_pipeline()` for pre-flight diagnostics. |
+
+#### How feedback aggregation works
+
+Raw judges scores (0.0–1.0 per `(query, candidate)` pair) are stored in SQLite. At
+**evaluation time**, they are aggregated into per-candidate, per-scope `pos`/`neg`
+counts that feed into the lift formula. Two modes, selectable per run:
+
+| Mode | How it works | Behavior |
+|------|-------------|----------|
+| `continuous` (default) | `pos = sum(scores)`, `neg = n − sum(scores)` | A candidate rated 0.75 by 100 queries gets `pos=75, neg=25` → strong lift. No information discarded. |
+| `binary` | `score ≥ 0.80 → pos`, `score ≤ 0.40 → neg`, else ignored | A candidate rated 0.79 by 100 queries gets `pos=0, neg=0` → zero lift. Preserves the neutral band from the earlier SIKDD methodology. |
+
+Because the raw scores are stored, you can switch modes **without rebuilding the
+feedback DB** — pass `--agg-mode continuous` or `--agg-mode binary` to
+`04_evaluate.py` and compare results side by side in the final report table.
 
 **Lift formula (Laplace), the primary choice:**
 
@@ -330,21 +345,55 @@ The first download of `all-MiniLM-L6-v2` is ~90 MB.
 
 ### 2. Feedback generation (requires API)
 
-Set your key, then:
+Set your key:
 
 ```bash
 $env:OPENROUTER_API_KEY="..."                # PowerShell
 # export OPENROUTER_API_KEY="..."            # bash
-
-python experiments/03_build_feedback.py      # -> feedback_conditioned.db + feedback_blind.db
 ```
 
-This judges the top-100 FAISS candidates for each of the 878 train queries with
-`gpt-4o-mini` at temperature 0, in **both** protocols:
-- `conditioned` — judge sees query + ground-truth reply + candidate;
-- `blind` — judge sees only query + candidate (simulated real user).
+**Recommended: validate first (20 queries, ~$0.50, ~2 minutes).**
 
-Judge responses are cached; re-running resumes without re-paying for completed calls.
+```bash
+python experiments/03_build_feedback.py --validate
+```
+
+This judges the top-75 FAISS candidates on 20 random train queries with both
+protocols, then prints a diagnostic report:
+
+```
+VALIDATION SUMMARY
+  [conditioned]  mean=0.63  positive=35%  negative=12%  neutral=53%
+  [blind]        mean=0.58  positive=28%  negative=18%  neutral=54%
+  Conditioned-vs-blind Pearson r: 0.72
+Proceed with full build on 878 queries? [y/N]
+```
+
+Check that:
+- Scores are spread across 0–1 (not all clustered near 0.5).
+- The conditioned-vs-blind correlation is reasonable (r > 0.60).
+- The positive/negative percentages make sense for your data.
+
+If it looks good, answer `y` to continue with the full build. If something is wrong,
+investigate without having spent $18 on 131K wasted calls.
+
+**Full build:**
+
+```bash
+python experiments/03_build_feedback.py          # -> feedback_conditioned.db + feedback_blind.db
+```
+
+| What | Detail |
+|------|--------|
+| Judge model | `openai/gpt-luna-latest` |
+| Candidates per query | top-75 FAISS (chosen because the ±0.20 lift cap means candidates ranked >75 are almost never promoted into the top-5) |
+| Queries judged | 878 train queries only |
+| Pairs per protocol | 878 × 75 = 65,850 |
+| Total pairs | 131,700 (both protocols) |
+| Approx. cost | ~$18 |
+| Output | `feedback_conditioned.db` + `feedback_blind.db` (raw continuous scores in SQLite, ~15 MB each) |
+| Caching | Judge responses are SHA-256 hashed → re-running resumes without re-incurring cost |
+| Protocols | `conditioned` (judge sees query + ground-truth reply + candidate) and `blind` (judge sees only query + candidate — simulated real user) |
 
 ### 3. Evaluation (requires API)
 
@@ -355,6 +404,9 @@ python experiments/04_evaluate.py --method M2_team   --split dev --seed 42
 python experiments/04_evaluate.py --method M3_class  --split dev --seed 42
 python experiments/04_evaluate.py --method M4_intersection --split dev --seed 42
 
+# Compare continuous vs binary aggregation (same feedback DB, different lifts):
+python experiments/04_evaluate.py --method M1_global --split dev --agg-mode binary
+
 # Train split — produces the data for gate training
 python experiments/04_evaluate.py --method M1_global --split train --seed 42
 
@@ -363,13 +415,25 @@ python experiments/04_evaluate.py --method M1_global --split eval --seed 42
 ```
 
 Each run writes `results/<experiment_id>/<experiment_id>_<ts>_details.json` and a
-`_summary.json`. Add `--feedback-protocol blind` to use the blind feedback DB;
-`--regime disjoint` to use the disjoint split.
+`_summary.json`. The experiment ID includes the aggregation mode, so continuous and
+binary runs get separate, non-overlapping result folders.
+
+Useful flags:
+- `--feedback-protocol blind` — use the blind feedback DB instead of conditioned.
+- `--agg-mode binary` — use 0.80/0.40 threshold binarization instead of continuous aggregation.
+- `--regime disjoint` — use the procedure-disjoint split.
+- `--seed 123` — switch to a different random split seed.
 
 ### 4. Learned gate (optional direction)
 
 ```bash
-python experiments/05_gate_cv.py --details-json "results/M1_global_train_conditioned/*_details.json"
+# First, evaluate the train split (needed for gate training targets)
+python experiments/04_evaluate.py --method M1_global --split train --seed 42
+
+# Then train the gate
+python experiments/05_gate_cv.py \
+    --details-json "results/M1_global_train_conditioned_continuous/*_details.json" \
+    --feedback-protocol conditioned
 ```
 
 Performs nested CV (outer 5-fold, inner 3-fold) over XGBoost + logistic regression and
@@ -395,12 +459,27 @@ pytest tests/ -v
 ## Configuration and provenance
 
 - **API keys**: `OPENROUTER_API_KEY` (or `OPENAI_API_KEY`), optional `OPENROUTER_BASE_URL`.
-- **Models / parameters**: all models, lift, routing, and gating parameters live in
-  `src/config.py` (frozen dataclasses) or `configs/*.yaml`. Nothing is hardcoded
-  elsewhere.
+- **Judge model**: pinned in `experiments/03_build_feedback.py` as
+  `JUDGE_MODEL = "openai/gpt-luna-latest"`. To change it, edit that variable and re-run.
+- **Generator model**: set per-experiment in `configs/*.yaml` or `src/config.py`
+  dataclasses — never hardcoded in the runner.
+- **Lift, routing, gating parameters**: all live in `src/config.py` (frozen dataclasses)
+  or `configs/*.yaml`. Nothing is hardcoded elsewhere.
 - **Provenance**: `EvalConfig.config_hash` (SHA-256 of the serialized config) is stamped
   into every result record; data artifacts record the source CSV hash. This lets
   reviewers confirm a run used exactly the claimed configuration.
+
+## Command reference
+
+| Script | Key flags | Output |
+|--------|-----------|--------|
+| `00_canonicalize.py` | none | `dataset.parquet`, `taxonomy.csv`, `groups.json` |
+| `01_split.py` | none | `splits/split_seed{42..1024}.json`, `*_disjoint.json` |
+| `02_build_index.py` | none | `faiss_index/`, `baseline_difficulty.csv` |
+| `03_build_feedback.py` | `--validate`, `--validate-only`, `--n-validate N`, `--seed`, `--regime` | `feedback_conditioned.db`, `feedback_blind.db` |
+| `04_evaluate.py` | `--method`, `--split`, `--seed`, `--regime`, `--feedback-protocol`, `--agg-mode` | `results/*_details.json`, `*_summary.json` |
+| `05_gate_cv.py` | `--details-json`, `--feedback-protocol` | `results/gate/gate_cv_results.json` |
+| `06_report.py` | `--input-dir`, `--output-dir` | `results/report/method_comparison.csv`, `oracle_deciles_*.csv`, `gate_sweep_*.csv` |
 
 ## Reproducibility
 

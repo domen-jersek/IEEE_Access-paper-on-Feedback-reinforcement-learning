@@ -33,6 +33,9 @@ async def main_async() -> None:
                         choices=["train", "dev", "eval"])
     parser.add_argument("--feedback-protocol", type=str, default="conditioned",
                         choices=["conditioned", "blind"])
+    parser.add_argument("--agg-mode", type=str, default="continuous",
+                        choices=["continuous", "binary"],
+                        help="How to aggregate raw judge scores into pos/neg lifts")
     args = parser.parse_args()
 
     level = logging.DEBUG if args.verbose else logging.INFO
@@ -44,7 +47,7 @@ async def main_async() -> None:
     df = load_dataset()
     split = load_split(seed=args.seed, regime=args.regime)
     query_ids = split[args.split]
-    log.info("Evaluating %s: %d queries", args.split, len(query_ids))
+    log.info("Evaluating %s: %d queries (agg: %s)", args.split, len(query_ids), args.agg_mode)
 
     log.info("=== Loading FAISS index ===")
     index_dir = paths.data_processed / "faiss_index"
@@ -60,7 +63,9 @@ async def main_async() -> None:
         log.warning("Feedback DB not found at %s, proceeding with zero feedback (baseline-only)", fb_db_path)
         feedback_scores = {}
     else:
-        feedback_scores = load_feedback_as_scores(fb_db_path, exclude_query_ids=set(query_ids))
+        feedback_scores = load_feedback_as_scores(
+            fb_db_path, exclude_query_ids=set(query_ids), mode=args.agg_mode
+        )
         log.info("Loaded feedback scores for %d candidates", len(feedback_scores))
 
     log.info("=== Configuring evaluation ===")
@@ -69,7 +74,7 @@ async def main_async() -> None:
         log.error("Unknown method: %s", args.method)
         return
     config = EvalConfig(
-        experiment_id=f"{args.method}_{args.split}_{args.feedback_protocol}",
+        experiment_id=f"{args.method}_{args.split}_{args.feedback_protocol}_{args.agg_mode}",
         lift=base_cfg.lift,
         routing=base_cfg.routing,
         gating=base_cfg.gating,
