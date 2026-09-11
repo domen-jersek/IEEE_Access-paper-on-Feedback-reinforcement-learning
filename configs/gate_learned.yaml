@@ -1,0 +1,6 @@
+# Learned gate: multivariate gate (trained separately via 05_gate_cv.py)
+extends: base.yaml
+experiment:
+  experiment_id: M_gate_learned
+gating:
+  name: learned

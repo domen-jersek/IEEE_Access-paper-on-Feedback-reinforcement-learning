@@ -1,0 +1,9 @@
+# M3: Class-only feedback routing
+extends: base.yaml
+experiment:
+  experiment_id: M3_class_only
+routing:
+  name: categorical
+  w_global: 0.0
+  w_class: 1.0
+  w_team: 0.0

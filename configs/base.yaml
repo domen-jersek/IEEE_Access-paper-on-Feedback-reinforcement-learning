@@ -1,0 +1,32 @@
+# Base configuration shared by all experiments
+experiment:
+  generator_model: "openai/gpt-4o-mini-2024-07-18"
+  judge_model: "openai/gpt-4o-mini-2024-07-18"
+  embedding_model: "all-MiniLM-L6-v2"
+  temperature: 0.0
+  top_k: 5
+  search_k: 100
+
+lift:
+  name: laplace
+  alpha: 1.0
+  beta: 1.0
+  multiplier: 0.80
+  cap: 0.20
+  positive_only: false
+  sensitivity: 3.5
+  lcb_k: 1.0
+
+routing:
+  name: global
+  w_global: 1.0
+  w_class: 0.0
+  w_team: 0.0
+  require_semantic: false
+
+gating:
+  name: none
+  faiss_ceiling: 1.0
+  fuzzy_low: 0.0
+  fuzzy_high: 0.0
+  miracle_tau: 0.0

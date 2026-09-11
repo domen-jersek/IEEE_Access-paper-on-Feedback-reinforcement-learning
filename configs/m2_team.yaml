@@ -1,0 +1,9 @@
+# M2: Team-only feedback routing
+extends: base.yaml
+experiment:
+  experiment_id: M2_team_only
+routing:
+  name: categorical
+  w_global: 0.0
+  w_class: 0.0
+  w_team: 1.0

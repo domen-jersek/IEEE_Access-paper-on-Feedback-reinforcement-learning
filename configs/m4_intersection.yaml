@@ -1,0 +1,9 @@
+# M4: Team+Class intersection (strictest scope)
+extends: base.yaml
+experiment:
+  experiment_id: M4_intersection
+routing:
+  name: categorical_intersection
+  w_global: 0.0
+  w_class: 1.0
+  w_team: 1.0

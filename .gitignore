@@ -1,0 +1,29 @@
+# Results (large JSONs, generated answers)
+results/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Data (processed artifacts are reusable; raw is referenced from parent)
+data/raw/
+data/processed/*.parquet
+data/processed/*.json
+data/processed/*.csv
+data/processed/splits/
+
+# Notebook checkpoints
+notebooks/.ipynb_checkpoints/
+
+# Environment
+.env
+.env.example
+
+# Keep the structure but not the artifacts
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!results/.gitkeep
+!configs/.gitkeep
+!tests/.gitkeep
+!notebooks/.gitkeep
