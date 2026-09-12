@@ -121,3 +121,94 @@ class FAISSIndex:
             valid = [(score, j) for score, j in zip(s[0], idx[0]) if j != i and j != -1]
             max_sims.append(valid[0][0] if valid else 0.0)
         return pd.Series(max_sims, index=df.index)
+
+
+def compute_recommended_judging_depth(
+    faiss_index,
+    encoder,
+    query_ids: list[str],
+    lift_cap: float = 0.20,
+    sample_depth: int = 500,
+) -> dict:
+    """
+    Compute the minimum number of candidates that must be judged per query so
+    that feedback can potentially promote candidates into the RAG top-5.
+
+    For each query:
+      1. Retrieve top `sample_depth` FAISS candidates (self-excluded).
+      2. The RAG generator sees the top 5; the lift cap is ±LIFT_CAP.
+         A candidate at rank R can enter the top-5 iff:
+             FAISS[R] + LIFT_CAP >= FAISS[4]
+         i.e., FAISS[R] >= FAISS[4] - LIFT_CAP
+      3. `max_promotable_rank` = largest R where the above holds, capped at
+         `sample_depth` (report if capped — it means the KB is flat enough
+         that even the deepest-sampled candidates are theoretically promotable).
+
+    NOTE: This metric is an *upper bound*. In practice, a candidate at rank R
+    must compete with all candidates at ranks 6..R-1 that also receive lifts,
+    so the practical promotion depth is substantially lower. The 95th-percentile
+    is reported for reference but may be capped by sample_depth.
+
+    Returns a dict with percentile distribution and the 95th-percentile value
+    (may be capped — check whether p95 == sample_depth).
+    """
+
+    ranks = []
+    capped_count = 0
+    for qid in query_ids:
+        try:
+            row = faiss_index._meta[faiss_index._meta["seq_id"] == qid].iloc[0]
+        except (KeyError, IndexError):
+            continue
+        title = str(row["Title_anon"])
+        desc = str(row.get("Description_anon", "") or "")
+        emb = encoder.encode_ticket(title, desc)
+
+        exclude = {faiss_index.id_to_index(qid)}
+        if None in exclude:
+            exclude.discard(None)
+        scores, _indices = faiss_index.search(emb, sample_depth, exclude)
+        arr = scores[0]
+
+        if len(arr) < 5:
+            ranks.append(len(arr))
+            continue
+
+        threshold = float(arr[4] - lift_cap)
+        promotable = np.where(arr >= threshold)[0]
+        max_rank = int(promotable[-1]) + 1 if len(promotable) > 0 else 5
+        if max_rank >= sample_depth:
+            max_rank = sample_depth
+            capped_count += 1
+        ranks.append(max_rank)
+
+    ranks_arr = np.array(ranks)
+    percentiles = [50, 75, 90, 95, 99]
+    result = {
+        "lift_cap": lift_cap,
+        "sample_depth": sample_depth,
+        "n_queries_sampled": int(len(ranks_arr)),
+        "n_queries_capped_at_max": int(capped_count),
+        "pct_capped": float(capped_count / max(len(ranks_arr), 1)),
+        "min_rank": int(np.min(ranks_arr)),
+        "max_rank": int(np.max(ranks_arr)),
+        "mean_rank": float(np.mean(ranks_arr)),
+        "median_rank": float(np.median(ranks_arr)),
+    }
+    for p in percentiles:
+        result[f"p{p}"] = int(np.percentile(ranks_arr, p))
+
+    p95_raw = result["p95"]
+    if p95_raw >= sample_depth:
+        result["note"] = (
+            f"95th percentile ({p95_raw}) is at or above sample_depth ({sample_depth}). "
+            "FAISS scores are flat across the KB — even deep candidates are "
+            "theoretically promotable. Choose a practical budget (e.g., 200) "
+            "rather than a theoretical lower bound."
+        )
+        result["recommended_judging_depth"] = 200
+    else:
+        result["recommended_judging_depth"] = p95_raw
+
+    result["ranks"] = ranks_arr.tolist()
+    return result

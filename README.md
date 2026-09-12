@@ -81,6 +81,7 @@ paper_ieee_access/
 │       ├── faiss_index/              #   FAISS index + metadata parquet
 │       ├── baseline_difficulty.csv   #   Per-ticket top-1 FAISS similarity
 │       └── feedback_*.db             #   Fresh LLM-judge feedback databases
+│       ├── recommended_judging_depth.json  #  Data-driven top-K computation
 │
 ├── src/                              # The Python package (imports are `from src...`)
 │   ├── config.py                     #   ProjectPaths + frozen dataclasses (single source of truth)
@@ -203,11 +204,35 @@ ticket counts; a companion `*_report.csv` records the per-stratum composition fo
 | File | Purpose |
 |------|---------|
 | `encoder.py` | `TicketEncoder` — wraps `SentenceTransformer` (`all-MiniLM-L6-v2`), encodes `title + \n + description` with normalized embeddings. |
-| `index.py` | `FAISSIndex` — `IndexFlatIP` inner-product index with `IndexIDMap`; build/search/save/load, plus `compute_ticket_similarity` for baseline difficulty. |
+| `index.py` | `FAISSIndex` — `IndexFlatIP` inner-product index with `IndexIDMap`; build/search/save/load, plus `compute_ticket_similarity` for baseline difficulty, and `compute_recommended_judging_depth` for data-driven top-K selection. |
 | `search.py` | Two retrieval paths: `retrieve_baseline` (FAISS-only top-k) and `retrieve_feedback` (FAISS + lift, top-k by `enhanced_score`), plus overlap/pool-feature helpers. |
 
 Lift computation lives in `src/feedback/lift.py` (single source of truth) and is invoked
 by `search.py` with routing-aware positive/negative counts.
+
+#### How the feedback judging depth (top-K) is chosen
+
+Feedback can only promote a candidate if the judge has scored it. So the number of
+candidates judged per query determines the "promotion horizon" — candidates beyond
+this depth get lift=0 and stay at their raw FAISS score.
+
+`02_build_index.py` computes the data-driven answer: for every train query, it
+retrieves the top-500 FAISS candidates and finds the last rank where
+`FAISS_score >= FAISS_score_at_rank_5 - 0.20` (the lift cap). This is the
+theoretical maximum rank a candidate could be promoted from (an upper bound —
+in practice competition among lifted candidates shrinks this).
+
+**Finding on this dataset:** FAISS scores are flat. The mean promotable rank is ~189
+(p50=138, p75=321), and the 95th percentile exceeds even rank 500. This means
+candidates hundreds of positions deep are still within 0.20 similarity of the top-5
+— a consequence of the many near-duplicate tickets in the KB.
+
+**Practical choice:** `03_build_feedback.py` reads `recommended_judging_depth.json`
+and uses a fixed practical depth of **200 candidates per query** (covering ~12.5%
+of the KB). Candidates beyond 200 still appear in retrieval at their raw FAISS
+score — they just don't receive a feedback boost. The judging-depth computation
+records exactly how many queries are capped by this budget so the paper can
+report the coverage gap transparently.
 
 ### `src/generation/`
 
@@ -223,7 +248,7 @@ by `search.py` with routing-aware positive/negative counts.
 | `lift.py` | Lift formulas: `laplace`, `tanh`, `bayesian_lcb`, with clamping and `positive_only` support. Works on float `pos`/`neg` — continuous scores flow through naturally. |
 | `judge.py` | `FeedbackJudge` — batches candidate pairs through the LLM client and parses 0–1 scores. |
 | `loader.py` | `FeedbackDB` (SQLite schema + insert/count) and `aggregate_feedback_scores` (raw scores → nested `{candidate: {scope: {pos, neg}}}` dict). Supports two aggregation modes (see below). |
-| `builder.py` | `FeedbackBuilder` — orchestrates per-query FAISS top-75 retrieval -> batched judge calls -> DB writes. Also includes `validate_feedback_pipeline()` for pre-flight diagnostics. |
+| `builder.py` | `FeedbackBuilder` — orchestrates per-query FAISS retrieval at the data-determined depth (top-200) -> batched judge calls -> DB writes. Also includes `validate_feedback_pipeline()` for pre-flight diagnostics. |
 
 #### How feedback aggregation works
 
@@ -358,7 +383,7 @@ $env:OPENROUTER_API_KEY="..."                # PowerShell
 python experiments/03_build_feedback.py --validate
 ```
 
-This judges the top-75 FAISS candidates on 20 random train queries with both
+This judges the top-200 FAISS candidates on 20 random train queries with both
 protocols, then prints a diagnostic report:
 
 ```
@@ -386,11 +411,11 @@ python experiments/03_build_feedback.py          # -> feedback_conditioned.db + 
 | What | Detail |
 |------|--------|
 | Judge model | `openai/gpt-luna-latest` |
-| Candidates per query | top-75 FAISS (chosen because the ±0.20 lift cap means candidates ranked >75 are almost never promoted into the top-5) |
+| Candidates per query | top-200 FAISS (data-driven: covering the mean promotable depth of ~189; see Retrieval section for details) |
 | Queries judged | 878 train queries only |
-| Pairs per protocol | 878 × 75 = 65,850 |
-| Total pairs | 131,700 (both protocols) |
-| Approx. cost | ~$18 |
+| Pairs per protocol | 878 × 200 = 175,600 |
+| Total pairs | 351,200 (both protocols) |
+| Approx. cost | ~$45 |
 | Output | `feedback_conditioned.db` + `feedback_blind.db` (raw continuous scores in SQLite, ~15 MB each) |
 | Caching | Judge responses are SHA-256 hashed → re-running resumes without re-incurring cost |
 | Protocols | `conditioned` (judge sees query + ground-truth reply + candidate) and `blind` (judge sees only query + candidate — simulated real user) |
@@ -475,7 +500,7 @@ pytest tests/ -v
 |--------|-----------|--------|
 | `00_canonicalize.py` | none | `dataset.parquet`, `taxonomy.csv`, `groups.json` |
 | `01_split.py` | none | `splits/split_seed{42..1024}.json`, `*_disjoint.json` |
-| `02_build_index.py` | none | `faiss_index/`, `baseline_difficulty.csv` |
+| `02_build_index.py` | none | `faiss_index/`, `baseline_difficulty.csv`, `recommended_judging_depth.json` |
 | `03_build_feedback.py` | `--validate`, `--validate-only`, `--n-validate N`, `--seed`, `--regime` | `feedback_conditioned.db`, `feedback_blind.db` |
 | `04_evaluate.py` | `--method`, `--split`, `--seed`, `--regime`, `--feedback-protocol`, `--agg-mode` | `results/*_details.json`, `*_summary.json` |
 | `05_gate_cv.py` | `--details-json`, `--feedback-protocol` | `results/gate/gate_cv_results.json` |

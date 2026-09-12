@@ -5,6 +5,10 @@
 Builds feedback databases (conditioned + blind) from train queries only.
 Uses FAISS top-K retrieval + LLM judge with continuous score aggregation.
 
+The judging depth (top-K) is read from data/processed/recommended_judging_depth.json
+(produced by 02_build_index.py) — computed as the 95th percentile of the maximum
+FAISS rank a candidate can be promoted from given the +/-0.20 lift cap.
+
 Two modes:
   --validate   Run a diagnostic on 20 random queries first, produce a report,
                then prompt before continuing to the full build.
@@ -15,6 +19,7 @@ Requires: OPENROUTER_API_KEY env var.
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import sys
 from pathlib import Path
@@ -29,8 +34,34 @@ from src.feedback.judge import FeedbackJudge
 from src.feedback.builder import FeedbackBuilder, validate_feedback_pipeline, save_validation_report
 from src.feedback.loader import FeedbackDB
 
-TOP_K = 75
 JUDGE_MODEL = "openai/gpt-luna-latest"
+FALLBACK_TOP_K = 100#200
+
+
+def _load_judging_depth(paths: ProjectPaths) -> int:
+    depth_path = paths.data_processed / "recommended_judging_depth.json"
+    if depth_path.exists():
+        report = json.loads(depth_path.read_text("utf-8"))
+        depth = report.get("recommended_judging_depth", FALLBACK_TOP_K)
+        log = logging.getLogger("build_feedback")
+        log.info(
+            "Read judging depth from %s: %d (p50=%d, p90=%d, p95=%d, p99=%d)",
+            depth_path.name,
+            depth,
+            report.get("p50", 0),
+            report.get("p90", 0),
+            report.get("p95", 0),
+            report.get("p99", 0),
+        )
+        return int(depth)
+    else:
+        logging.getLogger("build_feedback").warning(
+            "Judging depth file not found (%s). Run 02_build_index.py first. "
+            "Falling back to %d.",
+            depth_path,
+            FALLBACK_TOP_K,
+        )
+        return FALLBACK_TOP_K
 
 
 async def build_protocol(
@@ -40,6 +71,7 @@ async def build_protocol(
     faiss_idx,
     dataset,
     encoder,
+    top_k: int,
 ) -> int:
     log = logging.getLogger(f"feedback.{protocol}")
     cache_path = Path("data/processed") / f"judge_cache_{protocol}.db"
@@ -52,10 +84,10 @@ async def build_protocol(
         max_concurrency=8,
     )
     db = FeedbackDB(db_path)
-    builder = FeedbackBuilder(faiss_idx, dataset, judge, db, top_k=TOP_K, batch_size=10)
+    builder = FeedbackBuilder(faiss_idx, dataset, judge, db, top_k=top_k, batch_size=10)
 
     log.info("Building %s feedback from %d train queries (top-%d per query)...",
-             protocol, len(train_ids), TOP_K)
+             protocol, len(train_ids), top_k)
     n = await builder.build(train_ids, encoder)
     log.info("Done: %d rows, %d distinct queries, %d distinct candidates",
              db.count(), db.distinct_queries(), db.distinct_candidates())
@@ -93,8 +125,10 @@ async def main_async() -> None:
     log.info("=== Loading encoder ===")
     encoder = TicketEncoder("all-MiniLM-L6-v2")
 
+    top_k = _load_judging_depth(paths)
+
     log.info("=== Judge model: %s ===", JUDGE_MODEL)
-    log.info("=== Retrieval depth: top-%d ===", TOP_K)
+    log.info("=== Judging depth: top-%d per query ===", top_k)
 
     if args.validate or args.validate_only:
         log.info("=" * 60)
@@ -106,7 +140,7 @@ async def main_async() -> None:
             dataset=df,
             encoder=encoder,
             judge_model=JUDGE_MODEL,
-            top_k=TOP_K,
+            top_k=top_k,
             n_queries=args.n_validate,
         )
         report_path = paths.data_processed / "feedback_validation_report.json"
@@ -148,7 +182,7 @@ async def main_async() -> None:
 
     for protocol in ["conditioned", "blind"]:
         db_path = paths.data_processed / f"feedback_{protocol}.db"
-        n = await build_protocol(protocol, db_path, train_ids, faiss_idx, df, encoder)
+        n = await build_protocol(protocol, db_path, train_ids, faiss_idx, df, encoder, top_k)
         log.info("Written: %s (%d rows)", db_path, n)
 
     log.info("=== DONE ===")
