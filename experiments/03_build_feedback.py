@@ -34,8 +34,8 @@ from src.feedback.judge import FeedbackJudge
 from src.feedback.builder import FeedbackBuilder, validate_feedback_pipeline, save_validation_report
 from src.feedback.loader import FeedbackDB
 
-JUDGE_MODEL = "openai/gpt-luna-latest"
-FALLBACK_TOP_K = 100#200
+JUDGE_MODEL = "openai/gpt-5.6-luna"
+FALLBACK_TOP_K = 100 #200
 
 
 def _load_judging_depth(paths: ProjectPaths) -> int:
