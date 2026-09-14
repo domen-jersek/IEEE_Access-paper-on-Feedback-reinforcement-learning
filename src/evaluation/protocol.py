@@ -55,12 +55,18 @@ async def evaluate_one_ticket(
     fb_candidates = feedback_df.to_dict("records")
 
     bl_prompt = build_generation_prompt(query_title, query_desc, bl_candidates)
-    fb_prompt = build_generation_prompt(query_title, query_desc, fb_candidates)
 
-    bl_answer, fb_answer = await asyncio.gather(
-        llm_client.complete(bl_prompt, system=SYSTEM_PROMPT),
-        llm_client.complete(fb_prompt, system=SYSTEM_PROMPT),
-    )
+    is_baseline = (config.lift.name == "none")
+
+    if is_baseline:
+        bl_answer = await llm_client.complete(bl_prompt, system=SYSTEM_PROMPT)
+        fb_answer = bl_answer
+    else:
+        fb_prompt = build_generation_prompt(query_title, query_desc, fb_candidates)
+        bl_answer, fb_answer = await asyncio.gather(
+            llm_client.complete(bl_prompt, system=SYSTEM_PROMPT),
+            llm_client.complete(fb_prompt, system=SYSTEM_PROMPT),
+        )
 
     bl_metrics = compute_all_metrics(bl_answer, reference_reply)
     fb_metrics = compute_all_metrics(fb_answer, reference_reply)

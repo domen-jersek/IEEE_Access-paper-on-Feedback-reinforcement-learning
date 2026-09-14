@@ -199,45 +199,48 @@ class EvalConfig:
 
 # --- Default method definitions ---
 
+GENERATOR_MODEL = "openai/gpt-5.6-luna"
+JUDGE_MODEL_ID = "openai/gpt-5.6-luna"
+
 DEFAULT_METHODS = {
     "baseline": EvalConfig(
         experiment_id="baseline",
         lift=LiftConfig(name="none", multiplier=0.0, cap=0.0),
         routing=RoutingConfig(name="none"),
         gating=GatingConfig.none(),
-        generator_model="openai/gpt-4o-mini-2024-07-18",
-        judge_model="openai/gpt-4o-mini-2024-07-18",
+        generator_model=GENERATOR_MODEL,
+        judge_model=JUDGE_MODEL_ID,
     ),
     "M1_global": EvalConfig(
         experiment_id="M1_global",
         lift=LiftConfig.laplace(),
         routing=RoutingConfig.global_(),
         gating=GatingConfig.none(),
-        generator_model="openai/gpt-4o-mini-2024-07-18",
-        judge_model="openai/gpt-4o-mini-2024-07-18",
+        generator_model=GENERATOR_MODEL,
+        judge_model=JUDGE_MODEL_ID,
     ),
     "M2_team": EvalConfig(
         experiment_id="M2_team_only",
         lift=LiftConfig.laplace(),
         routing=RoutingConfig.team_only(),
         gating=GatingConfig.none(),
-        generator_model="openai/gpt-4o-mini-2024-07-18",
-        judge_model="openai/gpt-4o-mini-2024-07-18",
+        generator_model=GENERATOR_MODEL,
+        judge_model=JUDGE_MODEL_ID,
     ),
     "M3_class": EvalConfig(
         experiment_id="M3_class_only",
         lift=LiftConfig.laplace(),
         routing=RoutingConfig.class_only(),
         gating=GatingConfig.none(),
-        generator_model="openai/gpt-4o-mini-2024-07-18",
-        judge_model="openai/gpt-4o-mini-2024-07-18",
+        generator_model=GENERATOR_MODEL,
+        judge_model=JUDGE_MODEL_ID,
     ),
     "M4_intersection": EvalConfig(
         experiment_id="M4_intersection",
         lift=LiftConfig.laplace(),
         routing=RoutingConfig.intersection(),
         gating=GatingConfig.none(),
-        generator_model="openai/gpt-4o-mini-2024-07-18",
-        judge_model="openai/gpt-4o-mini-2024-07-18",
+        generator_model=GENERATOR_MODEL,
+        judge_model=JUDGE_MODEL_ID,
     ),
 }
