@@ -1,0 +1,51 @@
+{
+  "experiment_id": "M3_class_dev_conditioned_continuous",
+  "config": {
+    "experiment_id": "M3_class_dev_conditioned_continuous",
+    "lift": {
+      "name": "laplace",
+      "alpha": 1.0,
+      "beta": 1.0,
+      "multiplier": 0.8,
+      "cap": 0.2,
+      "positive_only": false,
+      "sensitivity": 3.5,
+      "lcb_k": 1.0
+    },
+    "routing": {
+      "name": "categorical",
+      "w_global": 0.0,
+      "w_class": 1.0,
+      "w_team": 0.0,
+      "require_semantic": false
+    },
+    "gating": {
+      "name": "none",
+      "faiss_ceiling": 1.0,
+      "fuzzy_low": 0.0,
+      "fuzzy_high": 0.0,
+      "miracle_tau": 0.0
+    },
+    "generator_model": "openai/gpt-5.6-luna",
+    "judge_model": "openai/gpt-5.6-luna",
+    "embedding_model": "all-MiniLM-L6-v2",
+    "top_k": 5,
+    "search_k": 100,
+    "temperature": 0.0,
+    "regime": "random",
+    "seed": 42
+  },
+  "generated_utc": "2026-09-14T07:25:35.315910+00:00",
+  "total_queries": 319,
+  "total_valid": 319,
+  "total_skipped": 0,
+  "metrics": {
+    "n_tickets": 319,
+    "mean_delta_cosine": -0.02496532511935339,
+    "median_delta_cosine": 0.007996559143066406,
+    "std_delta_cosine": 0.2053843375956199,
+    "pct_improved": 0.5360501567398119,
+    "pct_worsened": 0.4482758620689655,
+    "pct_unchanged": 0.01567398119122257
+  }
+}

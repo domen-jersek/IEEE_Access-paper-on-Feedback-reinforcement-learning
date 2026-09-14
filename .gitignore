@@ -1,5 +1,5 @@
 # Results (large JSONs, generated answers)
-results/
+#results/
 
 # Python
 __pycache__/
@@ -15,6 +15,7 @@ data/processed/splits/
 
 # Notebook checkpoints
 notebooks/.ipynb_checkpoints/
+experiments/experiment_table_idea.md
 
 # Environment
 .env
