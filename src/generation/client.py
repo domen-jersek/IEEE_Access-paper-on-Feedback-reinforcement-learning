@@ -45,6 +45,8 @@ class LLMClient:
         self.model = model
         self.temperature = temperature
         self.max_retries = max_retries
+        self.cache_hits = 0
+        self.cache_misses = 0
         self._semaphore = asyncio.Semaphore(max_concurrency)
         self._client = AsyncOpenAI(api_key=_get_api_key(), base_url=_get_base_url())
         self._cache_path = cache_path
@@ -61,9 +63,13 @@ class LLMClient:
         conn.commit()
         conn.close()
 
-    def _cache_key(self, prompt: str) -> str:
-        payload = json.dumps({"model": self.model, "temperature": self.temperature, "prompt": prompt}, sort_keys=True)
-        return hashlib.sha256(payload.encode()).hexdigest()
+    def _cache_key(self, prompt: str, system: str = "") -> str:
+        # NOTE: the system prompt is included only when non-empty, so keys for the
+        # judge cache (which never passes a system prompt) are unchanged.
+        payload = {"model": self.model, "temperature": self.temperature, "prompt": prompt}
+        if system:
+            payload["system"] = system
+        return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
 
     def _cache_get(self, key: str) -> Optional[str]:
         if not self._cache_path:
@@ -85,10 +91,12 @@ class LLMClient:
         conn.close()
 
     async def complete(self, prompt: str, system: str = "") -> str:
-        key = self._cache_key(prompt)
+        key = self._cache_key(prompt, system)
         cached = self._cache_get(key)
         if cached is not None:
+            self.cache_hits += 1
             return cached
+        self.cache_misses += 1
 
         async with self._semaphore:
             last_err = None

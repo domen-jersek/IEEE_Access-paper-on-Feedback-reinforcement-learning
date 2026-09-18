@@ -31,8 +31,8 @@ def train_evaluate_gate(
 ) -> dict:
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
+    # Scaling is fitted INSIDE each outer fold (no leakage from the test fold).
+    X_scaled = np.asarray(X, dtype=float)
 
     outer_cv = StratifiedKFold(n_splits=n_outer, shuffle=True, random_state=42)
     inner_cv = StratifiedKFold(n_splits=n_inner, shuffle=True, random_state=42)
@@ -57,10 +57,11 @@ def train_evaluate_gate(
         log.warning("XGBoost not available, using logistic regression only")
         xgb_available = False
 
-    results = {"outer_folds": [], "feature_importance": {}}
+    results = {"outer_folds": [], "feature_importance": {}, "lr_coefficients": {}}
 
     for fold_idx, (train_idx, test_idx) in enumerate(outer_cv.split(X_scaled, y)):
-        X_tr, X_te = X_scaled[train_idx], X_scaled[test_idx]
+        scaler = StandardScaler().fit(X_scaled[train_idx])
+        X_tr, X_te = scaler.transform(X_scaled[train_idx]), scaler.transform(X_scaled[test_idx])
         y_tr, y_te = y[train_idx], y[test_idx]
 
         fold_models = {}
@@ -75,9 +76,11 @@ def train_evaluate_gate(
             "auc": float(roc_auc_score(y_te, lr_proba)),
             "best_params": lr_gs.best_params_,
         }
+        for k, v in zip(feature_names, lr_best.coef_[0].tolist()):
+            results["lr_coefficients"][k] = results["lr_coefficients"].get(k, 0.0) + v / n_outer
 
         if xgb_available:
-            xgb_gs = GridSearchCV(XGBClassifier(random_state=42, use_label_encoder=False, eval_metric="logloss"), xgb_param_grid, cv=inner_cv, scoring="roc_auc")
+            xgb_gs = GridSearchCV(XGBClassifier(random_state=42, eval_metric="logloss"), xgb_param_grid, cv=inner_cv, scoring="roc_auc")
             xgb_gs.fit(X_tr, y_tr)
             xgb_best = xgb_gs.best_estimator_
             xgb_pred = xgb_best.predict(X_te)
@@ -142,7 +145,7 @@ def fit_gate_model(
         from xgboost import XGBClassifier
         model = XGBClassifier(
             learning_rate=0.05, max_depth=3, n_estimators=100, subsample=0.8,
-            random_state=42, use_label_encoder=False, eval_metric="logloss",
+            random_state=42, eval_metric="logloss",
         )
     elif model_type == "logistic":
         model = LogisticRegression(C=1.0, max_iter=1000, random_state=42)
@@ -159,3 +162,19 @@ def predict_gate(
     X_scaled = scaler.transform(X)
     proba = model.predict_proba(X_scaled)[:, 1]
     return (proba >= decision_threshold).astype(int)
+
+
+def gate_policy_value(delta: np.ndarray, proba: np.ndarray, thresholds: Optional[list[float]] = None) -> pd.DataFrame:
+    """
+    Value of a gate policy: apply feedback only when P(improve) >= t.
+    Returns mean delta under the policy for each threshold, plus the
+    always-on / never-on references and the oracle (apply iff delta > 0).
+    """
+    thresholds = thresholds or [0.3, 0.4, 0.5, 0.6, 0.7]
+    rows = [{"policy": "always_on", "threshold": None, "mean_delta": float(delta.mean()), "pct_open": 1.0},
+            {"policy": "never_on", "threshold": None, "mean_delta": 0.0, "pct_open": 0.0},
+            {"policy": "oracle", "threshold": None, "mean_delta": float(np.where(delta > 0, delta, 0).mean()), "pct_open": float(np.mean(delta > 0))}]
+    for t in thresholds:
+        open_ = proba >= t
+        rows.append({"policy": "learned", "threshold": t, "mean_delta": float(np.where(open_, delta, 0).mean()), "pct_open": float(open_.mean())})
+    return pd.DataFrame(rows)

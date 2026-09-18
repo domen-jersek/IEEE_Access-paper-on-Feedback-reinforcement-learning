@@ -64,9 +64,20 @@ class LiftConfig:
     positive_only: bool = False
     sensitivity: float = 3.5
     lcb_k: float = 1.0
+    # --- P1.5 calibration extensions (defaults reproduce the SIKDD behaviour) ---
+    # prior_strength: total pseudo-count kappa of the Beta prior used by `laplace_eb`
+    # (alpha = kappa * p_bar, beta = kappa * (1 - p_bar), p_bar = empirical scope mean).
+    prior_strength: float = 2.0
+    # scale_mode: "absolute" adds the lift directly to the retrieval score (SIKDD);
+    # "pool_std" expresses the lift in units of the candidate pool's score std
+    # (cap  <->  pool_lambda * std), which makes lifts comparable across retrievers.
+    scale_mode: str = "absolute"
+    pool_lambda: float = 1.0
+
+    _NEW_DEFAULTS = {"prior_strength": 2.0, "scale_mode": "absolute", "pool_lambda": 1.0}
 
     def to_dict(self) -> dict:
-        return {
+        d = {
             "name": self.name,
             "alpha": self.alpha,
             "beta": self.beta,
@@ -76,11 +87,27 @@ class LiftConfig:
             "sensitivity": self.sensitivity,
             "lcb_k": self.lcb_k,
         }
+        # New keys are emitted only when non-default so that config hashes of the
+        # already-completed SIKDD replication runs are unchanged.
+        for k, default in self._NEW_DEFAULTS.items():
+            v = getattr(self, k)
+            if v != default:
+                d[k] = v
+        return d
 
     @staticmethod
     def laplace() -> LiftConfig:
         return LiftConfig(
             name="laplace", alpha=1.0, beta=1.0, multiplier=0.80, cap=0.20
+        )
+
+    @staticmethod
+    def laplace_eb(prior_strength: float = 2.0, scale_mode: str = "absolute",
+                   pool_lambda: float = 1.0) -> LiftConfig:
+        """Empirical-Bayes centred Laplace lift (P1.5)."""
+        return LiftConfig(
+            name="laplace_eb", multiplier=0.80, cap=0.20,
+            prior_strength=prior_strength, scale_mode=scale_mode, pool_lambda=pool_lambda,
         )
 
     @staticmethod
@@ -103,6 +130,18 @@ class RoutingConfig:
     w_class: float = 0.0
     w_team: float = 0.0
     require_semantic: bool = False
+    # --- P3 granularity extensions (defaults keep legacy routings unchanged) ---
+    # "blend": enhanced = score + sum_s w_s * lift_s  (per-scope lifts, incl. intersection)
+    w_intersection: float = 0.0
+    # "backoff": first scope in `backoff_order` whose evidence n >= min_evidence
+    backoff_order: tuple = ("intersection", "team", "class", "global")
+    min_evidence: float = 3.0
+
+    _NEW_DEFAULTS = {
+        "w_intersection": 0.0,
+        "backoff_order": ("intersection", "team", "class", "global"),
+        "min_evidence": 3.0,
+    }
 
     @staticmethod
     def global_() -> RoutingConfig:
@@ -120,14 +159,31 @@ class RoutingConfig:
     def intersection() -> RoutingConfig:
         return RoutingConfig(name="categorical_intersection", w_global=0.0, w_class=1.0, w_team=1.0)
 
+    @staticmethod
+    def backoff(order: tuple = ("intersection", "team", "class", "global"),
+                min_evidence: float = 3.0) -> RoutingConfig:
+        return RoutingConfig(name="backoff", w_global=0.0, backoff_order=tuple(order),
+                             min_evidence=min_evidence)
+
+    @staticmethod
+    def blend(w_global: float = 0.0, w_class: float = 0.0, w_team: float = 0.0,
+              w_intersection: float = 0.0) -> RoutingConfig:
+        return RoutingConfig(name="blend", w_global=w_global, w_class=w_class,
+                             w_team=w_team, w_intersection=w_intersection)
+
     def to_dict(self) -> dict:
-        return {
+        d = {
             "name": self.name,
             "w_global": self.w_global,
             "w_class": self.w_class,
             "w_team": self.w_team,
             "require_semantic": self.require_semantic,
         }
+        for k, default in self._NEW_DEFAULTS.items():
+            v = getattr(self, k)
+            if v != default:
+                d[k] = list(v) if isinstance(v, tuple) else v
+        return d
 
 
 @dataclass(frozen=True)
@@ -174,9 +230,15 @@ class EvalConfig:
     temperature: float = 0.0
     regime: str = "random"
     seed: int = 42
+    # --- P2: retriever used for the candidate pool (see src/retrieval/retrievers.py) ---
+    retriever: str = "dense_minilm"
+    # --- P1.2: extra answer metrics ("core" = cosine+rouge_l+length as in SIKDD runs)
+    metric_set: str = "core"
+
+    _NEW_DEFAULTS = {"retriever": "dense_minilm", "metric_set": "core"}
 
     def to_dict(self) -> dict:
-        return {
+        d = {
             "experiment_id": self.experiment_id,
             "lift": self.lift.to_dict(),
             "routing": self.routing.to_dict(),
@@ -190,11 +252,39 @@ class EvalConfig:
             "regime": self.regime,
             "seed": self.seed,
         }
+        for k, default in self._NEW_DEFAULTS.items():
+            v = getattr(self, k)
+            if v != default:
+                d[k] = v
+        return d
 
     @property
     def config_hash(self) -> str:
         payload = json.dumps(self.to_dict(), sort_keys=True)
         return hashlib.sha256(payload.encode()).hexdigest()[:12]
+
+
+# Scope keys used in feedback_scores[candidate_id][...]
+SCOPE_GLOBAL = "global"
+SCOPE_ORDER = ("intersection", "team", "class", "global")
+
+# Retriever identifiers accepted by --retriever (P2)
+RETRIEVERS = (
+    "dense_minilm",      # all-MiniLM-L6-v2 FAISS (SIKDD default)
+    "bm25",              # lexical BM25Okapi on title + description
+    "hybrid_rrf",        # RRF(dense_minilm, bm25)
+    "dense_bge",         # BAAI/bge-small-en-v1.5 FAISS (independent embedder family)
+    "hybrid_bge_rrf",    # RRF(dense_bge, bm25)
+    "ce_rerank",         # cross-encoder/ms-marco-MiniLM-L-6-v2 re-ranking the dense_minilm pool
+    "ce_hybrid_rerank",  # cross-encoder re-ranking the hybrid_rrf pool
+)
+ALT_EMBEDDERS = {
+    "minilm": "all-MiniLM-L6-v2",
+    "bge": "BAAI/bge-small-en-v1.5",
+}
+CROSS_ENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+# Independent-family embedder used for the alternative answer metric / proxy (P1.2)
+ALT_METRIC_EMBEDDER = "BAAI/bge-base-en-v1.5"
 
 
 # --- Default method definitions ---
@@ -239,6 +329,25 @@ DEFAULT_METHODS = {
         experiment_id="M4_intersection",
         lift=LiftConfig.laplace(),
         routing=RoutingConfig.intersection(),
+        gating=GatingConfig.none(),
+        generator_model=GENERATOR_MODEL,
+        judge_model=JUDGE_MODEL_ID,
+    ),
+    # --- P3 granularity methods (new; not part of the SIKDD replication) ---
+    "M5_backoff": EvalConfig(
+        experiment_id="M5_backoff",
+        lift=LiftConfig.laplace(),
+        routing=RoutingConfig.backoff(),
+        gating=GatingConfig.none(),
+        generator_model=GENERATOR_MODEL,
+        judge_model=JUDGE_MODEL_ID,
+    ),
+    # Blend weights are placeholders; 12_learn_blend.py writes the learned weights to
+    # results/blend/learned_weights.json and 04_evaluate.py --blend-weights loads them.
+    "M6_blend": EvalConfig(
+        experiment_id="M6_blend",
+        lift=LiftConfig.laplace(),
+        routing=RoutingConfig.blend(w_global=0.0, w_class=0.25, w_team=0.5, w_intersection=0.5),
         gating=GatingConfig.none(),
         generator_model=GENERATOR_MODEL,
         judge_model=JUDGE_MODEL_ID,

@@ -187,3 +187,138 @@ def load_feedback_as_scores(
 
 def export_scores(scores: dict, path: Path) -> None:
     path.write_text(json.dumps(scores), encoding="utf-8")
+
+
+# ---------------------------------------------------------------------------
+# P1.5 / P3 additions: scope priors, bundle object, per-query LOO subtraction.
+# `load_feedback_as_scores` above is unchanged (used by the SIKDD replication runs).
+# ---------------------------------------------------------------------------
+
+def _scope_keys(q_class: str, q_team: str) -> list[str]:
+    keys = ["global"]
+    if q_class:
+        keys.append(f"class:{q_class}")
+    if q_team:
+        keys.append(f"team:{q_team}")
+    if q_class and q_team:
+        keys.append(f"intersection:{q_class}:{q_team}")
+    return keys
+
+
+def compute_scope_priors(scores_df: pd.DataFrame) -> dict[str, dict[str, float]]:
+    """
+    Empirical mean judge score per scope key (global, class:X, team:Y,
+    intersection:X:Y) over ALL (query, candidate) rows in the frame.
+    Returned as {scope_key: {"mean": p_bar, "n": rows}}.
+    Used as the centring point of `laplace_eb`.
+    """
+    df = scores_df.copy()
+    df["query_class"] = df["query_class"].fillna("").astype(str)
+    df["query_team"] = df["query_team"].fillna("").astype(str)
+    out: dict[str, dict[str, float]] = {}
+    out["global"] = {"mean": float(df["score"].mean()), "n": float(len(df))}
+    for col, prefix in (("query_class", "class"), ("query_team", "team")):
+        g = df[df[col] != ""].groupby(col)["score"].agg(["mean", "count"])
+        for k, row in g.iterrows():
+            out[f"{prefix}:{k}"] = {"mean": float(row["mean"]), "n": float(row["count"])}
+    both = df[(df["query_class"] != "") & (df["query_team"] != "")]
+    g = both.groupby(["query_class", "query_team"])["score"].agg(["mean", "count"])
+    for (c, t), row in g.iterrows():
+        out[f"intersection:{c}:{t}"] = {"mean": float(row["mean"]), "n": float(row["count"])}
+    return out
+
+
+def load_feedback_rows(
+    db_path: Path,
+    exclude_query_ids: Optional[set[str]] = None,
+    protocol: Optional[str] = None,
+) -> pd.DataFrame:
+    conn = sqlite3.connect(db_path)
+    params: list = []
+    sql = "SELECT query_id, candidate_id, query_class, query_team, score, protocol FROM feedback"
+    conds = []
+    if exclude_query_ids:
+        placeholders = ",".join("?" for _ in exclude_query_ids)
+        conds.append(f"query_id NOT IN ({placeholders})")
+        params.extend(exclude_query_ids)
+    if protocol:
+        conds.append("protocol = ?")
+        params.append(protocol)
+    if conds:
+        sql += " WHERE " + " AND ".join(conds)
+    df = pd.read_sql_query(sql, conn, params=params)
+    conn.close()
+    return df
+
+
+class FeedbackBundle:
+    """
+    feedback_scores dict + per-scope priors + the raw rows (for per-query LOO).
+
+    `scores`  : same structure as load_feedback_as_scores() output.
+    `priors`  : compute_scope_priors() output.
+    `prior_mean(scope_key)` : p_bar for a scope, falling back to the global mean.
+    `minus_query(qid)`      : scores with that query's own contributions removed
+                              (true leave-one-out when evaluating TRAIN queries whose
+                              judgements are in the DB).
+    """
+
+    def __init__(self, rows: pd.DataFrame, mode: str = "continuous"):
+        self.mode = mode
+        self.rows = rows
+        self.scores = aggregate_feedback_scores(rows, mode=mode)
+        self.priors = compute_scope_priors(rows)
+        self._by_query: Optional[dict] = None
+
+    def prior_mean(self, scope_key: str) -> float:
+        p = self.priors.get(scope_key)
+        if p is None:
+            p = self.priors.get("global", {"mean": 0.5})
+        return float(p["mean"])
+
+    def _contrib(self, score: float) -> tuple[float, float]:
+        if self.mode == "continuous":
+            return score, 1.0 - score
+        if score >= POS_THRESHOLD:
+            return 1.0, 0.0
+        if score <= NEG_THRESHOLD:
+            return 0.0, 1.0
+        return 0.0, 0.0
+
+    def minus_query(self, query_id: str) -> dict:
+        """
+        Return a *view-like copy* of `scores` in which the rows contributed by
+        `query_id` (as a query) are subtracted. Only candidates touched by that
+        query are copied; the rest reference the shared dicts (read-only use).
+        """
+        if self._by_query is None:
+            self._by_query = {k: v for k, v in self.rows.groupby("query_id")}
+        sub = self._by_query.get(query_id)
+        if sub is None or len(sub) == 0:
+            return self.scores
+        out = dict(self.scores)  # shallow copy of the candidate map
+        for _, row in sub.iterrows():
+            cid = str(row["candidate_id"])
+            entry = self.scores.get(cid)
+            if entry is None:
+                continue
+            p, n = self._contrib(float(row["score"]))
+            if p == 0.0 and n == 0.0:
+                continue
+            new_entry = {k: dict(v) for k, v in entry.items()}
+            for key in _scope_keys(str(row.get("query_class", "") or ""), str(row.get("query_team", "") or "")):
+                if key in new_entry:
+                    new_entry[key]["pos"] = max(0.0, new_entry[key]["pos"] - p)
+                    new_entry[key]["neg"] = max(0.0, new_entry[key]["neg"] - n)
+            out[cid] = new_entry
+        return out
+
+
+def load_feedback_bundle(
+    db_path: Path,
+    exclude_query_ids: Optional[set[str]] = None,
+    protocol: Optional[str] = None,
+    mode: Literal["continuous", "binary"] = "continuous",
+) -> FeedbackBundle:
+    rows = load_feedback_rows(db_path, exclude_query_ids=exclude_query_ids, protocol=protocol)
+    return FeedbackBundle(rows, mode=mode)

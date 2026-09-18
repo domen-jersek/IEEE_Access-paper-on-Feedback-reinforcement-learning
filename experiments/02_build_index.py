@@ -106,5 +106,45 @@ def main() -> None:
     log.info("Judging depth: %s", depth_path)
 
 
+def build_alt_index(tag: str) -> None:
+    """P2: build an additional FAISS index with an alternative embedder (e.g. --embedder bge).
+    Writes data/processed/faiss_index_<tag>/ and never touches the default MiniLM index."""
+    from src.config import ALT_EMBEDDERS
+    from experiments.utils import write_run_manifest, append_registry, make_run_id
+    log = logging.getLogger("build_index")
+    paths = ProjectPaths()
+    model_name = ALT_EMBEDDERS[tag]
+    df = load_dataset()
+    # Row order must match the default index metadata (shared LOO exclusion by position).
+    default_meta = paths.data_processed / "faiss_index" / "faiss_metadata.parquet"
+    if default_meta.exists():
+        import pandas as pd
+        ref_ids = pd.read_parquet(default_meta)["seq_id"].tolist()
+        if ref_ids != df["seq_id"].tolist():
+            raise RuntimeError("dataset.parquet row order differs from faiss_metadata.parquet; refusing to build misaligned index")
+    log.info("=== Encoding all tickets with %s ===", model_name)
+    encoder = TicketEncoder(model_name)
+    embeddings = encoder.encode_batch(df["Title_anon"].tolist(), df["Description_anon"].fillna("").tolist())
+    index_dir = paths.data_processed / f"faiss_index_{tag}"
+    index_dir.mkdir(parents=True, exist_ok=True)
+    faiss_idx = FAISSIndex(dim=encoder.dim)
+    faiss_idx.build(embeddings, df)
+    faiss_idx.save(index_dir / "faiss.index", index_dir / "faiss_metadata.parquet")
+    run_id = make_run_id(f"build_index_{tag}")
+    manifest = write_run_manifest(index_dir, script="experiments/02_build_index.py", args={"embedder": tag, "model": model_name},
+                                  inputs=[paths.dataset_parquet], extra={"dim": encoder.dim, "n": len(df)}, run_id=run_id)
+    append_registry(run_id=run_id, phase="P2-index", script="02_build_index.py", out_dir=index_dir, manifest=manifest,
+                    headline_metric="n_vectors", headline_value=faiss_idx.size)
+    log.info("=== DONE === %s (%d vectors, dim=%d)", index_dir, faiss_idx.size, encoder.dim)
+
+
 if __name__ == "__main__":
-    main()
+    import argparse
+    ap = argparse.ArgumentParser(description="Build FAISS index (default MiniLM pipeline, or --embedder <tag> for an extra index)")
+    ap.add_argument("--embedder", type=str, default=None, help="alternative embedder tag from src.config.ALT_EMBEDDERS (e.g. bge)")
+    a = ap.parse_args()
+    if a.embedder and a.embedder != "minilm":
+        setup_logging()
+        build_alt_index(a.embedder)
+    else:
+        main()

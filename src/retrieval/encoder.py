@@ -26,7 +26,7 @@ class TicketEncoder:
 
     def encode_ticket(self, title: str, description: str = "") -> np.ndarray:
         text = f"{title}\n{description}" if description else title
-        return self._model.encode(text, normalize_embeddings=True)
+        return self._model.encode(text, normalize_embeddings=True, show_progress_bar=False)
 
     def encode_batch(self, titles: list[str], descriptions: Optional[list[str]] = None) -> np.ndarray:
         if descriptions:

@@ -1,0 +1,2205 @@
+{
+  "runs": {
+    "M1_global_dev_blind_continuous": {
+      "details": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M1_global_dev_blind_continuous\\M1_global_dev_blind_continuous_20260914_064433_details.json",
+      "n": 319,
+      "mean_delta_cosine": -0.031920251077432245,
+      "pct_top1_changed": 0.40752351097178685,
+      "proxies": {
+        "minilm_d_proxy_top1": {
+          "mean_proxy_delta": -0.05366657437248663,
+          "all": {
+            "n": 319,
+            "spearman": 0.22761019784136907,
+            "spearman_p": 4.073445404508571e-05,
+            "pearson": 0.6776502551320713
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": 0.40891628872866587,
+            "spearman_p": 1.3637577204181337e-06,
+            "pearson": 0.7194771450080841
+          },
+          "sign_agreement_changed": 0.5538461538461539
+        },
+        "minilm_d_proxy_best5": {
+          "mean_proxy_delta": -0.05202891693967263,
+          "all": {
+            "n": 319,
+            "spearman": 0.2817672020826589,
+            "spearman_p": 3.107437495264708e-07,
+            "pearson": 0.8092749151852494
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": 0.4718037418345217,
+            "spearman_p": 1.45894227848102e-08,
+            "pearson": 0.8895181834939488
+          },
+          "sign_agreement_changed": 0.4461538461538462
+        },
+        "minilm_d_proxy_mean5": {
+          "mean_proxy_delta": -0.055842635766559255,
+          "all": {
+            "n": 319,
+            "spearman": 0.201790730179285,
+            "spearman_p": 0.00028636330858290075,
+            "pearson": 0.7565823634806315
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": 0.46969275442093716,
+            "spearman_p": 1.725180663100139e-08,
+            "pearson": 0.8384197819659124
+          },
+          "sign_agreement_changed": 0.5846153846153846
+        },
+        "minilm_d_proxy_rr": {
+          "mean_proxy_delta": -0.08672936259143155,
+          "all": {
+            "n": 319,
+            "spearman": 0.27614226644861084,
+            "spearman_p": 5.430111867718318e-07,
+            "pearson": 0.6572996906102504
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": 0.445484913174035,
+            "spearman_p": 1.0899000381643368e-07,
+            "pearson": 0.6923029870589554
+          },
+          "sign_agreement_changed": 0.2923076923076923
+        },
+        "minilm_d_same_reply_hit1": {
+          "mean_proxy_delta": -0.018808777429467086,
+          "all": {
+            "n": 319,
+            "spearman": -0.031938315296746754,
+            "spearman_p": 0.569802580271054,
+            "pearson": -0.039783594600082225
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": -0.07075756841317747,
+            "spearman_p": 0.4237270654816999,
+            "pearson": -0.07303846681877985
+          },
+          "sign_agreement_changed": 0.1076923076923077
+        },
+        "minilm_d_same_reply_hit5": {
+          "mean_proxy_delta": -0.0219435736677116,
+          "all": {
+            "n": 319,
+            "spearman": 0.11107304845889367,
+            "spearman_p": 0.047459344094660565,
+            "pearson": 0.05744637925401098
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": 0.11817278573825996,
+            "spearman_p": 0.18055083685625392,
+            "pearson": 0.0051657065936963
+          },
+          "sign_agreement_changed": 0.07692307692307693
+        },
+        "minilm_d_group_hit1": {
+          "mean_proxy_delta": -0.006269592476489028,
+          "all": {
+            "n": 319,
+            "spearman": -0.02366052807006992,
+            "spearman_p": 0.6737619640202629,
+            "pearson": -0.007218338141645932
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": -0.05277037301803052,
+            "spearman_p": 0.5509885758236701,
+            "pearson": -0.03172483046124084
+          },
+          "sign_agreement_changed": 0.023076923076923078
+        },
+        "minilm_d_group_hit5": {
+          "mean_proxy_delta": -0.006269592476489028,
+          "all": {
+            "n": 319,
+            "spearman": -0.006900457240881766,
+            "spearman_p": 0.9022941753575897,
+            "pearson": -0.016788156913173327
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": -0.03830615542632423,
+            "spearman_p": 0.665234212566358,
+            "pearson": -0.052745409161454614
+          },
+          "sign_agreement_changed": 0.023076923076923078
+        },
+        "bge_d_proxy_top1": {
+          "mean_proxy_delta": -0.025117130488811243,
+          "all": {
+            "n": 319,
+            "spearman": 0.2215183968469782,
+            "spearman_p": 6.590591580380975e-05,
+            "pearson": 0.6401413794348252
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": 0.39161032186327305,
+            "spearman_p": 4.079179655733267e-06,
+            "pearson": 0.6735225567544914
+          },
+          "sign_agreement_changed": 0.5615384615384615
+        },
+        "bge_d_proxy_best5": {
+          "mean_proxy_delta": -0.024180595030231535,
+          "all": {
+            "n": 319,
+            "spearman": 0.2894591638888126,
+            "spearman_p": 1.4195620509624754e-07,
+            "pearson": 0.7983924946400491
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": 0.5030266845383781,
+            "spearman_p": 1.0659002616317746e-09,
+            "pearson": 0.8760143278239823
+          },
+          "sign_agreement_changed": 0.43846153846153846
+        },
+        "bge_d_proxy_mean5": {
+          "mean_proxy_delta": -0.026556225405965105,
+          "all": {
+            "n": 319,
+            "spearman": 0.22982466963158893,
+            "spearman_p": 3.4086330251261036e-05,
+            "pearson": 0.7533103901266485
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": 0.4689545781575886,
+            "spearman_p": 1.8288342489652963e-08,
+            "pearson": 0.8323063136862238
+          },
+          "sign_agreement_changed": 0.6076923076923076
+        },
+        "bge_d_proxy_rr": {
+          "mean_proxy_delta": -0.0900208986415883,
+          "all": {
+            "n": 319,
+            "spearman": 0.3169317310635185,
+            "spearman_p": 7.112137381816472e-09,
+            "pearson": 0.7103478216064372
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": 0.5139678826508055,
+            "spearman_p": 3.9968247033282263e-10,
+            "pearson": 0.7548918410099761
+          },
+          "sign_agreement_changed": 0.3076923076923077
+        },
+        "bge_d_same_reply_hit1": {
+          "mean_proxy_delta": -0.018808777429467086,
+          "all": {
+            "n": 319,
+            "spearman": -0.031938315296746754,
+            "spearman_p": 0.569802580271054,
+            "pearson": -0.039783594600082225
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": -0.07075756841317747,
+            "spearman_p": 0.4237270654816999,
+            "pearson": -0.07303846681877985
+          },
+          "sign_agreement_changed": 0.1076923076923077
+        },
+        "bge_d_same_reply_hit5": {
+          "mean_proxy_delta": -0.0219435736677116,
+          "all": {
+            "n": 319,
+            "spearman": 0.11107304845889367,
+            "spearman_p": 0.047459344094660565,
+            "pearson": 0.05744637925401098
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": 0.11817278573825996,
+            "spearman_p": 0.18055083685625392,
+            "pearson": 0.0051657065936963
+          },
+          "sign_agreement_changed": 0.07692307692307693
+        },
+        "bge_d_group_hit1": {
+          "mean_proxy_delta": -0.006269592476489028,
+          "all": {
+            "n": 319,
+            "spearman": -0.02366052807006992,
+            "spearman_p": 0.6737619640202629,
+            "pearson": -0.007218338141645932
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": -0.05277037301803052,
+            "spearman_p": 0.5509885758236701,
+            "pearson": -0.03172483046124084
+          },
+          "sign_agreement_changed": 0.023076923076923078
+        },
+        "bge_d_group_hit5": {
+          "mean_proxy_delta": -0.006269592476489028,
+          "all": {
+            "n": 319,
+            "spearman": -0.006900457240881766,
+            "spearman_p": 0.9022941753575897,
+            "pearson": -0.016788156913173327
+          },
+          "changed_only": {
+            "n": 130,
+            "spearman": -0.03830615542632423,
+            "spearman_p": 0.665234212566358,
+            "pearson": -0.052745409161454614
+          },
+          "sign_agreement_changed": 0.023076923076923078
+        }
+      },
+      "onboarding_subgroup": {
+        "n": 80,
+        "mean_delta_cosine": -0.1552472658455372,
+        "mean_primary_proxy": -0.2126684494316578
+      }
+    },
+    "M1_global_dev_conditioned_binary": {
+      "details": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M1_global_dev_conditioned_binary\\M1_global_dev_conditioned_binary_20260914_065816_details.json",
+      "n": 319,
+      "mean_delta_cosine": -0.028582335429318647,
+      "pct_top1_changed": 0.3667711598746082,
+      "proxies": {
+        "minilm_d_proxy_top1": {
+          "mean_proxy_delta": -0.046551518072155205,
+          "all": {
+            "n": 319,
+            "spearman": 0.22392513511160045,
+            "spearman_p": 5.458211438351582e-05,
+            "pearson": 0.6481792597175218
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": 0.4018299408900304,
+            "spearman_p": 7.103617285755252e-06,
+            "pearson": 0.692635249896532
+          },
+          "sign_agreement_changed": 0.5726495726495726
+        },
+        "minilm_d_proxy_best5": {
+          "mean_proxy_delta": -0.033333543606312674,
+          "all": {
+            "n": 319,
+            "spearman": 0.2701976012487197,
+            "spearman_p": 9.664570642370052e-07,
+            "pearson": 0.7944290056897509
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": 0.4942059612550733,
+            "spearman_p": 1.4893860595021476e-08,
+            "pearson": 0.9064680527912704
+          },
+          "sign_agreement_changed": 0.38461538461538464
+        },
+        "minilm_d_proxy_mean5": {
+          "mean_proxy_delta": -0.03845137356777551,
+          "all": {
+            "n": 319,
+            "spearman": 0.20858477513324833,
+            "spearman_p": 0.00017530921006891413,
+            "pearson": 0.7648287843095302
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": 0.48149355401900173,
+            "spearman_p": 3.891477033367601e-08,
+            "pearson": 0.8511879570623178
+          },
+          "sign_agreement_changed": 0.6239316239316239
+        },
+        "minilm_d_proxy_rr": {
+          "mean_proxy_delta": -0.06055381400208986,
+          "all": {
+            "n": 319,
+            "spearman": 0.2850797858880211,
+            "spearman_p": 2.223930042355459e-07,
+            "pearson": 0.6631979970314772
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": 0.46897006844631245,
+            "spearman_p": 9.655688567562378e-08,
+            "pearson": 0.7192865909700228
+          },
+          "sign_agreement_changed": 0.24786324786324787
+        },
+        "minilm_d_same_reply_hit1": {
+          "mean_proxy_delta": -0.07210031347962383,
+          "all": {
+            "n": 319,
+            "spearman": 0.09204499514956876,
+            "spearman_p": 0.10079576839636303,
+            "pearson": 0.1053182389326105
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": 0.07625743294733404,
+            "spearman_p": 0.413822732836986,
+            "pearson": 0.02315851461724831
+          },
+          "sign_agreement_changed": 0.17094017094017094
+        },
+        "minilm_d_same_reply_hit5": {
+          "mean_proxy_delta": 0.0,
+          "all": {
+            "n": 319,
+            "spearman": 0.13766405484057892,
+            "spearman_p": 0.01386145493135209,
+            "pearson": 0.2323664183692032
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": 0.26043315252604404,
+            "spearman_p": 0.004569976535846718,
+            "pearson": 0.34903982271455164
+          },
+          "sign_agreement_changed": 0.05982905982905983
+        },
+        "minilm_d_group_hit1": {
+          "mean_proxy_delta": -0.003134796238244514,
+          "all": {
+            "n": 319,
+            "spearman": -0.06637672406100205,
+            "spearman_p": 0.23713568732175774,
+            "pearson": -0.03485384295331183
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": -0.10996510054735888,
+            "spearman_p": 0.23789408534828718,
+            "pearson": -0.06409318715389309
+          },
+          "sign_agreement_changed": 0.02564102564102564
+        },
+        "minilm_d_group_hit5": {
+          "mean_proxy_delta": 0.0,
+          "all": {
+            "n": 319,
+            "spearman": null,
+            "pearson": null
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.02564102564102564
+        },
+        "bge_d_proxy_top1": {
+          "mean_proxy_delta": -0.026762092094810033,
+          "all": {
+            "n": 319,
+            "spearman": 0.20731111314688086,
+            "spearman_p": 0.00019243358364562702,
+            "pearson": 0.5953943172444105
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": 0.34886509330204135,
+            "spearman_p": 0.0001157885568468533,
+            "pearson": 0.6237122579213397
+          },
+          "sign_agreement_changed": 0.5897435897435898
+        },
+        "bge_d_proxy_best5": {
+          "mean_proxy_delta": -0.014849891016102136,
+          "all": {
+            "n": 319,
+            "spearman": 0.24586507863576623,
+            "spearman_p": 8.894869145901004e-06,
+            "pearson": 0.7887473488825623
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": 0.45536522873119645,
+            "spearman_p": 2.489064765337182e-07,
+            "pearson": 0.8919504959308683
+          },
+          "sign_agreement_changed": 0.358974358974359
+        },
+        "bge_d_proxy_mean5": {
+          "mean_proxy_delta": -0.02030131314241774,
+          "all": {
+            "n": 319,
+            "spearman": 0.1566919455789266,
+            "spearman_p": 0.005032155553984243,
+            "pearson": 0.7534242963684272
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": 0.4285318209690406,
+            "spearman_p": 1.434462095395097e-06,
+            "pearson": 0.8358948007671944
+          },
+          "sign_agreement_changed": 0.5811965811965812
+        },
+        "bge_d_proxy_rr": {
+          "mean_proxy_delta": -0.05987460815047022,
+          "all": {
+            "n": 319,
+            "spearman": 0.3005279051931396,
+            "spearman_p": 4.410466484922806e-08,
+            "pearson": 0.6771375750214232
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": 0.4556558720867902,
+            "spearman_p": 2.440257541694701e-07,
+            "pearson": 0.7261584893189899
+          },
+          "sign_agreement_changed": 0.23076923076923078
+        },
+        "bge_d_same_reply_hit1": {
+          "mean_proxy_delta": -0.07210031347962383,
+          "all": {
+            "n": 319,
+            "spearman": 0.09204499514956876,
+            "spearman_p": 0.10079576839636303,
+            "pearson": 0.1053182389326105
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": 0.07625743294733404,
+            "spearman_p": 0.413822732836986,
+            "pearson": 0.02315851461724831
+          },
+          "sign_agreement_changed": 0.17094017094017094
+        },
+        "bge_d_same_reply_hit5": {
+          "mean_proxy_delta": 0.0,
+          "all": {
+            "n": 319,
+            "spearman": 0.13766405484057892,
+            "spearman_p": 0.01386145493135209,
+            "pearson": 0.2323664183692032
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": 0.26043315252604404,
+            "spearman_p": 0.004569976535846718,
+            "pearson": 0.34903982271455164
+          },
+          "sign_agreement_changed": 0.05982905982905983
+        },
+        "bge_d_group_hit1": {
+          "mean_proxy_delta": -0.003134796238244514,
+          "all": {
+            "n": 319,
+            "spearman": -0.06637672406100205,
+            "spearman_p": 0.23713568732175774,
+            "pearson": -0.03485384295331183
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": -0.10996510054735888,
+            "spearman_p": 0.23789408534828718,
+            "pearson": -0.06409318715389309
+          },
+          "sign_agreement_changed": 0.02564102564102564
+        },
+        "bge_d_group_hit5": {
+          "mean_proxy_delta": 0.0,
+          "all": {
+            "n": 319,
+            "spearman": null,
+            "pearson": null
+          },
+          "changed_only": {
+            "n": 117,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.02564102564102564
+        }
+      },
+      "onboarding_subgroup": {
+        "n": 80,
+        "mean_delta_cosine": -0.1413200075738132,
+        "mean_primary_proxy": -0.15783483851701022
+      }
+    },
+    "M1_global_dev_conditioned_continuous": {
+      "details": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M1_global_dev_conditioned_continuous\\M1_global_dev_conditioned_continuous_20260914_062910_details.json",
+      "n": 319,
+      "mean_delta_cosine": -0.035617800622150815,
+      "pct_top1_changed": 0.45141065830721006,
+      "proxies": {
+        "minilm_d_proxy_top1": {
+          "mean_proxy_delta": -0.05572306423164834,
+          "all": {
+            "n": 319,
+            "spearman": 0.14648217155143697,
+            "spearman_p": 0.008789556024613452,
+            "pearson": 0.598024383527745
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": 0.31825133188978,
+            "spearman_p": 0.00010136628166250076,
+            "pearson": 0.6173190601039187
+          },
+          "sign_agreement_changed": 0.5486111111111112
+        },
+        "minilm_d_proxy_best5": {
+          "mean_proxy_delta": -0.042427893109082425,
+          "all": {
+            "n": 319,
+            "spearman": 0.2866595003048318,
+            "spearman_p": 1.8931070195323383e-07,
+            "pearson": 0.8039171221695274
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": 0.4406799771302726,
+            "spearman_p": 3.2460677595172936e-08,
+            "pearson": 0.8540698256242791
+          },
+          "sign_agreement_changed": 0.4444444444444444
+        },
+        "minilm_d_proxy_mean5": {
+          "mean_proxy_delta": -0.042910453574410805,
+          "all": {
+            "n": 319,
+            "spearman": 0.21807240943529962,
+            "spearman_p": 8.602183419549149e-05,
+            "pearson": 0.787696966225928
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": 0.3824710410893125,
+            "spearman_p": 2.2364827168202486e-06,
+            "pearson": 0.8452113947438324
+          },
+          "sign_agreement_changed": 0.5486111111111112
+        },
+        "minilm_d_proxy_rr": {
+          "mean_proxy_delta": -0.07957157784743991,
+          "all": {
+            "n": 319,
+            "spearman": 0.2651033656245091,
+            "spearman_p": 1.5668844461204012e-06,
+            "pearson": 0.6654039850884617
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": 0.43216139232671164,
+            "spearman_p": 6.346141512627473e-08,
+            "pearson": 0.7075236266247857
+          },
+          "sign_agreement_changed": 0.25
+        },
+        "minilm_d_same_reply_hit1": {
+          "mean_proxy_delta": -0.05329153605015674,
+          "all": {
+            "n": 319,
+            "spearman": 0.04148149340657199,
+            "spearman_p": 0.4603366586541484,
+            "pearson": 0.14938340119559487
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": 0.04280601314295089,
+            "spearman_p": 0.6104516301503112,
+            "pearson": 0.12343647197979529
+          },
+          "sign_agreement_changed": 0.14583333333333334
+        },
+        "minilm_d_same_reply_hit5": {
+          "mean_proxy_delta": -0.0219435736677116,
+          "all": {
+            "n": 319,
+            "spearman": 0.1863725225653535,
+            "spearman_p": 0.0008228046642481495,
+            "pearson": 0.26368591490592114
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": 0.29701292003482427,
+            "spearman_p": 0.00030032403140251143,
+            "pearson": 0.35525102321877844
+          },
+          "sign_agreement_changed": 0.1111111111111111
+        },
+        "minilm_d_group_hit1": {
+          "mean_proxy_delta": -0.006269592476489028,
+          "all": {
+            "n": 319,
+            "spearman": -0.032544869482812246,
+            "spearman_p": 0.5624936507712477,
+            "pearson": -0.019817499646624867
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": -0.05211137763929679,
+            "spearman_p": 0.5350549369058721,
+            "pearson": -0.035680761846111075
+          },
+          "sign_agreement_changed": 0.041666666666666664
+        },
+        "minilm_d_group_hit5": {
+          "mean_proxy_delta": -0.003134796238244514,
+          "all": {
+            "n": 319,
+            "spearman": 0.04262739580727204,
+            "spearman_p": 0.44802855016636534,
+            "pearson": 0.00733738391838382
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": 0.039229603896912456,
+            "spearman_p": 0.6406199432190366,
+            "pearson": -0.005808075574122931
+          },
+          "sign_agreement_changed": 0.041666666666666664
+        },
+        "bge_d_proxy_top1": {
+          "mean_proxy_delta": -0.027927319551336354,
+          "all": {
+            "n": 319,
+            "spearman": 0.13784383228808697,
+            "spearman_p": 0.013736603066879466,
+            "pearson": 0.5485166972761479
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": 0.2837162054217445,
+            "spearman_p": 0.0005689243391210622,
+            "pearson": 0.5596085286505746
+          },
+          "sign_agreement_changed": 0.5486111111111112
+        },
+        "bge_d_proxy_best5": {
+          "mean_proxy_delta": -0.01946681560393785,
+          "all": {
+            "n": 319,
+            "spearman": 0.23769176400781153,
+            "spearman_p": 1.7844076855299672e-05,
+            "pearson": 0.7996950892248904
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": 0.3423639720537152,
+            "spearman_p": 2.6666736321800663e-05,
+            "pearson": 0.8471723183885332
+          },
+          "sign_agreement_changed": 0.4027777777777778
+        },
+        "bge_d_proxy_mean5": {
+          "mean_proxy_delta": -0.02188991534298864,
+          "all": {
+            "n": 319,
+            "spearman": 0.20469719290285193,
+            "spearman_p": 0.00023258961085297566,
+            "pearson": 0.7779517090778952
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": 0.39374962515662415,
+            "spearman_p": 1.0473531766647583e-06,
+            "pearson": 0.8369044098539502
+          },
+          "sign_agreement_changed": 0.5416666666666666
+        },
+        "bge_d_proxy_rr": {
+          "mean_proxy_delta": -0.06238244514106583,
+          "all": {
+            "n": 319,
+            "spearman": 0.28267160465183905,
+            "spearman_p": 2.8374240618165936e-07,
+            "pearson": 0.6238562163259178
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": 0.36850979861592004,
+            "spearman_p": 5.505074306347943e-06,
+            "pearson": 0.6299778658893582
+          },
+          "sign_agreement_changed": 0.2222222222222222
+        },
+        "bge_d_same_reply_hit1": {
+          "mean_proxy_delta": -0.05329153605015674,
+          "all": {
+            "n": 319,
+            "spearman": 0.04148149340657199,
+            "spearman_p": 0.4603366586541484,
+            "pearson": 0.14938340119559487
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": 0.04280601314295089,
+            "spearman_p": 0.6104516301503112,
+            "pearson": 0.12343647197979529
+          },
+          "sign_agreement_changed": 0.14583333333333334
+        },
+        "bge_d_same_reply_hit5": {
+          "mean_proxy_delta": -0.0219435736677116,
+          "all": {
+            "n": 319,
+            "spearman": 0.1863725225653535,
+            "spearman_p": 0.0008228046642481495,
+            "pearson": 0.26368591490592114
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": 0.29701292003482427,
+            "spearman_p": 0.00030032403140251143,
+            "pearson": 0.35525102321877844
+          },
+          "sign_agreement_changed": 0.1111111111111111
+        },
+        "bge_d_group_hit1": {
+          "mean_proxy_delta": -0.006269592476489028,
+          "all": {
+            "n": 319,
+            "spearman": -0.032544869482812246,
+            "spearman_p": 0.5624936507712477,
+            "pearson": -0.019817499646624867
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": -0.05211137763929679,
+            "spearman_p": 0.5350549369058721,
+            "pearson": -0.035680761846111075
+          },
+          "sign_agreement_changed": 0.041666666666666664
+        },
+        "bge_d_group_hit5": {
+          "mean_proxy_delta": -0.003134796238244514,
+          "all": {
+            "n": 319,
+            "spearman": 0.04262739580727204,
+            "spearman_p": 0.44802855016636534,
+            "pearson": 0.00733738391838382
+          },
+          "changed_only": {
+            "n": 144,
+            "spearman": 0.039229603896912456,
+            "spearman_p": 0.6406199432190366,
+            "pearson": -0.005808075574122931
+          },
+          "sign_agreement_changed": 0.041666666666666664
+        }
+      },
+      "onboarding_subgroup": {
+        "n": 80,
+        "mean_delta_cosine": -0.1448788027279079,
+        "mean_primary_proxy": -0.17667125668376685
+      }
+    },
+    "M2_team_dev_conditioned_continuous": {
+      "details": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M2_team_dev_conditioned_continuous\\M2_team_dev_conditioned_continuous_20260914_071111_details.json",
+      "n": 319,
+      "mean_delta_cosine": 0.01939115082395488,
+      "pct_top1_changed": 0.6238244514106583,
+      "proxies": {
+        "minilm_d_proxy_top1": {
+          "mean_proxy_delta": 0.003487539387141649,
+          "all": {
+            "n": 319,
+            "spearman": 0.16818688010549657,
+            "spearman_p": 0.002581532814639879,
+            "pearson": 0.3550424153039913
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": 0.24780462608274367,
+            "spearman_p": 0.0004172996603203936,
+            "pearson": 0.39888498765263847
+          },
+          "sign_agreement_changed": 0.5175879396984925
+        },
+        "minilm_d_proxy_best5": {
+          "mean_proxy_delta": -0.010517620274265732,
+          "all": {
+            "n": 319,
+            "spearman": 0.14004680558273577,
+            "spearman_p": 0.012285076608866885,
+            "pearson": 0.42055372126501467
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": 0.16813936421664177,
+            "spearman_p": 0.017602220423695112,
+            "pearson": 0.45713471815536844
+          },
+          "sign_agreement_changed": 0.36683417085427134
+        },
+        "minilm_d_proxy_mean5": {
+          "mean_proxy_delta": 0.015171339728381935,
+          "all": {
+            "n": 319,
+            "spearman": 0.228566160703713,
+            "spearman_p": 3.772683495899907e-05,
+            "pearson": 0.49601950696915376
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": 0.3404480038294,
+            "spearman_p": 8.648764229037581e-07,
+            "pearson": 0.6065847084452646
+          },
+          "sign_agreement_changed": 0.507537688442211
+        },
+        "minilm_d_proxy_rr": {
+          "mean_proxy_delta": -0.011703239289446183,
+          "all": {
+            "n": 319,
+            "spearman": 0.19076153333932816,
+            "spearman_p": 0.0006142525456766005,
+            "pearson": 0.35916360429534444
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": 0.2536330834812921,
+            "spearman_p": 0.00030071515386911863,
+            "pearson": 0.4092620501570094
+          },
+          "sign_agreement_changed": 0.24120603015075376
+        },
+        "minilm_d_same_reply_hit1": {
+          "mean_proxy_delta": 0.006269592476489028,
+          "all": {
+            "n": 319,
+            "spearman": 0.1344883189125914,
+            "spearman_p": 0.01623728739355437,
+            "pearson": 0.15860896604514077
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": 0.16053127094260353,
+            "spearman_p": 0.023511684084308558,
+            "pearson": 0.1772413074170303
+          },
+          "sign_agreement_changed": 0.1658291457286432
+        },
+        "minilm_d_same_reply_hit5": {
+          "mean_proxy_delta": 0.009404388714733543,
+          "all": {
+            "n": 319,
+            "spearman": 0.10003652939945698,
+            "spearman_p": 0.07439545376389582,
+            "pearson": 0.17948946814014463
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": 0.19607082560281175,
+            "spearman_p": 0.005511911471782522,
+            "pearson": 0.2706476521628375
+          },
+          "sign_agreement_changed": 0.10050251256281408
+        },
+        "minilm_d_group_hit1": {
+          "mean_proxy_delta": -0.006269592476489028,
+          "all": {
+            "n": 319,
+            "spearman": -0.03527824876223819,
+            "spearman_p": 0.5301273262388864,
+            "pearson": -0.01220382541428892
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": -0.03385769169596127,
+            "spearman_p": 0.6349660104925495,
+            "pearson": -0.006877332062634408
+          },
+          "sign_agreement_changed": 0.035175879396984924
+        },
+        "minilm_d_group_hit5": {
+          "mean_proxy_delta": -0.003134796238244514,
+          "all": {
+            "n": 319,
+            "spearman": -0.08990497766718125,
+            "spearman_p": 0.10900137550471066,
+            "pearson": -0.046191951286111324
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": -0.07454519095397985,
+            "spearman_p": 0.29536651729570523,
+            "pearson": -0.027999349440035445
+          },
+          "sign_agreement_changed": 0.03015075376884422
+        },
+        "bge_d_proxy_top1": {
+          "mean_proxy_delta": 0.0036204672158698676,
+          "all": {
+            "n": 319,
+            "spearman": 0.19154087900888506,
+            "spearman_p": 0.0005827903728638897,
+            "pearson": 0.3681883243264069
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": 0.28585385053840645,
+            "spearman_p": 4.2621248659756953e-05,
+            "pearson": 0.41103541518496356
+          },
+          "sign_agreement_changed": 0.5477386934673367
+        },
+        "bge_d_proxy_best5": {
+          "mean_proxy_delta": -0.00331217751233929,
+          "all": {
+            "n": 319,
+            "spearman": 0.11381287248451119,
+            "spearman_p": 0.042215628392572396,
+            "pearson": 0.409671497176418
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": 0.16655816471242568,
+            "spearman_p": 0.018711054563326397,
+            "pearson": 0.4508354302002161
+          },
+          "sign_agreement_changed": 0.36180904522613067
+        },
+        "bge_d_proxy_mean5": {
+          "mean_proxy_delta": 0.007648228888975041,
+          "all": {
+            "n": 319,
+            "spearman": 0.22295425977390224,
+            "spearman_p": 5.890948668424321e-05,
+            "pearson": 0.5033363527268404
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": 0.3727101581843395,
+            "spearman_p": 5.919802698219903e-08,
+            "pearson": 0.6182957240727551
+          },
+          "sign_agreement_changed": 0.5226130653266332
+        },
+        "bge_d_proxy_rr": {
+          "mean_proxy_delta": 0.005747126436781611,
+          "all": {
+            "n": 319,
+            "spearman": 0.23163197676028174,
+            "spearman_p": 2.9434854396497057e-05,
+            "pearson": 0.43389219661026307
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": 0.2777383259441993,
+            "spearman_p": 7.135435603914455e-05,
+            "pearson": 0.46828131869777534
+          },
+          "sign_agreement_changed": 0.15577889447236182
+        },
+        "bge_d_same_reply_hit1": {
+          "mean_proxy_delta": 0.006269592476489028,
+          "all": {
+            "n": 319,
+            "spearman": 0.1344883189125914,
+            "spearman_p": 0.01623728739355437,
+            "pearson": 0.15860896604514077
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": 0.16053127094260353,
+            "spearman_p": 0.023511684084308558,
+            "pearson": 0.1772413074170303
+          },
+          "sign_agreement_changed": 0.1658291457286432
+        },
+        "bge_d_same_reply_hit5": {
+          "mean_proxy_delta": 0.009404388714733543,
+          "all": {
+            "n": 319,
+            "spearman": 0.10003652939945698,
+            "spearman_p": 0.07439545376389582,
+            "pearson": 0.17948946814014463
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": 0.19607082560281175,
+            "spearman_p": 0.005511911471782522,
+            "pearson": 0.2706476521628375
+          },
+          "sign_agreement_changed": 0.10050251256281408
+        },
+        "bge_d_group_hit1": {
+          "mean_proxy_delta": -0.006269592476489028,
+          "all": {
+            "n": 319,
+            "spearman": -0.03527824876223819,
+            "spearman_p": 0.5301273262388864,
+            "pearson": -0.01220382541428892
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": -0.03385769169596127,
+            "spearman_p": 0.6349660104925495,
+            "pearson": -0.006877332062634408
+          },
+          "sign_agreement_changed": 0.035175879396984924
+        },
+        "bge_d_group_hit5": {
+          "mean_proxy_delta": -0.003134796238244514,
+          "all": {
+            "n": 319,
+            "spearman": -0.08990497766718125,
+            "spearman_p": 0.10900137550471066,
+            "pearson": -0.046191951286111324
+          },
+          "changed_only": {
+            "n": 199,
+            "spearman": -0.07454519095397985,
+            "spearman_p": 0.29536651729570523,
+            "pearson": -0.027999349440035445
+          },
+          "sign_agreement_changed": 0.03015075376884422
+        }
+      },
+      "onboarding_subgroup": {
+        "n": 80,
+        "mean_delta_cosine": 0.04061181992292404,
+        "mean_primary_proxy": 0.004972263798117637
+      }
+    },
+    "M2_team_dev_conditioned_continuous_smoke": {
+      "details": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M2_team_dev_conditioned_continuous_smoke\\M2_team_dev_conditioned_continuous_smoke_20260917_125320_details.json",
+      "n": 3,
+      "mean_delta_cosine": -0.035272955894470215,
+      "pct_top1_changed": 0.6666666666666666,
+      "proxies": {
+        "minilm_d_proxy_top1": {
+          "mean_proxy_delta": 0.06295205156008403,
+          "all": {
+            "n": 3,
+            "spearman": 0.0,
+            "spearman_p": 1.0,
+            "pearson": 0.4889843837755004
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.0
+        },
+        "minilm_d_proxy_best5": {
+          "mean_proxy_delta": -0.00037860870361328125,
+          "all": {
+            "n": 3,
+            "spearman": 1.0,
+            "spearman_p": 0.0,
+            "pearson": 1.0
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 1.0
+        },
+        "minilm_d_proxy_mean5": {
+          "mean_proxy_delta": -0.022356748580932635,
+          "all": {
+            "n": 3,
+            "spearman": 0.0,
+            "spearman_p": 1.0,
+            "pearson": -0.3236280370626842
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.5
+        },
+        "minilm_d_proxy_rr": {
+          "mean_proxy_delta": 0.0,
+          "all": {
+            "n": 3,
+            "spearman": null,
+            "pearson": null
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.5
+        },
+        "minilm_d_same_reply_hit1": {
+          "mean_proxy_delta": 0.0,
+          "all": {
+            "n": 3,
+            "spearman": null,
+            "pearson": null
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.5
+        },
+        "minilm_d_same_reply_hit5": {
+          "mean_proxy_delta": 0.0,
+          "all": {
+            "n": 3,
+            "spearman": null,
+            "pearson": null
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.5
+        },
+        "minilm_d_group_hit1": {
+          "mean_proxy_delta": 0.0,
+          "all": {
+            "n": 3,
+            "spearman": null,
+            "pearson": null
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.5
+        },
+        "minilm_d_group_hit5": {
+          "mean_proxy_delta": 0.0,
+          "all": {
+            "n": 3,
+            "spearman": null,
+            "pearson": null
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.5
+        },
+        "bge_d_proxy_top1": {
+          "mean_proxy_delta": 0.0350381334622701,
+          "all": {
+            "n": 3,
+            "spearman": 0.8660254037844387,
+            "spearman_p": 0.3333333333333332,
+            "pearson": 0.5519885557095023
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.5
+        },
+        "bge_d_proxy_best5": {
+          "mean_proxy_delta": 0.003367165724436442,
+          "all": {
+            "n": 3,
+            "spearman": -1.0,
+            "spearman_p": 0.0,
+            "pearson": -1.0
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.5
+        },
+        "bge_d_proxy_mean5": {
+          "mean_proxy_delta": -0.0034849762916564866,
+          "all": {
+            "n": 3,
+            "spearman": -0.8660254037844387,
+            "spearman_p": 0.3333333333333332,
+            "pearson": -0.709164306248724
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.0
+        },
+        "bge_d_proxy_rr": {
+          "mean_proxy_delta": 0.0,
+          "all": {
+            "n": 3,
+            "spearman": null,
+            "pearson": null
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.5
+        },
+        "bge_d_same_reply_hit1": {
+          "mean_proxy_delta": 0.0,
+          "all": {
+            "n": 3,
+            "spearman": null,
+            "pearson": null
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.5
+        },
+        "bge_d_same_reply_hit5": {
+          "mean_proxy_delta": 0.0,
+          "all": {
+            "n": 3,
+            "spearman": null,
+            "pearson": null
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.5
+        },
+        "bge_d_group_hit1": {
+          "mean_proxy_delta": 0.0,
+          "all": {
+            "n": 3,
+            "spearman": null,
+            "pearson": null
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.5
+        },
+        "bge_d_group_hit5": {
+          "mean_proxy_delta": 0.0,
+          "all": {
+            "n": 3,
+            "spearman": null,
+            "pearson": null
+          },
+          "changed_only": {
+            "n": 2,
+            "spearman": null,
+            "pearson": null
+          },
+          "sign_agreement_changed": 0.5
+        }
+      },
+      "onboarding_subgroup": {
+        "n": 2,
+        "mean_delta_cosine": -0.05290943384170532,
+        "mean_primary_proxy": 0.0013522803783416748
+      }
+    },
+    "M3_class_dev_conditioned_continuous": {
+      "details": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M3_class_dev_conditioned_continuous\\M3_class_dev_conditioned_continuous_20260914_072535_details.json",
+      "n": 319,
+      "mean_delta_cosine": -0.02496532511935339,
+      "pct_top1_changed": 0.5266457680250783,
+      "proxies": {
+        "minilm_d_proxy_top1": {
+          "mean_proxy_delta": -0.017535468475852266,
+          "all": {
+            "n": 319,
+            "spearman": 0.4118373223314833,
+            "spearman_p": 1.7223828779733725e-14,
+            "pearson": 0.7776272396231678
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.6241575238088811,
+            "spearman_p": 1.5834307755098714e-19,
+            "pearson": 0.8242300326077648
+          },
+          "sign_agreement_changed": 0.6607142857142857
+        },
+        "minilm_d_proxy_best5": {
+          "mean_proxy_delta": -0.0449376750889243,
+          "all": {
+            "n": 319,
+            "spearman": 0.4249630571808157,
+            "spearman_p": 2.0248416799757343e-15,
+            "pearson": 0.8131355500904389
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.6116686432718839,
+            "spearman_p": 1.2828761385213005e-18,
+            "pearson": 0.8747079209422235
+          },
+          "sign_agreement_changed": 0.4880952380952381
+        },
+        "minilm_d_proxy_mean5": {
+          "mean_proxy_delta": -0.008683696732532274,
+          "all": {
+            "n": 319,
+            "spearman": 0.4037663582858049,
+            "spearman_p": 6.136912257588004e-14,
+            "pearson": 0.8231593815562654
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.6537118388820824,
+            "spearman_p": 7.549842297454045e-22,
+            "pearson": 0.906780884322895
+          },
+          "sign_agreement_changed": 0.6488095238095238
+        },
+        "minilm_d_proxy_rr": {
+          "mean_proxy_delta": -0.029676071055381406,
+          "all": {
+            "n": 319,
+            "spearman": 0.5295124548131982,
+            "spearman_p": 1.8806019261760485e-24,
+            "pearson": 0.7454874262615001
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.6870260536680524,
+            "spearman_p": 8.50552267184548e-25,
+            "pearson": 0.7917793404943712
+          },
+          "sign_agreement_changed": 0.42857142857142855
+        },
+        "minilm_d_same_reply_hit1": {
+          "mean_proxy_delta": 0.012539184952978056,
+          "all": {
+            "n": 319,
+            "spearman": 0.2900129249541464,
+            "spearman_p": 1.3404943751623144e-07,
+            "pearson": 0.27753159016529333
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.35708497672685047,
+            "spearman_p": 2.0202443289846657e-06,
+            "pearson": 0.30290675561962344
+          },
+          "sign_agreement_changed": 0.23809523809523808
+        },
+        "minilm_d_same_reply_hit5": {
+          "mean_proxy_delta": 0.0219435736677116,
+          "all": {
+            "n": 319,
+            "spearman": 0.25719380552601373,
+            "spearman_p": 3.2536391981321958e-06,
+            "pearson": 0.29912088602912024
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.3353228122248976,
+            "spearman_p": 8.864854040541063e-06,
+            "pearson": 0.3469532430418098
+          },
+          "sign_agreement_changed": 0.16071428571428573
+        },
+        "minilm_d_group_hit1": {
+          "mean_proxy_delta": -0.003134796238244514,
+          "all": {
+            "n": 319,
+            "spearman": 0.095452404510865,
+            "spearman_p": 0.08874970052924809,
+            "pearson": 0.026704541175869748
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.10853791052087197,
+            "spearman_p": 0.1613787424904268,
+            "pearson": 0.024615842031106273
+          },
+          "sign_agreement_changed": 0.047619047619047616
+        },
+        "minilm_d_group_hit5": {
+          "mean_proxy_delta": -0.006269592476489028,
+          "all": {
+            "n": 319,
+            "spearman": 0.06248899840744014,
+            "spearman_p": 0.26579615758065905,
+            "pearson": 0.017394009195423582
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.09235376636007593,
+            "spearman_p": 0.23379068090757266,
+            "pearson": 0.01732847753985793
+          },
+          "sign_agreement_changed": 0.03571428571428571
+        },
+        "bge_d_proxy_top1": {
+          "mean_proxy_delta": -0.009946581338266595,
+          "all": {
+            "n": 319,
+            "spearman": 0.42488485630908845,
+            "spearman_p": 2.0514038484179184e-15,
+            "pearson": 0.7659604941479051
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.6418080812429405,
+            "spearman_p": 6.975554866313709e-21,
+            "pearson": 0.8105123000204157
+          },
+          "sign_agreement_changed": 0.6607142857142857
+        },
+        "bge_d_proxy_best5": {
+          "mean_proxy_delta": -0.022417813446080796,
+          "all": {
+            "n": 319,
+            "spearman": 0.391876880832447,
+            "spearman_p": 3.7505685178977456e-13,
+            "pearson": 0.8146067842375171
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.6045338911198107,
+            "spearman_p": 4.068737439550309e-18,
+            "pearson": 0.8737338390941244
+          },
+          "sign_agreement_changed": 0.48214285714285715
+        },
+        "bge_d_proxy_mean5": {
+          "mean_proxy_delta": -0.005298395795881938,
+          "all": {
+            "n": 319,
+            "spearman": 0.3787751860047704,
+            "spearman_p": 2.5383571425679866e-12,
+            "pearson": 0.817313221281996
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.6440963264702856,
+            "spearman_p": 4.584216618357926e-21,
+            "pearson": 0.8988942441332973
+          },
+          "sign_agreement_changed": 0.6071428571428571
+        },
+        "bge_d_proxy_rr": {
+          "mean_proxy_delta": -0.05851619644723093,
+          "all": {
+            "n": 319,
+            "spearman": 0.5273798852332541,
+            "spearman_p": 3.0993707582503647e-24,
+            "pearson": 0.8009150311773656
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.6880240908063793,
+            "spearman_p": 6.84341730541352e-25,
+            "pearson": 0.8455057811729465
+          },
+          "sign_agreement_changed": 0.3392857142857143
+        },
+        "bge_d_same_reply_hit1": {
+          "mean_proxy_delta": 0.012539184952978056,
+          "all": {
+            "n": 319,
+            "spearman": 0.2900129249541464,
+            "spearman_p": 1.3404943751623144e-07,
+            "pearson": 0.27753159016529333
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.35708497672685047,
+            "spearman_p": 2.0202443289846657e-06,
+            "pearson": 0.30290675561962344
+          },
+          "sign_agreement_changed": 0.23809523809523808
+        },
+        "bge_d_same_reply_hit5": {
+          "mean_proxy_delta": 0.0219435736677116,
+          "all": {
+            "n": 319,
+            "spearman": 0.25719380552601373,
+            "spearman_p": 3.2536391981321958e-06,
+            "pearson": 0.29912088602912024
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.3353228122248976,
+            "spearman_p": 8.864854040541063e-06,
+            "pearson": 0.3469532430418098
+          },
+          "sign_agreement_changed": 0.16071428571428573
+        },
+        "bge_d_group_hit1": {
+          "mean_proxy_delta": -0.003134796238244514,
+          "all": {
+            "n": 319,
+            "spearman": 0.095452404510865,
+            "spearman_p": 0.08874970052924809,
+            "pearson": 0.026704541175869748
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.10853791052087197,
+            "spearman_p": 0.1613787424904268,
+            "pearson": 0.024615842031106273
+          },
+          "sign_agreement_changed": 0.047619047619047616
+        },
+        "bge_d_group_hit5": {
+          "mean_proxy_delta": -0.006269592476489028,
+          "all": {
+            "n": 319,
+            "spearman": 0.06248899840744014,
+            "spearman_p": 0.26579615758065905,
+            "pearson": 0.017394009195423582
+          },
+          "changed_only": {
+            "n": 168,
+            "spearman": 0.09235376636007593,
+            "spearman_p": 0.23379068090757266,
+            "pearson": 0.01732847753985793
+          },
+          "sign_agreement_changed": 0.03571428571428571
+        }
+      },
+      "onboarding_subgroup": {
+        "n": 80,
+        "mean_delta_cosine": -0.19335851529613138,
+        "mean_primary_proxy": -0.21406033989042045
+      }
+    },
+    "M4_intersection_dev_conditioned_continuous": {
+      "details": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M4_intersection_dev_conditioned_continuous\\M4_intersection_dev_conditioned_continuous_20260914_073841_details.json",
+      "n": 319,
+      "mean_delta_cosine": 0.021884093697541934,
+      "pct_top1_changed": 0.47962382445141066,
+      "proxies": {
+        "minilm_d_proxy_top1": {
+          "mean_proxy_delta": 0.04188954903741242,
+          "all": {
+            "n": 319,
+            "spearman": 0.21576053042959917,
+            "spearman_p": 0.00010261386470088762,
+            "pearson": 0.4684998639220689
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": 0.3467637903728951,
+            "spearman_p": 1.1278566361956e-05,
+            "pearson": 0.5695295548544121
+          },
+          "sign_agreement_changed": 0.6013071895424836
+        },
+        "minilm_d_proxy_best5": {
+          "mean_proxy_delta": 0.012325063301104363,
+          "all": {
+            "n": 319,
+            "spearman": 0.19541037459866667,
+            "spearman_p": 0.0004475327074774057,
+            "pearson": 0.31419445357443876
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": 0.23854905749068525,
+            "spearman_p": 0.002983013880773333,
+            "pearson": 0.38246384244656023
+          },
+          "sign_agreement_changed": 0.3464052287581699
+        },
+        "minilm_d_proxy_mean5": {
+          "mean_proxy_delta": 0.049668202982473895,
+          "all": {
+            "n": 319,
+            "spearman": 0.22415515218211862,
+            "spearman_p": 5.3601741416443624e-05,
+            "pearson": 0.46995977237637293
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": 0.36287995989333194,
+            "spearman_p": 4.028761905085557e-06,
+            "pearson": 0.618949439349735
+          },
+          "sign_agreement_changed": 0.5490196078431373
+        },
+        "minilm_d_proxy_rr": {
+          "mean_proxy_delta": 0.06217345872518287,
+          "all": {
+            "n": 319,
+            "spearman": 0.21817333491267282,
+            "spearman_p": 8.535840899963808e-05,
+            "pearson": 0.36813790397061397
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": 0.32279447483397783,
+            "spearman_p": 4.711726504123519e-05,
+            "pearson": 0.43796916846573186
+          },
+          "sign_agreement_changed": 0.23529411764705882
+        },
+        "minilm_d_same_reply_hit1": {
+          "mean_proxy_delta": 0.06896551724137931,
+          "all": {
+            "n": 319,
+            "spearman": 0.12421630827842317,
+            "spearman_p": 0.026523234742733978,
+            "pearson": 0.15794273640630416
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": 0.1849235027407041,
+            "spearman_p": 0.022114670875488924,
+            "pearson": 0.18161077602253048
+          },
+          "sign_agreement_changed": 0.17647058823529413
+        },
+        "minilm_d_same_reply_hit5": {
+          "mean_proxy_delta": 0.05329153605015674,
+          "all": {
+            "n": 319,
+            "spearman": 0.11013942581189873,
+            "spearman_p": 0.049366330465441526,
+            "pearson": 0.15507892676233997
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": 0.1334155326419172,
+            "spearman_p": 0.10015886345084576,
+            "pearson": 0.17368759395741817
+          },
+          "sign_agreement_changed": 0.0915032679738562
+        },
+        "minilm_d_group_hit1": {
+          "mean_proxy_delta": -0.006269592476489028,
+          "all": {
+            "n": 319,
+            "spearman": -0.00021865421509833886,
+            "spearman_p": 0.9968962698616141,
+            "pearson": 0.007880372616050922
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": -0.003394335890490288,
+            "spearman_p": 0.9667845545973581,
+            "pearson": 0.013388784740143354
+          },
+          "sign_agreement_changed": 0.032679738562091505
+        },
+        "minilm_d_group_hit5": {
+          "mean_proxy_delta": -0.003134796238244514,
+          "all": {
+            "n": 319,
+            "spearman": -0.01825965658979034,
+            "spearman_p": 0.7452758734770812,
+            "pearson": -0.002056421385307903
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": -0.04269368664737577,
+            "spearman_p": 0.6002785546648597,
+            "pearson": 0.0029639195321046535
+          },
+          "sign_agreement_changed": 0.026143790849673203
+        },
+        "bge_d_proxy_top1": {
+          "mean_proxy_delta": 0.02119348378017031,
+          "all": {
+            "n": 319,
+            "spearman": 0.14866487407999238,
+            "spearman_p": 0.007823091691499763,
+            "pearson": 0.428347671052985
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": 0.2863217077526283,
+            "spearman_p": 0.00033325367923871095,
+            "pearson": 0.5192029812389332
+          },
+          "sign_agreement_changed": 0.5686274509803921
+        },
+        "bge_d_proxy_best5": {
+          "mean_proxy_delta": 0.006918599426185823,
+          "all": {
+            "n": 319,
+            "spearman": 0.0706482551220289,
+            "spearman_p": 0.20823347198259334,
+            "pearson": 0.2709201945298031
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": 0.13776075936827045,
+            "spearman_p": 0.08948161396756038,
+            "pearson": 0.33057275264367736
+          },
+          "sign_agreement_changed": 0.33986928104575165
+        },
+        "bge_d_proxy_mean5": {
+          "mean_proxy_delta": 0.023100192475842087,
+          "all": {
+            "n": 319,
+            "spearman": 0.18444605640103748,
+            "spearman_p": 0.0009335526930353719,
+            "pearson": 0.45069944078803204
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": 0.34777713528889354,
+            "spearman_p": 1.058906176971519e-05,
+            "pearson": 0.5809304008121802
+          },
+          "sign_agreement_changed": 0.5359477124183006
+        },
+        "bge_d_proxy_rr": {
+          "mean_proxy_delta": 0.04571577847439916,
+          "all": {
+            "n": 319,
+            "spearman": 0.30421912845649896,
+            "spearman_p": 2.9537778893607353e-08,
+            "pearson": 0.47824203837145596
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": 0.41418792472239374,
+            "spearman_p": 1.0251793545140709e-07,
+            "pearson": 0.5707840754252176
+          },
+          "sign_agreement_changed": 0.20261437908496732
+        },
+        "bge_d_same_reply_hit1": {
+          "mean_proxy_delta": 0.06896551724137931,
+          "all": {
+            "n": 319,
+            "spearman": 0.12421630827842317,
+            "spearman_p": 0.026523234742733978,
+            "pearson": 0.15794273640630416
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": 0.1849235027407041,
+            "spearman_p": 0.022114670875488924,
+            "pearson": 0.18161077602253048
+          },
+          "sign_agreement_changed": 0.17647058823529413
+        },
+        "bge_d_same_reply_hit5": {
+          "mean_proxy_delta": 0.05329153605015674,
+          "all": {
+            "n": 319,
+            "spearman": 0.11013942581189873,
+            "spearman_p": 0.049366330465441526,
+            "pearson": 0.15507892676233997
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": 0.1334155326419172,
+            "spearman_p": 0.10015886345084576,
+            "pearson": 0.17368759395741817
+          },
+          "sign_agreement_changed": 0.0915032679738562
+        },
+        "bge_d_group_hit1": {
+          "mean_proxy_delta": -0.006269592476489028,
+          "all": {
+            "n": 319,
+            "spearman": -0.00021865421509833886,
+            "spearman_p": 0.9968962698616141,
+            "pearson": 0.007880372616050922
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": -0.003394335890490288,
+            "spearman_p": 0.9667845545973581,
+            "pearson": 0.013388784740143354
+          },
+          "sign_agreement_changed": 0.032679738562091505
+        },
+        "bge_d_group_hit5": {
+          "mean_proxy_delta": -0.003134796238244514,
+          "all": {
+            "n": 319,
+            "spearman": -0.01825965658979034,
+            "spearman_p": 0.7452758734770812,
+            "pearson": -0.002056421385307903
+          },
+          "changed_only": {
+            "n": 153,
+            "spearman": -0.04269368664737577,
+            "spearman_p": 0.6002785546648597,
+            "pearson": 0.0029639195321046535
+          },
+          "sign_agreement_changed": 0.026143790849673203
+        }
+      },
+      "onboarding_subgroup": {
+        "n": 80,
+        "mean_delta_cosine": 0.016332884319126606,
+        "mean_primary_proxy": 0.027862828597426413
+      }
+    }
+  },
+  "models": [
+    "minilm",
+    "bge"
+  ],
+  "k": 5,
+  "method_order_by_generated_delta": [
+    "M1_global_dev_conditioned_continuous",
+    "M2_team_dev_conditioned_continuous_smoke",
+    "M1_global_dev_blind_continuous",
+    "M1_global_dev_conditioned_binary",
+    "M3_class_dev_conditioned_continuous",
+    "M2_team_dev_conditioned_continuous",
+    "M4_intersection_dev_conditioned_continuous"
+  ],
+  "method_ordering_by_proxy": {
+    "minilm_d_proxy_top1": {
+      "order_by_proxy": [
+        "M1_global_dev_conditioned_continuous",
+        "M1_global_dev_blind_continuous",
+        "M1_global_dev_conditioned_binary",
+        "M3_class_dev_conditioned_continuous",
+        "M2_team_dev_conditioned_continuous",
+        "M4_intersection_dev_conditioned_continuous",
+        "M2_team_dev_conditioned_continuous_smoke"
+      ],
+      "rank_spearman_vs_generated": 0.4642857142857144
+    },
+    "minilm_d_proxy_best5": {
+      "order_by_proxy": [
+        "M1_global_dev_blind_continuous",
+        "M3_class_dev_conditioned_continuous",
+        "M1_global_dev_conditioned_continuous",
+        "M1_global_dev_conditioned_binary",
+        "M2_team_dev_conditioned_continuous",
+        "M2_team_dev_conditioned_continuous_smoke",
+        "M4_intersection_dev_conditioned_continuous"
+      ],
+      "rank_spearman_vs_generated": 0.39285714285714296
+    },
+    "minilm_d_same_reply_hit1": {
+      "order_by_proxy": [
+        "M1_global_dev_conditioned_binary",
+        "M1_global_dev_conditioned_continuous",
+        "M1_global_dev_blind_continuous",
+        "M2_team_dev_conditioned_continuous_smoke",
+        "M2_team_dev_conditioned_continuous",
+        "M3_class_dev_conditioned_continuous",
+        "M4_intersection_dev_conditioned_continuous"
+      ],
+      "rank_spearman_vs_generated": 0.7142857142857144
+    },
+    "minilm_d_group_hit1": {
+      "order_by_proxy": [
+        "M1_global_dev_blind_continuous",
+        "M1_global_dev_conditioned_continuous",
+        "M2_team_dev_conditioned_continuous",
+        "M4_intersection_dev_conditioned_continuous",
+        "M1_global_dev_conditioned_binary",
+        "M3_class_dev_conditioned_continuous",
+        "M2_team_dev_conditioned_continuous_smoke"
+      ],
+      "rank_spearman_vs_generated": 0.10714285714285716
+    },
+    "bge_d_proxy_top1": {
+      "order_by_proxy": [
+        "M1_global_dev_conditioned_continuous",
+        "M1_global_dev_conditioned_binary",
+        "M1_global_dev_blind_continuous",
+        "M3_class_dev_conditioned_continuous",
+        "M2_team_dev_conditioned_continuous",
+        "M4_intersection_dev_conditioned_continuous",
+        "M2_team_dev_conditioned_continuous_smoke"
+      ],
+      "rank_spearman_vs_generated": 0.42857142857142866
+    },
+    "bge_d_proxy_best5": {
+      "order_by_proxy": [
+        "M1_global_dev_blind_continuous",
+        "M3_class_dev_conditioned_continuous",
+        "M1_global_dev_conditioned_continuous",
+        "M1_global_dev_conditioned_binary",
+        "M2_team_dev_conditioned_continuous",
+        "M2_team_dev_conditioned_continuous_smoke",
+        "M4_intersection_dev_conditioned_continuous"
+      ],
+      "rank_spearman_vs_generated": 0.39285714285714296
+    },
+    "bge_d_same_reply_hit1": {
+      "order_by_proxy": [
+        "M1_global_dev_conditioned_binary",
+        "M1_global_dev_conditioned_continuous",
+        "M1_global_dev_blind_continuous",
+        "M2_team_dev_conditioned_continuous_smoke",
+        "M2_team_dev_conditioned_continuous",
+        "M3_class_dev_conditioned_continuous",
+        "M4_intersection_dev_conditioned_continuous"
+      ],
+      "rank_spearman_vs_generated": 0.7142857142857144
+    },
+    "bge_d_group_hit1": {
+      "order_by_proxy": [
+        "M1_global_dev_blind_continuous",
+        "M1_global_dev_conditioned_continuous",
+        "M2_team_dev_conditioned_continuous",
+        "M4_intersection_dev_conditioned_continuous",
+        "M1_global_dev_conditioned_binary",
+        "M3_class_dev_conditioned_continuous",
+        "M2_team_dev_conditioned_continuous_smoke"
+      ],
+      "rank_spearman_vs_generated": 0.10714285714285716
+    }
+  },
+  "pooled": {
+    "minilm_d_proxy_top1": {
+      "all": {
+        "n": 1917,
+        "spearman": 0.2360476695127064,
+        "spearman_p": 1.1058810343820867e-25,
+        "pearson": 0.6359454422635092
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": 0.3990778166147026,
+        "spearman_p": 3.171078912885177e-36,
+        "pearson": 0.6903545692250943
+      }
+    },
+    "minilm_d_proxy_best5": {
+      "all": {
+        "n": 1917,
+        "spearman": 0.27180717587388564,
+        "spearman_p": 8.091578421151678e-34,
+        "pearson": 0.7394360704123113
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": 0.40815623250685407,
+        "spearman_p": 5.750027632018407e-38,
+        "pearson": 0.8179201427809455
+      }
+    },
+    "minilm_d_proxy_mean5": {
+      "all": {
+        "n": 1917,
+        "spearman": 0.25110891967389204,
+        "spearman_p": 5.937123415508817e-29,
+        "pearson": 0.7376988736132118
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": 0.4539027604731072,
+        "spearman_p": 1.3323492567162237e-47,
+        "pearson": 0.8349880555536808
+      }
+    },
+    "minilm_d_proxy_rr": {
+      "all": {
+        "n": 1917,
+        "spearman": 0.30628020968522107,
+        "spearman_p": 6.472641047859415e-43,
+        "pearson": 0.6214356624999609
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": 0.44995587495106487,
+        "spearman_p": 1.035661452575367e-46,
+        "pearson": 0.6760085648920039
+      }
+    },
+    "minilm_d_same_reply_hit1": {
+      "all": {
+        "n": 1917,
+        "spearman": 0.127025802135935,
+        "spearman_p": 2.3964407918213106e-08,
+        "pearson": 0.155053761000729
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": 0.16854694754378205,
+        "spearman_p": 3.0149732778011876e-07,
+        "pearson": 0.16705614232636634
+      }
+    },
+    "minilm_d_same_reply_hit5": {
+      "all": {
+        "n": 1917,
+        "spearman": 0.16053721669290041,
+        "spearman_p": 1.547006074808e-12,
+        "pearson": 0.21021924720565066
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": 0.2491381189045835,
+        "spearman_p": 2.199783012113045e-14,
+        "pearson": 0.26714687381373287
+      }
+    },
+    "minilm_d_group_hit1": {
+      "all": {
+        "n": 1917,
+        "spearman": -0.0006838317236871129,
+        "spearman_p": 0.9761300092124754,
+        "pearson": -0.0026053361647619946
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": -0.0013061077473884844,
+        "spearman_p": 0.968562583817257,
+        "pearson": -0.009906388328626267
+      }
+    },
+    "minilm_d_group_hit5": {
+      "all": {
+        "n": 1917,
+        "spearman": 0.000667675089079605,
+        "spearman_p": 0.9766938142576657,
+        "pearson": -0.001762850931776137
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": 0.0039484572872027475,
+        "spearman_p": 0.9051619308933967,
+        "pearson": -0.012522510530585847
+      }
+    },
+    "bge_d_proxy_top1": {
+      "all": {
+        "n": 1917,
+        "spearman": 0.2262081707864039,
+        "spearman_p": 1.1482259269379279e-23,
+        "pearson": 0.6068501917398176
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": 0.3826199236931336,
+        "spearman_p": 3.337395255540365e-33,
+        "pearson": 0.65784261889294
+      }
+    },
+    "bge_d_proxy_best5": {
+      "all": {
+        "n": 1917,
+        "spearman": 0.22775001908191148,
+        "spearman_p": 5.62685412308251e-24,
+        "pearson": 0.7327637494216634
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": 0.36787066942954216,
+        "spearman_p": 1.227437945423206e-30,
+        "pearson": 0.8082067014179155
+      }
+    },
+    "bge_d_proxy_mean5": {
+      "all": {
+        "n": 1917,
+        "spearman": 0.2307517606711482,
+        "spearman_p": 1.382356897302858e-24,
+        "pearson": 0.7310324565338875
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": 0.44572695414277075,
+        "spearman_p": 9.04830002900842e-46,
+        "pearson": 0.8262820114372159
+      }
+    },
+    "bge_d_proxy_rr": {
+      "all": {
+        "n": 1917,
+        "spearman": 0.3374015000078061,
+        "spearman_p": 2.977758765174443e-52,
+        "pearson": 0.6756522364617545
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": 0.46940568650813236,
+        "spearman_p": 3.245325059402552e-51,
+        "pearson": 0.7282744636583088
+      }
+    },
+    "bge_d_same_reply_hit1": {
+      "all": {
+        "n": 1917,
+        "spearman": 0.127025802135935,
+        "spearman_p": 2.3964407918213106e-08,
+        "pearson": 0.155053761000729
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": 0.16854694754378205,
+        "spearman_p": 3.0149732778011876e-07,
+        "pearson": 0.16705614232636634
+      }
+    },
+    "bge_d_same_reply_hit5": {
+      "all": {
+        "n": 1917,
+        "spearman": 0.16053721669290041,
+        "spearman_p": 1.547006074808e-12,
+        "pearson": 0.21021924720565066
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": 0.2491381189045835,
+        "spearman_p": 2.199783012113045e-14,
+        "pearson": 0.26714687381373287
+      }
+    },
+    "bge_d_group_hit1": {
+      "all": {
+        "n": 1917,
+        "spearman": -0.0006838317236871129,
+        "spearman_p": 0.9761300092124754,
+        "pearson": -0.0026053361647619946
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": -0.0013061077473884844,
+        "spearman_p": 0.968562583817257,
+        "pearson": -0.009906388328626267
+      }
+    },
+    "bge_d_group_hit5": {
+      "all": {
+        "n": 1917,
+        "spearman": 0.000667675089079605,
+        "spearman_p": 0.9766938142576657,
+        "pearson": -0.001762850931776137
+      },
+      "changed_only": {
+        "n": 913,
+        "spearman": 0.0039484572872027475,
+        "spearman_p": 0.9051619308933967,
+        "pearson": -0.012522510530585847
+      }
+    }
+  },
+  "decision": {
+    "primary_proxy": "minilm_d_proxy_top1",
+    "pooled_spearman_changed": 0.3990778166147026,
+    "method_order_rank_spearman": 0.4642857142857144,
+    "best_per_ticket_proxy": "bge_d_proxy_rr",
+    "best_per_ticket_spearman_changed": 0.46940568650813236,
+    "adopt_for_config_selection": false,
+    "adopt_for_per_ticket_labels": false,
+    "rule": "config selection: Spearman(changed) >= 0.3 and method-order rank-Spearman >= 0.8; per-ticket labels: Spearman(changed) >= 0.5 (else train on proxy but report gate quality on generated labels)"
+  }
+}

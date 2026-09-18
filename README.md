@@ -178,11 +178,14 @@ tickets used by the disjoint split.
 
 ### `src/data/split.py` — train/dev/eval
 
-Produces stratified 3-way splits, with stratification applied in priority order:
-
-1. **team** (teams with <5 tickets pooled into `TEAM_OTHER`);
-2. **intent class** (classes with <10 pooled into `CLASS_OTHER`);
-3. (difficulty bins are applied in later stages once the FAISS index is built).
+Produces 3-way splits. The stratum (team × intent class) of every ticket is computed
+and written to the companion `*_report.csv` for audit, **but the assignment itself is a
+seeded random permutation** (`_assign_to_splits`), i.e. the splits are *randomized-but-
+audited*, not stratified. This was discovered after the feedback DB had been built on the
+seed-42 train split, so the splits were deliberately left unchanged (re-splitting would
+invalidate `feedback_*.db` and the completed evaluation runs). The per-stratum composition
+in the report CSVs is close to proportional because the dataset is large relative to the
+number of strata; use those reports when describing the splits in the paper.
 
 Two regimes are produced:
 
@@ -502,18 +505,49 @@ pytest tests/ -v
 | `01_split.py` | none | `splits/split_seed{42..1024}.json`, `*_disjoint.json` |
 | `02_build_index.py` | none | `faiss_index/`, `baseline_difficulty.csv`, `recommended_judging_depth.json` |
 | `03_build_feedback.py` | `--validate`, `--validate-only`, `--n-validate N`, `--seed`, `--regime` | `feedback_conditioned.db`, `feedback_blind.db` |
-| `04_evaluate.py` | `--method`, `--split`, `--seed`, `--regime`, `--feedback-protocol`, `--agg-mode` | `results/*_details.json`, `*_summary.json` |
-| `05_gate_cv.py` | `--details-json`, `--feedback-protocol` | `results/gate/gate_cv_results.json` |
+| `04_evaluate.py` | `--method`, `--split`, `--seed`, `--regime`, `--feedback-protocol`, `--agg-mode`, `--generator-model`, `--retriever`, `--lift`, `--scale-mode`, `--limit`, `--tag` | `results/<run>/*_details.json`, `*_summary.json`, `manifest.json` |
+| `05_gate_cv.py` | `--details-json` (legacy) or `--features-parquet`, `--eval-features-parquet`, `--eval-details` | `results/gate/gate_cv_results.json`, `dev_eval.json`, `dev_policy_value.csv` |
 | `06_report.py` | `--input-dir`, `--output-dir` | `results/report/method_comparison.csv`, `oracle_deciles_*.csv`, `gate_sweep_*.csv` |
+| `07_validate_proxy.py` | `--runs`, `--models` | `results/proxy_validation/{report.json, per_ticket.csv}` |
+| `08_rescore.py` | `--runs`, `--no-bertscore` | `results/rescored/method_comparison_v2.csv`, `<run>/*_rescored.csv` |
+| `09_llm_judge_pairwise.py` | `--judge-model`, `--runs`, `--n` | `results/answer_judge/{scores.csv, summary.json}` |
+| `10_feedback_calibration.py` | `--protocols`, `--saturation-queries` | `results/feedback_calibration/{report.json, reliability_*.csv, saturation.csv}` |
+| `11_retriever_ladder.py` | `--split`, `--retrievers`, `--routings`, `--scale-modes`, `--kappas` | `results/retriever_ladder/{grid.csv, ladder_curve.csv, per_ticket.parquet, pools/}` |
+| `12_learn_blend.py` | `--retriever`, `--lift`, `--scale-mode`, `--step` | `results/blend/{learned_weights.json, grid_train.csv, dev_eval.csv, gate_features_*.parquet}` |
+
+See `REPRODUCE.md` for the ordered command list of the P0–P4 research programme.
 
 ## Reproducibility
 
-- All LLM calls use `temperature=0` and an optional SQLite response cache, so generation
-  is deterministic and re-runnable without re-incurring API cost.
-- Splits are randomized-but-seeded; every seed's split file and stratification report
-  are committed.
+- All LLM calls use `temperature=0`. Generation responses are cached in
+  `data/cache/generation_cache.db` (key = model + temperature + prompt + system prompt);
+  judge responses in `data/processed/judge_cache_*.db` and `data/cache/judge_pairwise_cache.db`.
+- **Every experiment script writes `manifest.json`** into its output folder (git SHA + dirty
+  flag, argv, resolved config + `config_hash`, sha256 of every input artifact, package
+  versions) **and appends one row to `results/registry.csv`**. The registry is the
+  authoritative index of what was run, when, from which commit, with which headline number.
+- `requirements.lock.txt` is a `pip freeze` of the environment used for the runs.
+- Splits are randomized-but-seeded (see the caveat under `src/data/split.py`); every seed's
+  split file and composition report are committed.
+- **Feedback DB across seeds**: `feedback_*.db` was judged for the seed-42 *train* queries
+  only. Runs on other seeds exclude the evaluated split's query ids from the DB (leakage
+  guard), so the feedback *source population* shrinks and shifts with the seed. Multi-seed
+  results therefore test robustness to the *query* set, not to the feedback set. State
+  this in the paper.
+- **Backward compatibility of the P0–P3 code changes**: default CLI values reproduce the
+  SIKDD replication runs bit-for-bit (folder names, `config_hash`, retrieval numerics;
+  verified against the stored `*_details.json`). New behaviour is opt-in via flags; new
+  record keys are additive.
 - The FAISS index, feedback databases, and all downstream artifacts can be regenerated
   from the source CSV by running the numbered scripts in order.
+
+### Known limitations to state in the paper
+- The feedback judge and the primary generator are the same model (`gpt-5.6-luna`). The
+  judge never sees generated answers (no evaluation leak), but a same-model preference
+  alignment cannot be excluded; the `--generator-model openai/gpt-4o-mini` runs break this tie.
+- The SIKDD answer metric (`multi-qa-MiniLM-L6-cos-v1`) is in the same model family as
+  the retriever (`all-MiniLM-L6-v2`); `08_rescore.py` (bge cosine, BERTScore) and
+  `09_llm_judge_pairwise.py` provide independent metrics.
 
 ---
 

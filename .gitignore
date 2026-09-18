@@ -28,3 +28,6 @@ experiments/experiment_table_idea.md
 !configs/.gitkeep
 !tests/.gitkeep
 !notebooks/.gitkeep
+# Embedding / generation / judge caches (regenerable)
+data/cache/
+results/retriever_ladder/pools/

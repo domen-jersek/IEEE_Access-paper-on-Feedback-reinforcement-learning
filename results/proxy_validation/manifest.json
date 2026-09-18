@@ -1,0 +1,58 @@
+{
+  "run_id": "proxy_validation_20260918_100045",
+  "script": "experiments/07_validate_proxy.py",
+  "timestamp_utc": "2026-09-18T10:00:57.835969+00:00",
+  "argv": [
+    "experiments/07_validate_proxy.py"
+  ],
+  "args": {
+    "seed": 42,
+    "regime": "random",
+    "verbose": false,
+    "runs": [
+      "M*_dev_*"
+    ],
+    "models": [
+      "minilm",
+      "bge"
+    ],
+    "k": 5
+  },
+  "config": null,
+  "git": {
+    "sha": "2eeaa311a1fc5668c6dec79de9573097225088d5",
+    "dirty": true,
+    "branch": "main"
+  },
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "hostname": "AilabStudent",
+  "packages": {
+    "numpy": "2.0.2",
+    "pandas": "2.2.3",
+    "scipy": "1.14.1",
+    "scikit-learn": "1.6.0",
+    "sentence-transformers": "5.1.0",
+    "transformers": "4.53.1",
+    "torch": "2.7.1",
+    "faiss-cpu": "1.11.0.post1",
+    "openai": "2.6.1",
+    "rouge-score": "0.1.2",
+    "bert-score": "0.3.13",
+    "rank-bm25": "0.2.2",
+    "xgboost": null
+  },
+  "inputs": {
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\dataset.parquet": "32453a69c847e32f6dd97859c475192171ccffe3f6c97ba06ff0a706df947a83",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M1_global_dev_blind_continuous\\M1_global_dev_blind_continuous_20260914_064433_details.json": "9415cb867975fbc688f6dfd19d3b0118ed66d39b8fe624ed926c764d928e0a48",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M1_global_dev_conditioned_binary\\M1_global_dev_conditioned_binary_20260914_065816_details.json": "6b0f0e08b52be06ddbc7e15d222cf808ec02a93c68e882f268627904659b9d9f",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M1_global_dev_conditioned_continuous\\M1_global_dev_conditioned_continuous_20260914_062910_details.json": "d9ec666a596ea3654a57a465a3c3d184e4e8369233c8b41aae3b026aa0ea0187",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M2_team_dev_conditioned_continuous\\M2_team_dev_conditioned_continuous_20260914_071111_details.json": "f8deb2e8dbce173ff74bf7d195eb95ec3f13571eac8b058482ed42c067592cbc",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M2_team_dev_conditioned_continuous_smoke\\M2_team_dev_conditioned_continuous_smoke_20260917_125320_details.json": "43d438074e9da4903c51edd2b3c20ac875756e151f1a2dbca97b5da60c77450c",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M3_class_dev_conditioned_continuous\\M3_class_dev_conditioned_continuous_20260914_072535_details.json": "b85bc95d9832e21599632bd138699939b3bec64f102e1d409996d918f6bd3624",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M4_intersection_dev_conditioned_continuous\\M4_intersection_dev_conditioned_continuous_20260914_073841_details.json": "498308975062986230366a1c82ea61c6ddd1572ec74e49623e657e75eb767895"
+  },
+  "extra": {
+    "n_runs": 7
+  }
+}

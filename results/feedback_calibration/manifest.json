@@ -1,0 +1,50 @@
+{
+  "run_id": "feedback_calibration_20260917_134150",
+  "script": "experiments/10_feedback_calibration.py",
+  "timestamp_utc": "2026-09-17T13:46:31.898127+00:00",
+  "argv": [
+    "experiments/10_feedback_calibration.py"
+  ],
+  "args": {
+    "seed": 42,
+    "regime": "random",
+    "verbose": false,
+    "protocols": [
+      "conditioned",
+      "blind"
+    ],
+    "sim_model": "minilm",
+    "saturation_queries": 319
+  },
+  "config": null,
+  "git": {
+    "sha": "2eeaa311a1fc5668c6dec79de9573097225088d5",
+    "dirty": true,
+    "branch": "main"
+  },
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "hostname": "AilabStudent",
+  "packages": {
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "sentence-transformers": "6.0.1",
+    "transformers": "5.17.0",
+    "torch": "2.14.0",
+    "faiss-cpu": "1.15.0",
+    "openai": "3.13.0",
+    "rouge-score": "0.1.2",
+    "bert-score": "0.3.13",
+    "rank-bm25": null,
+    "xgboost": "3.4.1"
+  },
+  "inputs": {
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\dataset.parquet": "32453a69c847e32f6dd97859c475192171ccffe3f6c97ba06ff0a706df947a83",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\splits\\split_seed42.json": "a2361b8637c8e807673466f4df02d57a111debca3d8d8ffc8ae6faa86eb4a7e9",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\feedback_conditioned.db": "8faf7d7321a2ac9f4472abb222eeabf3d149e3e69a19b88b53909fa48617fdc3",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\feedback_blind.db": "b018c34766f37bf2728ef7557f1655909030338450bc1c2abd851177eccdb244"
+  },
+  "extra": {}
+}
