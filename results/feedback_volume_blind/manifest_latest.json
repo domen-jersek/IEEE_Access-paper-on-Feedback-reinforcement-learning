@@ -1,0 +1,81 @@
+{
+  "run_id": "feedback_volume_20260919_153640",
+  "script": "experiments/13_feedback_volume_curve.py",
+  "timestamp_utc": "2026-09-19T16:11:50.470600+00:00",
+  "argv": [
+    "experiments/13_feedback_volume_curve.py",
+    "--feedback-protocol",
+    "blind",
+    "--tag",
+    "blind"
+  ],
+  "args": {
+    "seed": 42,
+    "regime": "random",
+    "verbose": false,
+    "sim_model": "minilm",
+    "retriever": "dense_minilm",
+    "feedback_protocol": "blind",
+    "search_k": 100,
+    "top_k": 5,
+    "tag": "blind",
+    "seeds": "1000,1001,1002,1003,1004,1005,1006,1007,1008,1009",
+    "fractions": "0.01,0.02,0.05,0.1,0.25,0.5,0.75,1.0"
+  },
+  "config": null,
+  "git": {
+    "sha": "5f14ac60755fa6c553e9f6eb742718fc04f0e6b9",
+    "dirty": true,
+    "branch": "main"
+  },
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "hostname": "AilabStudent",
+  "packages": {
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "sentence-transformers": "6.0.1",
+    "transformers": "5.17.0",
+    "torch": "2.14.0",
+    "faiss-cpu": "1.15.0",
+    "openai": "3.13.0",
+    "rouge-score": "0.1.2",
+    "bert-score": "0.3.13",
+    "rank-bm25": "0.2.2",
+    "xgboost": "3.4.1"
+  },
+  "inputs": {
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\dataset.parquet": "32453a69c847e32f6dd97859c475192171ccffe3f6c97ba06ff0a706df947a83",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\retriever_ladder\\pools\\dense_minilm_dev_seed42.parquet": "fd1f7584420926f1259add5a66bcbbd51f4db2ca0945182766571f672458b8a7",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\feedback_blind.db": "b018c34766f37bf2728ef7557f1655909030338450bc1c2abd851177eccdb244",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\splits\\split_seed42.json": "a2361b8637c8e807673466f4df02d57a111debca3d8d8ffc8ae6faa86eb4a7e9"
+  },
+  "extra": {
+    "n_fractions": 8,
+    "n_seeds": 10,
+    "fractions": [
+      0.01,
+      0.02,
+      0.05,
+      0.1,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "seeds": [
+      1000,
+      1001,
+      1002,
+      1003,
+      1004,
+      1005,
+      1006,
+      1007,
+      1008,
+      1009
+    ]
+  }
+}

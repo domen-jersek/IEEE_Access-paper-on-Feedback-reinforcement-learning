@@ -46,6 +46,7 @@ from src.feedback.loader import load_feedback_bundle
 from src.retrieval.encoder import TicketEncoder
 from src.retrieval.index import FAISSIndex
 from src.retrieval.retrievers import build_retriever
+from src.retrieval.semantic import TicketTextSimilarity
 
 ROUTINGS = {
     "none": RoutingConfig(name="none"),
@@ -56,6 +57,16 @@ ROUTINGS = {
     "M5_backoff": RoutingConfig.backoff(),
 }
 COSINE_RETRIEVERS = {"dense_minilm", "dense_bge"}
+DEFAULT_SEMANTIC_TAUS = [0.5, 0.6, 0.7, 0.8]
+
+
+def build_routings(semantic_taus: list[float]) -> dict[str, RoutingConfig]:
+    """Base routings plus one semantic-filter variant per tau (P5)."""
+    out = dict(ROUTINGS)
+    for tau in semantic_taus:
+        out[f"semantic_intersection_tau{tau:g}"] = RoutingConfig.semantic_intersection(tau)
+        out[f"semantic_backoff_tau{tau:g}"] = RoutingConfig.semantic_backoff(tau, min_evidence=2.0)
+    return out
 
 
 def lift_variants(scale_modes: list[str], lambdas: list[float], kappas: list[float]) -> dict[str, LiftConfig]:
@@ -82,6 +93,8 @@ def main() -> None:
     parser.add_argument("--search-k", type=int, default=100)
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--feedback-protocol", default="conditioned")
+    parser.add_argument("--semantic-taus", nargs="*", type=float, default=DEFAULT_SEMANTIC_TAUS,
+                        help="Taus for the semantic relevance-filter routings")
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--tag", default="")
     args = parser.parse_args()
@@ -91,6 +104,12 @@ def main() -> None:
     for r in args.retrievers:
         if r not in RETRIEVERS:
             raise SystemExit(f"unknown retriever {r}")
+
+    routings = build_routings(args.semantic_taus)
+    unknown = [r for r in args.routings if r not in routings]
+    if unknown:
+        raise SystemExit(f"unknown routing(s) {unknown}; available: {sorted(routings)}")
+    needs_semantic = any(name.startswith("semantic") for name in args.routings)
 
     paths = ProjectPaths()
     out_dir = paths.results / ("retriever_ladder" + (f"_{args.tag}" if args.tag else ""))
@@ -112,6 +131,7 @@ def main() -> None:
     idx = FAISSIndex(dim=384)
     idx.load(paths.data_processed / "faiss_index" / "faiss.index", paths.data_processed / "faiss_index" / "faiss_metadata.parquet")
     enc = TicketEncoder("all-MiniLM-L6-v2")
+    text_sim = TicketTextSimilarity(df, encoder=enc) if needs_semantic else None
 
     lifts = lift_variants(args.scale_modes, args.lambdas, args.kappas)
     grid_rows, ticket_frames, curve_rows = [], [], []
@@ -120,7 +140,7 @@ def main() -> None:
         retr = build_retriever(rname, paths, idx, enc, ce_pool=args.search_k)
         pool_path = pools_dir / f"{rname}_{args.split}_seed{args.seed}{'_' + args.regime if args.regime != 'random' else ''}.parquet"
         pools = collect_pools(retr, queries, enc, args.search_k, cache_path=pool_path, id_to_index=idx.id_to_index)
-        T = build_pool_tensor(pools, queries, bundle, sims, per_query_loo=per_query_loo)
+        T = build_pool_tensor(pools, queries, bundle, sims, per_query_loo=per_query_loo, text_sim=text_sim)
         cov = T.coverage()
         base_top = T.baseline_top(args.top_k)
         base_m = {tag: T.metrics(base_top, tag) for tag in sims}
@@ -133,7 +153,7 @@ def main() -> None:
                 continue
             if lcfg.scale_mode == "absolute" and rname not in COSINE_RETRIEVERS and route_name != "none":
                 continue  # absolute cosine-unit lifts are meaningless for BM25 / RRF / CE scores
-            routing = ROUTINGS[route_name]
+            routing = routings[route_name]
             lift = T.routed_lift(lcfg, routing) if route_name != "none" else np.zeros_like(T.score)
             top = T.rerank(lift, T.scale_factor(lcfg), args.top_k)
             rec = {"retriever": rname, "routing": route_name, "lift": lift_name, "split": args.split, "n": len(T.query_ids)}

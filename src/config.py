@@ -136,11 +136,16 @@ class RoutingConfig:
     # "backoff": first scope in `backoff_order` whose evidence n >= min_evidence
     backoff_order: tuple = ("intersection", "team", "class", "global")
     min_evidence: float = 3.0
+    # --- P5 semantic relevance filter (defaults keep legacy routings unchanged) ---
+    # Zero the routed lift when query<->candidate ticket-text cosine < semantic_tau.
+    # Used by the "semantic_intersection" and "semantic_backoff" routings only.
+    semantic_tau: float = 0.0
 
     _NEW_DEFAULTS = {
         "w_intersection": 0.0,
         "backoff_order": ("intersection", "team", "class", "global"),
         "min_evidence": 3.0,
+        "semantic_tau": 0.0,
     }
 
     @staticmethod
@@ -164,6 +169,18 @@ class RoutingConfig:
                 min_evidence: float = 3.0) -> RoutingConfig:
         return RoutingConfig(name="backoff", w_global=0.0, backoff_order=tuple(order),
                              min_evidence=min_evidence)
+
+    @staticmethod
+    def semantic_intersection(tau: float = 0.70) -> RoutingConfig:
+        """Intersection lift, applied only where query<->candidate text cosine >= tau."""
+        return RoutingConfig(name="semantic_intersection", w_global=0.0, semantic_tau=tau)
+
+    @staticmethod
+    def semantic_backoff(tau: float = 0.70, min_evidence: float = 2.0,
+                         order: tuple = ("intersection", "team", "class", "global")) -> RoutingConfig:
+        """Hierarchical backoff, applied only where query<->candidate text cosine >= tau."""
+        return RoutingConfig(name="semantic_backoff", w_global=0.0, backoff_order=tuple(order),
+                             min_evidence=min_evidence, semantic_tau=tau)
 
     @staticmethod
     def blend(w_global: float = 0.0, w_class: float = 0.0, w_team: float = 0.0,
@@ -348,6 +365,23 @@ DEFAULT_METHODS = {
         experiment_id="M6_blend",
         lift=LiftConfig.laplace(),
         routing=RoutingConfig.blend(w_global=0.0, w_class=0.25, w_team=0.5, w_intersection=0.5),
+        gating=GatingConfig.none(),
+        generator_model=GENERATOR_MODEL,
+        judge_model=JUDGE_MODEL_ID,
+    ),
+    # --- P5 semantic relevance filter (opt-in; tau set via --semantic-tau) ---
+    "M7_semantic_intersection": EvalConfig(
+        experiment_id="M7_semantic_intersection",
+        lift=LiftConfig.laplace(),
+        routing=RoutingConfig.semantic_intersection(tau=0.70),
+        gating=GatingConfig.none(),
+        generator_model=GENERATOR_MODEL,
+        judge_model=JUDGE_MODEL_ID,
+    ),
+    "M8_semantic_backoff": EvalConfig(
+        experiment_id="M8_semantic_backoff",
+        lift=LiftConfig.laplace(),
+        routing=RoutingConfig.semantic_backoff(tau=0.70, min_evidence=2.0),
         gating=GatingConfig.none(),
         generator_model=GENERATOR_MODEL,
         judge_model=JUDGE_MODEL_ID,

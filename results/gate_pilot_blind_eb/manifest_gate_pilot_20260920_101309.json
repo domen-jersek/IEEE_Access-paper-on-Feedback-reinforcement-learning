@@ -1,0 +1,60 @@
+{
+  "run_id": "gate_pilot_20260920_101309",
+  "script": "experiments/16_gate_pilot.py",
+  "timestamp_utc": "2026-09-20T10:13:18.077045+00:00",
+  "argv": [
+    "experiments/16_gate_pilot.py",
+    "--runs",
+    "results/M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2",
+    "results/M4_intersection_dev_blind_continuous_liftlaplace_eb_k10_pool_std1",
+    "--feedback-protocol",
+    "blind",
+    "--tag",
+    "blind_eb"
+  ],
+  "args": {
+    "seed": 42,
+    "regime": "random",
+    "verbose": false,
+    "runs": [
+      "results/M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2",
+      "results/M4_intersection_dev_blind_continuous_liftlaplace_eb_k10_pool_std1"
+    ],
+    "feedback_protocol": "blind",
+    "model": "logistic",
+    "tag": "blind_eb"
+  },
+  "config": null,
+  "git": {
+    "sha": "5f14ac60755fa6c553e9f6eb742718fc04f0e6b9",
+    "dirty": true,
+    "branch": "main"
+  },
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "hostname": "AilabStudent",
+  "packages": {
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "sentence-transformers": "6.0.1",
+    "transformers": "5.17.0",
+    "torch": "2.14.0",
+    "faiss-cpu": "1.15.0",
+    "openai": "3.13.0",
+    "rouge-score": "0.1.2",
+    "bert-score": "0.3.13",
+    "rank-bm25": "0.2.2",
+    "xgboost": "3.4.1"
+  },
+  "inputs": {
+    "results\\M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2\\M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_20260920_093130_details.json": "9b6563a59ad9db2b876087e7ceed1398591ac85ab77f72fa054e47fa70324e6d",
+    "results\\M4_intersection_dev_blind_continuous_liftlaplace_eb_k10_pool_std1\\M4_intersection_dev_blind_continuous_liftlaplace_eb_k10_pool_std1_20260920_092413_details.json": "500557bf71399e88dd5d7bf23545f42e942bdce01e20cad78bb17a98ce54656a"
+  },
+  "extra": {
+    "n_runs": 2,
+    "model": "logistic",
+    "n_features": 15
+  }
+}

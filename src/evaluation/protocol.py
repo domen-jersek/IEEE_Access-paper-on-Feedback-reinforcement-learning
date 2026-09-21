@@ -36,6 +36,17 @@ def _sha(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
 
 
+async def _generate_pair(llm_client, baseline_prompt: str, feedback_prompt: str) -> tuple[str, str]:
+    """Generate once when retrieval produced identical generation context."""
+    if baseline_prompt == feedback_prompt:
+        answer = await llm_client.complete(baseline_prompt, system=SYSTEM_PROMPT)
+        return answer, answer
+    return await asyncio.gather(
+        llm_client.complete(baseline_prompt, system=SYSTEM_PROMPT),
+        llm_client.complete(feedback_prompt, system=SYSTEM_PROMPT),
+    )
+
+
 def _cand_record(r: dict, feedback_scores: dict, query_class: str, query_team: str,
                  config: EvalConfig, priors, side: str) -> dict:
     cid = str(r.get("seq_id", ""))
@@ -73,6 +84,7 @@ async def evaluate_one_ticket(
     llm_client,
     priors=None,
     retriever_name: str = "dense_minilm",
+    text_sim=None,
 ) -> dict:
     query_title = str(query_row["Title_anon"])
     query_desc = str(query_row.get("Description_anon", "") or "")
@@ -99,6 +111,7 @@ async def evaluate_one_ticket(
         faiss_index, query_embedding, config.top_k, exclude_idxs,
         feedback_scores, config, query_class, query_team, config.search_k,
         query_text=query_text, priors=priors, return_pool=True,
+        text_sim=text_sim, query_id=query_id,
     )
 
     bl_candidates = baseline_df.to_dict("records")
@@ -110,14 +123,9 @@ async def evaluate_one_ticket(
 
     if is_baseline:
         fb_prompt = bl_prompt
-        bl_answer = await llm_client.complete(bl_prompt, system=SYSTEM_PROMPT)
-        fb_answer = bl_answer
     else:
         fb_prompt = build_generation_prompt(query_title, query_desc, fb_candidates)
-        bl_answer, fb_answer = await asyncio.gather(
-            llm_client.complete(bl_prompt, system=SYSTEM_PROMPT),
-            llm_client.complete(fb_prompt, system=SYSTEM_PROMPT),
-        )
+    bl_answer, fb_answer = await _generate_pair(llm_client, bl_prompt, fb_prompt)
 
     bl_metrics = compute_all_metrics(bl_answer, reference_reply, metric_set=config.metric_set)
     fb_metrics = compute_all_metrics(fb_answer, reference_reply, metric_set=config.metric_set)

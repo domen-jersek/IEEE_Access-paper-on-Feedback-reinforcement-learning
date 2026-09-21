@@ -1,0 +1,63 @@
+{
+  "experiment_id": "M4_intersection_dev_blind_continuous_liftlaplace_eb_k10_pool_std2_ce_rerank",
+  "config": {
+    "experiment_id": "M4_intersection_dev_blind_continuous_liftlaplace_eb_k10_pool_std2_ce_rerank",
+    "lift": {
+      "name": "laplace_eb",
+      "alpha": 1.0,
+      "beta": 1.0,
+      "multiplier": 0.8,
+      "cap": 0.2,
+      "positive_only": false,
+      "sensitivity": 3.5,
+      "lcb_k": 1.0,
+      "prior_strength": 10.0,
+      "scale_mode": "pool_std",
+      "pool_lambda": 2.0
+    },
+    "routing": {
+      "name": "categorical_intersection",
+      "w_global": 0.0,
+      "w_class": 1.0,
+      "w_team": 1.0,
+      "require_semantic": false
+    },
+    "gating": {
+      "name": "none",
+      "faiss_ceiling": 1.0,
+      "fuzzy_low": 0.0,
+      "fuzzy_high": 0.0,
+      "miracle_tau": 0.0
+    },
+    "generator_model": "openai/gpt-5.6-luna",
+    "judge_model": "openai/gpt-5.6-luna",
+    "embedding_model": "all-MiniLM-L6-v2",
+    "top_k": 5,
+    "search_k": 100,
+    "temperature": 0.0,
+    "regime": "random",
+    "seed": 42,
+    "retriever": "ce_rerank"
+  },
+  "config_hash": "c3d0c5dd4044",
+  "generated_utc": "2026-09-20T10:47:07.741219+00:00",
+  "total_queries": 319,
+  "total_valid": 319,
+  "total_skipped": 0,
+  "retriever": "ce_rerank",
+  "generation_cache": {
+    "path": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\cache\\generation_cache.db",
+    "hits": 0,
+    "misses": 596
+  },
+  "metrics": {
+    "n_tickets": 319,
+    "mean_delta_cosine": 0.004078781401569193,
+    "median_delta_cosine": 0.0,
+    "std_delta_cosine": 0.10136969401025263,
+    "pct_improved": 0.4263322884012539,
+    "pct_worsened": 0.42946708463949845,
+    "pct_unchanged": 0.14420062695924765,
+    "mean_delta_rouge_l": 0.006450856042360297
+  }
+}

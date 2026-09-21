@@ -117,47 +117,56 @@ def aggregate_feedback_scores(
     `pos` and `neg` are floats regardless of mode; the downstream lift functions
     (`src/feedback/lift.py`) operate on them identically.
     """
+    required = {"candidate_id", "score"}
+    missing = required.difference(scores_df.columns)
+    if missing:
+        raise ValueError(f"Feedback rows are missing required columns: {sorted(missing)}")
+    if mode not in {"continuous", "binary"}:
+        raise ValueError(f"Unsupported feedback aggregation mode: {mode}")
+    if scores_df.empty:
+        return {}
+
+    df = scores_df[["candidate_id", "score"]].copy()
+    df["candidate_id"] = df["candidate_id"].astype(str)
+    for column in ("query_class", "query_team"):
+        if column in scores_df:
+            df[column] = scores_df[column].fillna("").astype(str)
+        else:
+            df[column] = ""
+
+    score = pd.to_numeric(df["score"], errors="raise").astype(float)
+    if mode == "continuous":
+        df["pos"] = score
+        df["neg"] = 1.0 - score
+    else:
+        df["pos"] = (score >= pos_threshold).astype(float)
+        df["neg"] = (score <= neg_threshold).astype(float)
+        df = df[(df["pos"] != 0.0) | (df["neg"] != 0.0)]
+    if df.empty:
+        return {}
+
+    frames = [df.assign(scope="global")]
+    class_rows = df[df["query_class"] != ""]
+    team_rows = df[df["query_team"] != ""]
+    both = df[(df["query_class"] != "") & (df["query_team"] != "")]
+    if not class_rows.empty:
+        frames.append(class_rows.assign(scope="class:" + class_rows["query_class"]))
+    if not team_rows.empty:
+        frames.append(team_rows.assign(scope="team:" + team_rows["query_team"]))
+    if not both.empty:
+        frames.append(both.assign(scope="intersection:" + both["query_class"] + ":" + both["query_team"]))
+
+    grouped = (
+        pd.concat(frames, ignore_index=True)
+        .groupby(["candidate_id", "scope"], sort=False, observed=True)[["pos", "neg"]]
+        .sum()
+    )
     feedback_scores: dict[str, dict[str, dict[str, float]]] = {}
-
-    def contrib(score: float) -> tuple[float, float]:
-        if mode == "continuous":
-            return score, 1.0 - score
-        if score >= pos_threshold:
-            return 1.0, 0.0
-        if score <= neg_threshold:
-            return 0.0, 1.0
-        return 0.0, 0.0
-
-    for _, row in scores_df.iterrows():
-        cid = str(row["candidate_id"])
-        q_class = str(row.get("query_class", "") or "")
-        q_team = str(row.get("query_team", "") or "")
-        p, n = contrib(float(row["score"]))
-        if p == 0.0 and n == 0.0:
-            continue
-
-        entry = feedback_scores.setdefault(cid, {})
-
-        g = entry.setdefault("global", {"pos": 0.0, "neg": 0.0})
-        g["pos"] += p
-        g["neg"] += n
-
-        if q_class:
-            c = entry.setdefault(f"class:{q_class}", {"pos": 0.0, "neg": 0.0})
-            c["pos"] += p
-            c["neg"] += n
-
-        if q_team:
-            t = entry.setdefault(f"team:{q_team}", {"pos": 0.0, "neg": 0.0})
-            t["pos"] += p
-            t["neg"] += n
-
-        if q_class and q_team:
-            isec_key = f"intersection:{q_class}:{q_team}"
-            i = entry.setdefault(isec_key, {"pos": 0.0, "neg": 0.0})
-            i["pos"] += p
-            i["neg"] += n
-
+    for (candidate_id, scope), values in grouped.iterrows():
+        feedback_scores.setdefault(str(candidate_id), {})[str(scope)] = {
+            "pos": float(values["pos"]),
+            "neg": float(values["neg"]),
+        }
     return feedback_scores
 
 

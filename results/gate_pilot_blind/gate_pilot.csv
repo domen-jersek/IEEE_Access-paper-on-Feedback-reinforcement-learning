@@ -1,0 +1,3 @@
+run,n,n_features,model,base_rate_improved,oof_auc,mean_delta_always_on,mean_delta_never_on,mean_delta_oracle,ceiling_recovery,best_rule
+M2_team_dev_blind_continuous,319,15,logistic,0.47962382445141066,0.6292621466257184,-0.03360587145934658,0.0,0.03760123972235055,0.6774583208668232,"{'rule': 'top1_faiss_below_0.898', 'feature': 'top1_faiss', 'threshold': 0.8980841636657715, 'pct_open': 0.5987460815047022, 'mean_delta': 0.009229363762659712}"
+M4_intersection_dev_blind_continuous,319,15,logistic,0.4200626959247649,0.6415490116982654,-0.05061848172012915,0.0,0.02609521921338706,0.7367402653928392,"{'rule': 'top1_faiss_below_0.792', 'feature': 'top1_faiss', 'threshold': 0.7915699005126953, 'pct_open': 0.4012539184952978, 'mean_delta': 0.002289891242980957}"

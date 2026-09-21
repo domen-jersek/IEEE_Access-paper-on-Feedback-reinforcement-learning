@@ -43,6 +43,7 @@ from src.config import ProjectPaths, DEFAULT_METHODS, EvalConfig, LiftConfig, Ro
 from src.retrieval.encoder import TicketEncoder
 from src.retrieval.index import FAISSIndex
 from src.retrieval.retrievers import build_retriever
+from src.retrieval.semantic import TicketTextSimilarity
 from src.feedback.loader import load_feedback_bundle
 from src.evaluation.runner import EvaluationRunner
 
@@ -76,6 +77,12 @@ def build_config(args, base_cfg: EvalConfig) -> tuple[EvalConfig, str]:
                 w_team=float(w.get("team", 0.0)), w_intersection=float(w.get("intersection", 0.0)),
             )
             suffix_parts.append("wlearned")
+        if args.method in ("M7_semantic_intersection", "M8_semantic_backoff") and args.semantic_tau is not None:
+            if args.method == "M7_semantic_intersection":
+                routing = RoutingConfig.semantic_intersection(tau=args.semantic_tau)
+            else:
+                routing = RoutingConfig.semantic_backoff(tau=args.semantic_tau, min_evidence=args.min_evidence)
+            suffix_parts.append(f"tau{args.semantic_tau:g}")
 
     if args.retriever != "dense_minilm":
         suffix_parts.append(args.retriever)
@@ -128,6 +135,8 @@ async def main_async() -> None:
     parser.add_argument("--pool-lambda", type=float, default=1.0)
     parser.add_argument("--min-evidence", type=float, default=3.0)
     parser.add_argument("--blend-weights", type=str, default=None)
+    parser.add_argument("--semantic-tau", type=float, default=None,
+                        help="Query<->candidate text cosine threshold for M7/M8 semantic routings")
     parser.add_argument("--search-k", type=int, default=100)
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--limit", type=int, default=None)
@@ -182,6 +191,7 @@ async def main_async() -> None:
     log.info("=== Configuring evaluation ===")
     base_cfg = DEFAULT_METHODS[args.method]
     config, folder = build_config(args, base_cfg)
+    text_sim = TicketTextSimilarity(df, encoder=encoder) if config.routing.name.startswith("semantic") else None
     results_dir = paths.results / folder
     cache_path = None if args.no_cache else cache_dir() / "generation_cache.db"
     run_id = make_run_id(folder)
@@ -208,6 +218,7 @@ async def main_async() -> None:
         cache_path=cache_path,
         priors=priors,
         retriever_name=args.retriever,
+        text_sim=text_sim,
     )
 
     log.info("=== Running evaluation (%s) ===", folder)

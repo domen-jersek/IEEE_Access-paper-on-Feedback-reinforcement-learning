@@ -5,7 +5,7 @@ Reproducibility helpers (P0):
   - set_seeds(seed)              : seed random / numpy / torch
   - file_sha256(path)            : content hash of an input artifact
   - git_info()                   : commit SHA + dirty flag of the working tree
-  - write_run_manifest(...)      : manifest.json in the run's output folder
+  - write_run_manifest(...)      : immutable run manifest + manifest_latest.json
   - append_registry(...)         : one row per run in results/registry.csv
 """
 from __future__ import annotations
@@ -181,9 +181,9 @@ def write_run_manifest(
     inputs: Iterable[Path] = (),
     extra: Optional[dict] = None,
     run_id: Optional[str] = None,
-    filename: str = "manifest.json",
+    filename: Optional[str] = None,
 ) -> Path:
-    """Write a manifest describing exactly how a run was produced."""
+    """Write an immutable manifest describing exactly how a run was produced."""
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     run_id = run_id or make_run_id(Path(script).stem)
@@ -202,8 +202,11 @@ def write_run_manifest(
         "inputs": {str(p): file_sha256(Path(p)) for p in inputs},
         "extra": _jsonable(extra or {}),
     }
+    filename = filename or f"manifest_{run_id}.json"
     path = out_dir / filename
-    path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
+    payload = json.dumps(manifest, indent=2, ensure_ascii=False)
+    path.write_text(payload, encoding="utf-8")
+    (out_dir / "manifest_latest.json").write_text(payload, encoding="utf-8")
     return path
 
 

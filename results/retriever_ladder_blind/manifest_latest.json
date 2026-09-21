@@ -1,0 +1,90 @@
+{
+  "run_id": "retriever_ladder_20260919_153549",
+  "script": "experiments/11_retriever_ladder.py",
+  "timestamp_utc": "2026-09-19T15:38:12.422275+00:00",
+  "argv": [
+    "experiments/11_retriever_ladder.py",
+    "--feedback-protocol",
+    "blind",
+    "--retrievers",
+    "dense_minilm",
+    "bm25",
+    "hybrid_rrf",
+    "--tag",
+    "blind"
+  ],
+  "args": {
+    "seed": 42,
+    "regime": "random",
+    "verbose": false,
+    "split": "dev",
+    "retrievers": [
+      "dense_minilm",
+      "bm25",
+      "hybrid_rrf"
+    ],
+    "routings": [
+      "none",
+      "M1_global",
+      "M2_team",
+      "M3_class",
+      "M4_intersection",
+      "M5_backoff"
+    ],
+    "scale_modes": [
+      "absolute",
+      "pool_std"
+    ],
+    "lambdas": [
+      0.5,
+      1.0,
+      2.0
+    ],
+    "kappas": [
+      2.0,
+      10.0
+    ],
+    "sim_models": [
+      "minilm",
+      "bge"
+    ],
+    "search_k": 100,
+    "top_k": 5,
+    "feedback_protocol": "blind",
+    "limit": null,
+    "tag": "blind"
+  },
+  "config": null,
+  "git": {
+    "sha": "5f14ac60755fa6c553e9f6eb742718fc04f0e6b9",
+    "dirty": true,
+    "branch": "main"
+  },
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "hostname": "AilabStudent",
+  "packages": {
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "sentence-transformers": "6.0.1",
+    "transformers": "5.17.0",
+    "torch": "2.14.0",
+    "faiss-cpu": "1.15.0",
+    "openai": "3.13.0",
+    "rouge-score": "0.1.2",
+    "bert-score": "0.3.13",
+    "rank-bm25": "0.2.2",
+    "xgboost": "3.4.1"
+  },
+  "inputs": {
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\dataset.parquet": "32453a69c847e32f6dd97859c475192171ccffe3f6c97ba06ff0a706df947a83",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\splits\\split_seed42.json": "a2361b8637c8e807673466f4df02d57a111debca3d8d8ffc8ae6faa86eb4a7e9",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\feedback_blind.db": "b018c34766f37bf2728ef7557f1655909030338450bc1c2abd851177eccdb244"
+  },
+  "extra": {
+    "n_cells": 153,
+    "primary_proxy": "minilm_d_proxy_top1"
+  }
+}

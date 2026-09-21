@@ -1,4 +1,0 @@
-run,ticket_id,expected_team,expected_class,baseline_cosine,feedback_cosine,delta_cosine,delta_rouge_l,top1_changed,baseline_cosine_bge,feedback_cosine_bge,delta_cosine_bge,baseline_cosine_recomputed
-M2_team_dev_conditioned_continuous_smoke,R-100,(GI-IaaS) Admin - Local IT purchase,other,0.5895600318908691,0.5895600318908691,0.0,0.0,1.0,0.748725414276123,0.748725414276123,0.0,0.5895600318908691
-M2_team_dev_conditioned_continuous_smoke,R-1002,(GI-UX) File & Print,onboarding,0.909527599811554,0.8037087321281433,-0.10581886768341064,-0.08502024291497967,1.0,0.8950072526931763,0.8840529322624207,-0.010954320430755615,0.9095274806022644
-M2_team_dev_conditioned_continuous_smoke,R-1003,(GI-UX) Account Management,onboarding,0.7828981876373291,0.7828981876373291,0.0,0.0,0.0,0.8364237546920776,0.8364237546920776,0.0,0.7828982472419739

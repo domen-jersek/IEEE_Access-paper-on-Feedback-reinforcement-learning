@@ -1,0 +1,17 @@
+policy,threshold,mean_delta,pct_open,run
+always_on,,0.01939115082395488,1.0,M2_team_dev_conditioned_continuous
+never_on,,0.0,0.0,M2_team_dev_conditioned_continuous
+oracle,,0.046046357590203,0.5454545454545454,M2_team_dev_conditioned_continuous
+learned,0.3,0.018431408885504385,0.9623824451410659,M2_team_dev_conditioned_continuous
+learned,0.4,0.0175684358352404,0.9090909090909091,M2_team_dev_conditioned_continuous
+learned,0.5,0.015881272435748838,0.6833855799373041,M2_team_dev_conditioned_continuous
+learned,0.6,0.00974958350292194,0.34169278996865204,M2_team_dev_conditioned_continuous
+learned,0.7,0.003119919694329504,0.09404388714733543,M2_team_dev_conditioned_continuous
+always_on,,0.021884093697541934,1.0,M4_intersection_dev_conditioned_continuous
+never_on,,0.0,0.0,M4_intersection_dev_conditioned_continuous
+oracle,,0.047048002317968206,0.54858934169279,M4_intersection_dev_conditioned_continuous
+learned,0.3,0.021477005651752028,0.9655172413793104,M4_intersection_dev_conditioned_continuous
+learned,0.4,0.018888323938585,0.8463949843260188,M4_intersection_dev_conditioned_continuous
+learned,0.5,0.018001132040375078,0.6865203761755486,M4_intersection_dev_conditioned_continuous
+learned,0.6,0.01477439166703568,0.39184952978056425,M4_intersection_dev_conditioned_continuous
+learned,0.7,0.00806639443931161,0.12539184952978055,M4_intersection_dev_conditioned_continuous

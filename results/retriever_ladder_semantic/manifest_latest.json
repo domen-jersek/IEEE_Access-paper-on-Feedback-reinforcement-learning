@@ -1,0 +1,100 @@
+{
+  "run_id": "retriever_ladder_20260920_084319",
+  "script": "experiments/11_retriever_ladder.py",
+  "timestamp_utc": "2026-09-20T08:46:17.135823+00:00",
+  "argv": [
+    "experiments/11_retriever_ladder.py",
+    "--routings",
+    "M4_intersection",
+    "M5_backoff",
+    "semantic_intersection_tau0.6",
+    "semantic_intersection_tau0.7",
+    "semantic_backoff_tau0.6",
+    "semantic_backoff_tau0.7",
+    "--tag",
+    "semantic"
+  ],
+  "args": {
+    "seed": 42,
+    "regime": "random",
+    "verbose": false,
+    "split": "dev",
+    "retrievers": [
+      "dense_minilm",
+      "bm25",
+      "hybrid_rrf",
+      "dense_bge",
+      "hybrid_bge_rrf",
+      "ce_rerank"
+    ],
+    "routings": [
+      "M4_intersection",
+      "M5_backoff",
+      "semantic_intersection_tau0.6",
+      "semantic_intersection_tau0.7",
+      "semantic_backoff_tau0.6",
+      "semantic_backoff_tau0.7"
+    ],
+    "scale_modes": [
+      "absolute",
+      "pool_std"
+    ],
+    "lambdas": [
+      0.5,
+      1.0,
+      2.0
+    ],
+    "kappas": [
+      2.0,
+      10.0
+    ],
+    "sim_models": [
+      "minilm",
+      "bge"
+    ],
+    "search_k": 100,
+    "top_k": 5,
+    "feedback_protocol": "conditioned",
+    "semantic_taus": [
+      0.5,
+      0.6,
+      0.7,
+      0.8
+    ],
+    "limit": null,
+    "tag": "semantic"
+  },
+  "config": null,
+  "git": {
+    "sha": "5f14ac60755fa6c553e9f6eb742718fc04f0e6b9",
+    "dirty": true,
+    "branch": "main"
+  },
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "hostname": "AilabStudent",
+  "packages": {
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "sentence-transformers": "6.0.1",
+    "transformers": "5.17.0",
+    "torch": "2.14.0",
+    "faiss-cpu": "1.15.0",
+    "openai": "3.13.0",
+    "rouge-score": "0.1.2",
+    "bert-score": "0.3.13",
+    "rank-bm25": "0.2.2",
+    "xgboost": "3.4.1"
+  },
+  "inputs": {
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\dataset.parquet": "32453a69c847e32f6dd97859c475192171ccffe3f6c97ba06ff0a706df947a83",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\splits\\split_seed42.json": "a2361b8637c8e807673466f4df02d57a111debca3d8d8ffc8ae6faa86eb4a7e9",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\feedback_conditioned.db": "8faf7d7321a2ac9f4472abb222eeabf3d149e3e69a19b88b53909fa48617fdc3"
+  },
+  "extra": {
+    "n_cells": 360,
+    "primary_proxy": "minilm_d_proxy_top1"
+  }
+}

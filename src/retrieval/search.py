@@ -125,16 +125,35 @@ def per_scope_lifts(candidate_data: dict, query_class: str, query_team: str,
 
 
 def candidate_lift(candidate_data: dict, query_class: str, query_team: str,
-                   routing: RoutingConfig, lift_cfg: LiftConfig, priors=None) -> tuple[float, str]:
+                   routing: RoutingConfig, lift_cfg: LiftConfig, priors=None,
+                   semantic_sim: Optional[float] = None) -> tuple[float, str]:
     """
     Returns (lift, scope_used).
     Legacy routings reproduce the SIKDD numerics exactly (single pos/neg -> lift).
+    `semantic_sim` (query<->candidate ticket-text cosine) is only consulted by the
+    `semantic_intersection` / `semantic_backoff` routings; when it is None the lift
+    is applied unfiltered so callers without an embedding store still work.
     """
     if routing.name in ("global", "categorical", "categorical_intersection"):
         pos, neg = _routing_score("", candidate_data, query_class, query_team, routing)
         prior = _prior_for(priors, _legacy_prior_scope(routing, query_class, query_team))
         return _compute_lift_raw(pos, neg, lift_cfg, prior), routing.name
     if routing.name == "backoff":
+        ev = scope_evidence(candidate_data, query_class, query_team)
+        for s in routing.backoff_order:
+            if ev[s]["n"] >= routing.min_evidence:
+                prior = _prior_for(priors, scope_key(s, query_class, query_team))
+                return _compute_lift_raw(ev[s]["pos"], ev[s]["neg"], lift_cfg, prior), s
+        return 0.0, "none"
+    if routing.name == "semantic_intersection":
+        if semantic_sim is not None and semantic_sim < routing.semantic_tau:
+            return 0.0, "semantic_filtered"
+        ev = scope_evidence(candidate_data, query_class, query_team)["intersection"]
+        prior = _prior_for(priors, scope_key("intersection", query_class, query_team))
+        return _compute_lift_raw(ev["pos"], ev["neg"], lift_cfg, prior), "intersection"
+    if routing.name == "semantic_backoff":
+        if semantic_sim is not None and semantic_sim < routing.semantic_tau:
+            return 0.0, "semantic_filtered"
         ev = scope_evidence(candidate_data, query_class, query_team)
         for s in routing.backoff_order:
             if ev[s]["n"] >= routing.min_evidence:
@@ -183,15 +202,22 @@ def apply_feedback_to_pool(
     query_class: str,
     query_team: str,
     priors=None,
+    semantic_sims: Optional[np.ndarray] = None,
 ) -> pd.DataFrame:
-    """Add feedback_lift_raw / lift_scope / feedback_lift / enhanced_score / gate columns to a pool."""
+    """Add feedback_lift_raw / lift_scope / feedback_lift / enhanced_score / gate columns to a pool.
+
+    `semantic_sims` (optional, aligned with `pool` rows) feeds the semantic
+    relevance filter; when omitted the filter is inactive.
+    """
     results = pool.reset_index(drop=True)
 
     lifts, scopes = [], []
-    for _, row in results.iterrows():
+    for i, (_, row) in enumerate(results.iterrows()):
+        sim = float(semantic_sims[i]) if semantic_sims is not None else None
         lift, scope_used = candidate_lift(
             feedback_scores.get(str(row["seq_id"]), {}),
             query_class, query_team, config.routing, config.lift, priors,
+            semantic_sim=sim,
         )
         lifts.append(lift)
         scopes.append(scope_used)
@@ -240,9 +266,15 @@ def retrieve_feedback(
     query_text: Optional[str] = None,
     priors=None,
     return_pool: bool = False,
+    semantic_sims: Optional[np.ndarray] = None,
+    text_sim=None,
+    query_id: Optional[str] = None,
 ):
     pool = _search(faiss_index, query_text, query_embedding, search_k, exclude_idxs)
-    results = apply_feedback_to_pool(pool, feedback_scores, config, query_class, query_team, priors)
+    if semantic_sims is None and text_sim is not None and query_id is not None:
+        semantic_sims = np.array([text_sim.s(query_id, str(cid)) for cid in pool["seq_id"]], dtype=float)
+    results = apply_feedback_to_pool(pool, feedback_scores, config, query_class, query_team, priors,
+                                     semantic_sims=semantic_sims)
 
     pool = results
     # NOTE: default (non-stable) sort kept on purpose — identical tie-ordering to the SIKDD runs.

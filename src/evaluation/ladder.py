@@ -82,6 +82,7 @@ class PoolTensor:
     same_group: np.ndarray        # (Q, K)
     query_class: list[str]
     query_team: list[str]
+    semantic: Optional[np.ndarray] = None   # (Q, K) query<->candidate text cosine
 
     @property
     def n(self) -> np.ndarray:
@@ -154,6 +155,23 @@ class PoolTensor:
                 out = np.where(take, L[..., j], out)
                 done |= take
             return out
+        if routing.name == "semantic_intersection":
+            base = L[..., SCOPE_IDX["intersection"]].copy()
+            if self.semantic is not None:
+                base = np.where(self.semantic >= routing.semantic_tau, base, 0.0)
+            return base
+        if routing.name == "semantic_backoff":
+            n = self.n
+            out = np.zeros(L.shape[:2])
+            done = np.zeros(L.shape[:2], dtype=bool)
+            for s in routing.backoff_order:
+                j = SCOPE_IDX[s]
+                take = (~done) & (n[..., j] >= routing.min_evidence)
+                out = np.where(take, L[..., j], out)
+                done |= take
+            if self.semantic is not None:
+                out = np.where(self.semantic >= routing.semantic_tau, out, 0.0)
+            return out
         if routing.name == "blend":
             w = np.array([routing.w_global, routing.w_class, routing.w_team, routing.w_intersection])
             return L @ w
@@ -203,11 +221,13 @@ class PoolTensor:
 
 
 def build_pool_tensor(pools: pd.DataFrame, queries: pd.DataFrame, bundle: FeedbackBundle, sims: dict[str, ReplySimilarity],
-                      per_query_loo: bool = False, k_pool: Optional[int] = None) -> PoolTensor:
+                      per_query_loo: bool = False, k_pool: Optional[int] = None, text_sim=None) -> PoolTensor:
     """
     pools    : long frame from collect_pools
     queries  : rows with seq_id, intent_class, Team->Name (order defines Q)
     bundle   : FeedbackBundle (already excluding the evaluated split, or use per_query_loo=True for TRAIN)
+    text_sim : optional TicketTextSimilarity; when given, fills the (Q, K) semantic
+               matrix used by the semantic relevance-filter routings.
     """
     qmeta = queries.set_index("seq_id")
     qids = [q for q in queries["seq_id"].astype(str) if q in set(pools["query_id"])]
@@ -224,6 +244,7 @@ def build_pool_tensor(pools: pd.DataFrame, queries: pd.DataFrame, bundle: Feedba
     same_reply = np.zeros((Q, K))
     same_group = np.zeros((Q, K))
     qcls, qteam = [], []
+    semantic = np.zeros((Q, K)) if text_sim is not None else None
     any_sim = next(iter(sims.values())) if sims else None
     for qi, qid in enumerate(qids):
         g = grouped[qid].head(K)
@@ -247,7 +268,9 @@ def build_pool_tensor(pools: pd.DataFrame, queries: pd.DataFrame, bundle: Feedba
                     neg[qi, ci, j] = e.get("neg", 0.0)
             for tag, sim in sims.items():
                 useful[tag][qi, ci] = sim.s(qid, cid)
+            if semantic is not None:
+                semantic[qi, ci] = text_sim.s(qid, cid)
             if any_sim is not None:
                 same_reply[qi, ci] = float(any_sim.reply_hash[cid] == any_sim.reply_hash[qid])
                 same_group[qi, ci] = float(any_sim.group_hash[cid] == any_sim.group_hash[qid])
-    return PoolTensor(qids, cand, score, mask, pos, neg, prior, useful, same_reply, same_group, qcls, qteam)
+    return PoolTensor(qids, cand, score, mask, pos, neg, prior, useful, same_reply, same_group, qcls, qteam, semantic)

@@ -1,0 +1,62 @@
+{
+  "experiment_id": "M5_backoff_eval_conditioned_continuous_liftlaplace_eb_pool_std0.5_minev2",
+  "config": {
+    "experiment_id": "M5_backoff_eval_conditioned_continuous_liftlaplace_eb_pool_std0.5_minev2",
+    "lift": {
+      "name": "laplace_eb",
+      "alpha": 1.0,
+      "beta": 1.0,
+      "multiplier": 0.8,
+      "cap": 0.2,
+      "positive_only": false,
+      "sensitivity": 3.5,
+      "lcb_k": 1.0,
+      "scale_mode": "pool_std",
+      "pool_lambda": 0.5
+    },
+    "routing": {
+      "name": "backoff",
+      "w_global": 0.0,
+      "w_class": 0.0,
+      "w_team": 0.0,
+      "require_semantic": false,
+      "min_evidence": 2.0
+    },
+    "gating": {
+      "name": "none",
+      "faiss_ceiling": 1.0,
+      "fuzzy_low": 0.0,
+      "fuzzy_high": 0.0,
+      "miracle_tau": 0.0
+    },
+    "generator_model": "openai/gpt-5.6-luna",
+    "judge_model": "openai/gpt-5.6-luna",
+    "embedding_model": "all-MiniLM-L6-v2",
+    "top_k": 5,
+    "search_k": 100,
+    "temperature": 0.0,
+    "regime": "random",
+    "seed": 42
+  },
+  "config_hash": "51479a2bbc92",
+  "generated_utc": "2026-09-20T13:38:57.636456+00:00",
+  "total_queries": 398,
+  "total_valid": 398,
+  "total_skipped": 0,
+  "retriever": "dense_minilm",
+  "generation_cache": {
+    "path": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\cache\\generation_cache.db",
+    "hits": 238,
+    "misses": 417
+  },
+  "metrics": {
+    "n_tickets": 398,
+    "mean_delta_cosine": -0.0016627949919907291,
+    "median_delta_cosine": 0.0,
+    "std_delta_cosine": 0.09172202688023823,
+    "pct_improved": 0.3015075376884422,
+    "pct_worsened": 0.3417085427135678,
+    "pct_unchanged": 0.35678391959798994,
+    "mean_delta_rouge_l": 0.002485799922093668
+  }
+}

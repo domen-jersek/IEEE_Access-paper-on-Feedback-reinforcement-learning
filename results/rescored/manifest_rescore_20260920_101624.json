@@ -1,0 +1,54 @@
+{
+  "run_id": "rescore_20260920_101624",
+  "script": "experiments/08_rescore.py",
+  "timestamp_utc": "2026-09-20T12:31:41.772928+00:00",
+  "argv": [
+    "experiments/08_rescore.py",
+    "--runs",
+    "*liftlaplace_eb*",
+    "--force"
+  ],
+  "args": {
+    "seed": 42,
+    "regime": "random",
+    "verbose": false,
+    "runs": [
+      "*liftlaplace_eb*"
+    ],
+    "no_bertscore": false,
+    "force": true
+  },
+  "config": null,
+  "git": {
+    "sha": "5f14ac60755fa6c553e9f6eb742718fc04f0e6b9",
+    "dirty": true,
+    "branch": "main"
+  },
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "hostname": "AilabStudent",
+  "packages": {
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "sentence-transformers": "6.0.1",
+    "transformers": "5.17.0",
+    "torch": "2.14.0",
+    "faiss-cpu": "1.15.0",
+    "openai": "3.13.0",
+    "rouge-score": "0.1.2",
+    "bert-score": "0.3.13",
+    "rank-bm25": "0.2.2",
+    "xgboost": "3.4.1"
+  },
+  "inputs": {
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M4_intersection_dev_blind_continuous_liftlaplace_eb_k10_pool_std1\\M4_intersection_dev_blind_continuous_liftlaplace_eb_k10_pool_std1_20260920_092413_details.json": "500557bf71399e88dd5d7bf23545f42e942bdce01e20cad78bb17a98ce54656a",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M4_intersection_dev_blind_continuous_liftlaplace_eb_pool_std0.5_hybrid_rrf\\M4_intersection_dev_blind_continuous_liftlaplace_eb_pool_std0.5_hybrid_rrf_20260920_094224_details.json": "3847c2c649190fe30d3d73776d9dd001684623ca28b3c068d3c8ab26d335333a",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M4_intersection_dev_conditioned_continuous_liftlaplace_eb_k10_pool_std1\\M4_intersection_dev_conditioned_continuous_liftlaplace_eb_k10_pool_std1_20260920_094926_details.json": "47457baa305cd9515a3314242796aeccf00dea6c5369172ed03ffcc128538d75",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2\\M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_20260920_093130_details.json": "9b6563a59ad9db2b876087e7ceed1398591ac85ab77f72fa054e47fa70324e6d"
+  },
+  "extra": {
+    "n_runs": 4
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "run_id": "gate_pilot_20260919_173339",
+  "script": "experiments/16_gate_pilot.py",
+  "timestamp_utc": "2026-09-19T17:34:01.796982+00:00",
+  "argv": [
+    "experiments/16_gate_pilot.py",
+    "--runs",
+    "results/M2_team_dev_blind_continuous",
+    "results/M4_intersection_dev_blind_continuous",
+    "--feedback-protocol",
+    "blind",
+    "--tag",
+    "blind"
+  ],
+  "args": {
+    "seed": 42,
+    "regime": "random",
+    "verbose": false,
+    "runs": [
+      "results/M2_team_dev_blind_continuous",
+      "results/M4_intersection_dev_blind_continuous"
+    ],
+    "feedback_protocol": "blind",
+    "model": "logistic",
+    "tag": "blind"
+  },
+  "config": null,
+  "git": {
+    "sha": "5f14ac60755fa6c553e9f6eb742718fc04f0e6b9",
+    "dirty": true,
+    "branch": "main"
+  },
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "hostname": "AilabStudent",
+  "packages": {
+    "numpy": "2.0.2",
+    "pandas": "2.2.3",
+    "scipy": "1.14.1",
+    "scikit-learn": "1.6.0",
+    "sentence-transformers": "5.1.0",
+    "transformers": "4.53.1",
+    "torch": "2.7.1",
+    "faiss-cpu": "1.11.0.post1",
+    "openai": "2.6.1",
+    "rouge-score": "0.1.2",
+    "bert-score": "0.3.13",
+    "rank-bm25": "0.2.2",
+    "xgboost": null
+  },
+  "inputs": {
+    "results\\M2_team_dev_blind_continuous\\M2_team_dev_blind_continuous_20260919_145629_details.json": "75658c1d99c5a2a2b259386d88fb2c02b6c9985d3880f9065309feed601c4f58",
+    "results\\M4_intersection_dev_blind_continuous\\M4_intersection_dev_blind_continuous_20260919_151416_details.json": "6726fdbf42d9f08b864ab95fc356b5385c2f070f73410dec6bc2c37fbc58e6b8"
+  },
+  "extra": {
+    "n_runs": 2,
+    "model": "logistic",
+    "n_features": 15
+  }
+}

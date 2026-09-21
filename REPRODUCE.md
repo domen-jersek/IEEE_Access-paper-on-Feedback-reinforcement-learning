@@ -1,8 +1,11 @@
 # REPRODUCE.md — ordered command list (P0–P4)
 
-All commands run from `paper_ieee_access/`. Every script writes `manifest.json` in its
-output folder and appends a row to `results/registry.csv`. Set `USE_TF=0` once per
+All commands run from `paper_ieee_access/`. Every script writes an immutable
+`manifest_<run_id>.json`, updates `manifest_latest.json`, and appends a row to
+`results/registry.csv`. Set `USE_TF=0` once per
 shell to keep `transformers` from importing TensorFlow (PowerShell: `$env:USE_TF='0'`).
+
+Install the notebook and test dependencies once with `python -m pip install -e ".[dev]"`.
 
 Already completed before this programme (SIKDD replication, luna generator, dev split, seed 42):
 `baseline`, `M1_global` (conditioned/blind/binary), `M2_team`, `M3_class`, `M4_intersection`
@@ -11,10 +14,10 @@ Already completed before this programme (SIKDD replication, luna generator, dev 
 ## P0 — sanity
 
 ```powershell
-python -m pytest -q                                                   # 39 tests
+python -m pytest -q                                                   # 43 tests
 python experiments/04_evaluate.py --method M2_team --limit 3 --tag smoke   # ~$0.05; run twice -> 2nd run = 100% cache hits
 ```
-Check: `results/M2_team_dev_conditioned_continuous_smoke/manifest.json` exists, a row was appended to
+Check: `results/M2_team_dev_conditioned_continuous_smoke/manifest_latest.json` exists, a row was appended to
 `results/registry.csv`, the second run's `*_summary.json` shows `generation_cache.misses = 0`.
 Delete the smoke folder afterwards (or keep it; it is tagged).
 
@@ -23,6 +26,7 @@ Delete the smoke folder afterwards (or keep it; it is tagged).
 ```powershell
 python experiments/07_validate_proxy.py                     # proxy vs generated deltas (minilm + bge reply-sim; bge encodes 1,595 replies once, ~10 min CPU)
 python experiments/10_feedback_calibration.py               # judge reliability, scope priors, lift saturation on 319 dev pools
+python experiments/14_audit_identical_prompts.py             # correct diagnostic for legacy duplicate-generation deltas
 python experiments/08_rescore.py                            # bge cosine + BERTScore on stored answers of all dev runs (CPU, ~20-40 min); add --no-bertscore for a fast first pass
 python experiments/09_llm_judge_pairwise.py --judge-model <NON-OPENAI MODEL ID> --runs M2_team_dev_conditioned_continuous M4_intersection_dev_conditioned_continuous M1_global_dev_conditioned_continuous   # ~600 calls, cached
 ```
@@ -47,33 +51,69 @@ gain on `hybrid_rrf`, `dense_bge`, `ce_rerank`?
 python experiments/12_learn_blend.py                                     # laplace, absolute; weights learned on train (per-query LOO), evaluated on dev
 python experiments/12_learn_blend.py --lift laplace_eb --tag eb          # calibrated lift variant
 python experiments/12_learn_blend.py --retriever hybrid_rrf --scale-mode pool_std --tag hybrid   # if P2 says hybrid is the right base
-python experiments/05_gate_cv.py --features-parquet results/blend/gate_features_train.parquet --eval-features-parquet results/blend/gate_features_dev.parquet --eval-details results/M4_intersection_dev_conditioned_continuous/<newest>_details.json
+python experiments/13_feedback_volume_curve.py
+$d=(Get-ChildItem results/M4_intersection_dev_conditioned_continuous/*_details.json | Sort-Object LastWriteTime | Select-Object -Last 1).FullName
+python experiments/05_gate_cv.py --features-parquet results/blend_eb/gate_features_train_M4_intersection.parquet --eval-features-parquet results/blend_eb/gate_features_dev_M4_intersection.parquet --eval-details $d --tag eb_m4
+python experiments/11_retriever_ladder.py --split eval --retrievers dense_minilm bm25 hybrid_rrf --tag eval
+python experiments/11_retriever_ladder.py --split eval --regime disjoint --retrievers dense_minilm bm25 hybrid_rrf --tag disjoint
 ```
 
 ## P4 — generation confirmation (API cost, finalists only; ~$4 per dev run with luna)
 
 ```powershell
 # finalists on dev (luna)
-python experiments/04_evaluate.py --method M5_backoff
-python experiments/04_evaluate.py --method M6_blend --blend-weights results/blend/learned_weights.json
-python experiments/04_evaluate.py --method M4_intersection --lift laplace_eb            # if calibration helps in P2/P3
-python experiments/04_evaluate.py --method M4_intersection --retriever hybrid_rrf --scale-mode pool_std   # if P2 says so (+ matching baseline below)
+python experiments/04_evaluate.py --method M4_intersection --lift laplace_eb
+python experiments/04_evaluate.py --method M5_backoff --lift laplace_eb --min-evidence 2
+python experiments/04_evaluate.py --method M2_team --lift laplace_eb
+python experiments/04_evaluate.py --method M4_intersection --retriever hybrid_rrf --lift laplace_eb --scale-mode pool_std --pool-lambda 2
 python experiments/04_evaluate.py --method baseline --retriever hybrid_rrf
 # economic parity (generator != feedback judge)
 python experiments/04_evaluate.py --method baseline --generator-model openai/gpt-4o-mini
-python experiments/04_evaluate.py --method M2_team  --generator-model openai/gpt-4o-mini
-python experiments/04_evaluate.py --method M4_intersection --generator-model openai/gpt-4o-mini
+python experiments/04_evaluate.py --method M2_team --lift laplace_eb --generator-model openai/gpt-4o-mini
+python experiments/04_evaluate.py --method M4_intersection --lift laplace_eb --generator-model openai/gpt-4o-mini
 # robustness
 python experiments/04_evaluate.py --method M2_team --seed 123 ; python experiments/04_evaluate.py --method M4_intersection --seed 123
 python experiments/04_evaluate.py --method M2_team --seed 456 ; python experiments/04_evaluate.py --method M4_intersection --seed 456
 python experiments/04_evaluate.py --method M2_team --split eval ; python experiments/04_evaluate.py --method M4_intersection --split eval
 python experiments/04_evaluate.py --method M4_intersection --split eval --regime disjoint
 # independent metrics on the new runs
-python experiments/08_rescore.py --runs "*gengpt4omini*" "M5_*" "M6_*" "*_eval_*"
+python experiments/08_rescore.py --force
+python experiments/09_llm_judge_pairwise.py --judge-model <NON-LUNA MODEL ID> --runs M2_team_dev_conditioned_continuous M4_intersection_dev_conditioned_continuous M1_global_dev_conditioned_continuous
 python experiments/06_report.py
+```
+
+## Paper notebooks
+
+```powershell
+python notebooks/build_ieee_notebooks.py
+python notebooks/validate_ieee_notebooks.py --execute
+```
+
+Open from the `notebooks/` directory. The suite is analysis + modeling, with an
+explanation on every output:
+
+| Notebook | Type | Content |
+|----------|------|---------|
+| `02_protocol_and_validity.ipynb` | analysis | corpus, splits, feedback protocols, judge calibration, proxy validity |
+| `03_when_feedback_helps.ipynb` | analysis | conditional benefit, evidence, scope, volume, ceilings, retriever ladder, negative controls |
+| `04_modeling_the_prior.ipynb` | modeling | lift formulas, centering, pool-relative scaling, backoff, blend null, aggression tradeoff |
+| `05_modeling_the_control_policy.ipynb` | modeling | pre-generation gating, dev→eval methodology, policy value, ceiling recovery |
+| `06_final_results_and_claims.ipynb` | results | locked configuration, dev + eval results, robustness, independent metrics, claim ledger |
+
+## P5 — semantic relevance filter and gate pilot
+
+```powershell
+# offline sweeps of the semantic-filter routings (conditioned + blind)
+python experiments/11_retriever_ladder.py --routings M4_intersection M5_backoff semantic_intersection_tau0.6 semantic_intersection_tau0.7 semantic_backoff_tau0.6 semantic_backoff_tau0.7 --tag semantic
+python experiments/11_retriever_ladder.py --feedback-protocol blind --routings M4_intersection M5_backoff semantic_intersection_tau0.6 semantic_intersection_tau0.7 semantic_backoff_tau0.6 semantic_backoff_tau0.7 --tag semantic_blind
+
+# learned-gate pilot on generated dev labels (free; train/CV on dev)
+python experiments/16_gate_pilot.py --runs results/M2_team_dev_blind_continuous results/M4_intersection_dev_blind_continuous --feedback-protocol blind --tag blind
+python experiments/16_gate_pilot.py --runs results/M2_team_dev_conditioned_continuous results/M4_intersection_dev_conditioned_continuous --tag conditioned
 ```
 
 Notes
 - Baseline runs generate once per ticket (feedback == baseline), so a baseline run costs half a method run.
+- Any method ticket whose baseline and feedback prompts are identical also generates once, preventing nondeterministic false deltas.
 - `--generator-model` changes the folder suffix (`_gen<model>`); the feedback DB / judge are unchanged.
 - Runs on seeds != 42 use the seed-42 feedback DB minus the evaluated split (see README "Feedback DB across seeds").

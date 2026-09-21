@@ -1,0 +1,76 @@
+{
+  "retriever": "dense_minilm",
+  "sim_model": "minilm",
+  "metric": "proxy_top1",
+  "selected_on": "train (per-query LOO feedback)",
+  "lift": {
+    "name": "laplace_eb",
+    "alpha": 1.0,
+    "beta": 1.0,
+    "multiplier": 0.8,
+    "cap": 0.2,
+    "positive_only": false,
+    "sensitivity": 3.5,
+    "lcb_k": 1.0,
+    "prior_strength": 20.0,
+    "scale_mode": "absolute",
+    "pool_lambda": 1.0
+  },
+  "weights": {
+    "global": 0.0,
+    "class": 0.0,
+    "team": 0.0,
+    "intersection": 0.25
+  },
+  "train_gain": -0.014281606034360877,
+  "dev_gain": -0.017959745419810186,
+  "best_fixed_on_train": {
+    "routing": "M4_intersection",
+    "lift": "laplace_eb_k20|absolute1",
+    "train_gain": -0.023504711621799474,
+    "dev_gain": -0.022859042469517192
+  },
+  "best_backoff_on_train": {
+    "min_evidence": 1.0,
+    "lift": "laplace_eb_k20|absolute1",
+    "train_gain": -0.024988769846628917,
+    "dev_gain": -0.022929986944673204
+  },
+  "adaptive": {
+    "with_intersection_evidence": {
+      "weights": {
+        "global": 0.0,
+        "class": 0.0,
+        "team": 0.0,
+        "intersection": 0.25
+      },
+      "train_gain_bucket": -0.014856931395934657,
+      "n_train": 844,
+      "n_dev": 311
+    },
+    "without_intersection_evidence": {
+      "weights": {
+        "global": 1.0,
+        "class": 0.0,
+        "team": 0.25,
+        "intersection": 0.0
+      },
+      "train_gain_bucket": 0.007009872618843527,
+      "n_train": 34,
+      "n_dev": 8
+    }
+  },
+  "adaptive_dev_gain": -0.017849817451638487,
+  "bootstrap_weight_means": {
+    "global": 0.0,
+    "class": 0.0,
+    "team": 0.0,
+    "intersection": 0.5
+  },
+  "bootstrap_weight_mode_freq": {
+    "global": 1.0,
+    "class": 1.0,
+    "team": 1.0,
+    "intersection": 1.0
+  }
+}

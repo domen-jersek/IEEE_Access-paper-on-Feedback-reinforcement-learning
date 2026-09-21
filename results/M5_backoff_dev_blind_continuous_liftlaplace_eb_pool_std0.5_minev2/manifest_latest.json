@@ -1,0 +1,122 @@
+{
+  "run_id": "M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_20260920_092748",
+  "script": "experiments/04_evaluate.py",
+  "timestamp_utc": "2026-09-20T09:27:48.748167+00:00",
+  "argv": [
+    "experiments/04_evaluate.py",
+    "--method",
+    "M5_backoff",
+    "--lift",
+    "laplace_eb",
+    "--prior-strength",
+    "2",
+    "--scale-mode",
+    "pool_std",
+    "--pool-lambda",
+    "0.5",
+    "--min-evidence",
+    "2",
+    "--feedback-protocol",
+    "blind"
+  ],
+  "args": {
+    "seed": 42,
+    "regime": "random",
+    "verbose": false,
+    "method": "M5_backoff",
+    "split": "dev",
+    "feedback_protocol": "blind",
+    "agg_mode": "continuous",
+    "generator_model": null,
+    "retriever": "dense_minilm",
+    "lift": "laplace_eb",
+    "prior_strength": 2.0,
+    "scale_mode": "pool_std",
+    "pool_lambda": 0.5,
+    "min_evidence": 2.0,
+    "blend_weights": null,
+    "semantic_tau": null,
+    "search_k": 100,
+    "top_k": 5,
+    "limit": null,
+    "concurrency": 4,
+    "metric_set": "core",
+    "tag": "",
+    "no_cache": false,
+    "notes": ""
+  },
+  "config": {
+    "experiment_id": "M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2",
+    "lift": {
+      "name": "laplace_eb",
+      "alpha": 1.0,
+      "beta": 1.0,
+      "multiplier": 0.8,
+      "cap": 0.2,
+      "positive_only": false,
+      "sensitivity": 3.5,
+      "lcb_k": 1.0,
+      "scale_mode": "pool_std",
+      "pool_lambda": 0.5
+    },
+    "routing": {
+      "name": "backoff",
+      "w_global": 0.0,
+      "w_class": 0.0,
+      "w_team": 0.0,
+      "require_semantic": false,
+      "min_evidence": 2.0
+    },
+    "gating": {
+      "name": "none",
+      "faiss_ceiling": 1.0,
+      "fuzzy_low": 0.0,
+      "fuzzy_high": 0.0,
+      "miracle_tau": 0.0
+    },
+    "generator_model": "openai/gpt-5.6-luna",
+    "judge_model": "openai/gpt-5.6-luna",
+    "embedding_model": "all-MiniLM-L6-v2",
+    "top_k": 5,
+    "search_k": 100,
+    "temperature": 0.0,
+    "regime": "random",
+    "seed": 42
+  },
+  "git": {
+    "sha": "5f14ac60755fa6c553e9f6eb742718fc04f0e6b9",
+    "dirty": true,
+    "branch": "main"
+  },
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "hostname": "AilabStudent",
+  "packages": {
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "sentence-transformers": "6.0.1",
+    "transformers": "5.17.0",
+    "torch": "2.14.0",
+    "faiss-cpu": "1.15.0",
+    "openai": "3.13.0",
+    "rouge-score": "0.1.2",
+    "bert-score": "0.3.13",
+    "rank-bm25": "0.2.2",
+    "xgboost": "3.4.1"
+  },
+  "inputs": {
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\dataset.parquet": "32453a69c847e32f6dd97859c475192171ccffe3f6c97ba06ff0a706df947a83",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\splits\\split_seed42.json": "a2361b8637c8e807673466f4df02d57a111debca3d8d8ffc8ae6faa86eb4a7e9",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\feedback_blind.db": "b018c34766f37bf2728ef7557f1655909030338450bc1c2abd851177eccdb244",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\faiss_index\\faiss.index": "3b4051a5dcb27f4933f6fb413590914c0bd84ab86f61c5ee9ec308360119a5c7",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\faiss_index\\faiss_metadata.parquet": "aa020e4b299515827671887e941a8a494308d54d147ed039c66ef90af1d6db2a"
+  },
+  "extra": {
+    "n_queries": 319,
+    "config_hash": "448a2c639294",
+    "generation_cache": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\cache\\generation_cache.db",
+    "feedback_priors_global": 0.2520727790432802
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "run_id": "rescore_20260920_181006",
+  "script": "experiments/08_rescore.py",
+  "timestamp_utc": "2026-09-20T21:40:48.934905+00:00",
+  "argv": [
+    "experiments/08_rescore.py",
+    "--runs",
+    "*M5_backoff*liftlaplace_eb*",
+    "M4_intersection_dev*_eval*",
+    "M2_team_dev*_eval*",
+    "--force"
+  ],
+  "args": {
+    "seed": 42,
+    "regime": "random",
+    "verbose": false,
+    "runs": [
+      "*M5_backoff*liftlaplace_eb*",
+      "M4_intersection_dev*_eval*",
+      "M2_team_dev*_eval*"
+    ],
+    "no_bertscore": false,
+    "force": true
+  },
+  "config": null,
+  "git": {
+    "sha": "5f14ac60755fa6c553e9f6eb742718fc04f0e6b9",
+    "dirty": true,
+    "branch": "main"
+  },
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "hostname": "AilabStudent",
+  "packages": {
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "sentence-transformers": "6.0.1",
+    "transformers": "5.17.0",
+    "torch": "2.14.0",
+    "faiss-cpu": "1.15.0",
+    "openai": "3.13.0",
+    "rouge-score": "0.1.2",
+    "bert-score": "0.3.13",
+    "rank-bm25": "0.2.2",
+    "xgboost": "3.4.1"
+  },
+  "inputs": {
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2\\M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_20260920_093130_details.json": "9b6563a59ad9db2b876087e7ceed1398591ac85ab77f72fa054e47fa70324e6d",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_seed123\\M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_seed123_20260920_180807_details.json": "e5d1c0e7903fd9585971f034a33af860697bf5cf27d561751cef0d0ad6780e92",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_seed456\\M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_seed456_20260920_180828_details.json": "df03da5cc8204626dbabb746951e97dc7d10d71d1fc5fafd6625b9a60d7b8e97",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M5_backoff_dev_conditioned_continuous_liftlaplace_eb_pool_std0.5_minev2\\M5_backoff_dev_conditioned_continuous_liftlaplace_eb_pool_std0.5_minev2_20260920_110646_details.json": "f08af8eb6900fe44540720a56a889735fb4b1c67b21657e0a3d5369e486d39c0",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2\\M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_20260920_133900_details.json": "a14ef1f28654358d3b7761f7cd6795601b57d6c5f8dbadfe8ef703f35165d03e",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_disjoint\\M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_disjoint_20260920_173414_details.json": "6c5f45e7f2b239cc5a2a0775eb3c5a483df48595e5a1cef7a453b44ea99f453f",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M5_backoff_eval_conditioned_continuous_liftlaplace_eb_pool_std0.5_minev2\\M5_backoff_eval_conditioned_continuous_liftlaplace_eb_pool_std0.5_minev2_20260920_133856_details.json": "7e61a4ea302abc71aa2311125e475319c329d5c8a015c74e571a19ff688205f5"
+  },
+  "extra": {
+    "n_runs": 7
+  }
+}

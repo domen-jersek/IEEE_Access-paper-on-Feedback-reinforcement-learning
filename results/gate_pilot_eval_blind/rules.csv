@@ -1,0 +1,17 @@
+rule,feature,threshold,pct_open,mean_delta,run
+top1_faiss_below_0.613,top1_faiss,0.6125027656555176,0.20100502512562815,7.681177938403796e-05,M2_team_eval_blind_continuous
+top1_faiss_below_0.754,top1_faiss,0.7543562650680542,0.39949748743718594,0.002764374729077421,M2_team_eval_blind_continuous
+top1_faiss_below_0.870,top1_faiss,0.8701699495315551,0.6005025125628141,0.0022817674706030132,M2_team_eval_blind_continuous
+top1_faiss_below_0.973,top1_faiss,0.9730377674102784,0.7989949748743719,-0.01164624931749387,M2_team_eval_blind_continuous
+max_lift_above_-0.029,max_lift,-0.029333333333333347,0.8090452261306532,-0.030115063615779782,M2_team_eval_blind_continuous
+max_lift_above_0.000,max_lift,0.0,0.7035175879396985,-0.02656148651137424,M2_team_eval_blind_continuous
+max_lift_above_0.034,max_lift,0.03354838709677423,0.4120603015075377,-0.030483016865936356,M2_team_eval_blind_continuous
+max_lift_above_0.127,max_lift,0.1267380720545278,0.20100502512562815,-0.007048778872394083,M2_team_eval_blind_continuous
+top1_faiss_below_0.613,top1_faiss,0.6125027656555176,0.20100502512562815,-0.000938974788889813,M4_intersection_eval_blind_continuous
+top1_faiss_below_0.754,top1_faiss,0.7543562650680542,0.39949748743718594,0.0011975976016054201,M4_intersection_eval_blind_continuous
+top1_faiss_below_0.870,top1_faiss,0.8701699495315551,0.6005025125628141,0.0024908562682232067,M4_intersection_eval_blind_continuous
+top1_faiss_below_0.973,top1_faiss,0.9730377674102784,0.7989949748743719,-0.010421963183948743,M4_intersection_eval_blind_continuous
+max_lift_above_0.000,max_lift,0.0,0.8994974874371859,-0.03725431082611108,M4_intersection_eval_blind_continuous
+max_lift_above_0.023,max_lift,0.022857142857142868,0.6055276381909548,-0.03752914928461439,M4_intersection_eval_blind_continuous
+max_lift_above_0.085,max_lift,0.08533333333333336,0.40954773869346733,-0.041850084794601006,M4_intersection_eval_blind_continuous
+max_lift_above_0.147,max_lift,0.14741151385927512,0.20100502512562815,-0.011817325973630551,M4_intersection_eval_blind_continuous

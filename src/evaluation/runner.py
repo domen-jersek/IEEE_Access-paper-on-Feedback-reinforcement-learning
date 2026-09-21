@@ -37,6 +37,7 @@ class EvaluationRunner:
         cache_path: Optional[Path] = None,
         priors=None,
         retriever_name: str = "dense_minilm",
+        text_sim=None,
     ):
         self.config = config
         self.dataset = dataset.set_index("seq_id")
@@ -45,6 +46,7 @@ class EvaluationRunner:
         self.feedback_scores = feedback_scores
         self.priors = priors
         self.retriever_name = retriever_name
+        self.text_sim = text_sim
         self.results_dir = Path(results_dir)
         self.results_dir.mkdir(parents=True, exist_ok=True)
         self.concurrency = concurrency
@@ -74,6 +76,7 @@ class EvaluationRunner:
                         self.faiss_index, self.encoder,
                         self.feedback_scores, self.config, self.llm_client,
                         priors=self.priors, retriever_name=self.retriever_name,
+                        text_sim=self.text_sim,
                     )
                     result["_config_hash"] = self.config.config_hash
                     async with results_lock:

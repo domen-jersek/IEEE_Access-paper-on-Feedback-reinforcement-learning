@@ -12,5 +12,5 @@ xgboost>=2.0
 rouge-score>=0.1
 bert-score>=0.3
 transformers>=4.36
-torch>=2.0rank-bm25>=0.2
-rank-bm25
+torch>=2.0
+rank-bm25>=0.2

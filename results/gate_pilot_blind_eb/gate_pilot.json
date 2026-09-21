@@ -1,0 +1,40 @@
+[
+  {
+    "run": "M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2",
+    "n": 319,
+    "n_features": 15,
+    "model": "logistic",
+    "base_rate_improved": 0.30407523510971785,
+    "oof_auc": 0.706557072536454,
+    "mean_delta_always_on": 0.009587476829936886,
+    "mean_delta_never_on": 0.0,
+    "mean_delta_oracle": 0.022873796592685496,
+    "ceiling_recovery": 0.0026787143727106293,
+    "best_rule": {
+      "rule": "max_lift_above_0.006",
+      "feature": "max_lift",
+      "threshold": 0.006262602535555838,
+      "pct_open": 0.799373040752351,
+      "mean_delta": 0.008821654188969292
+    }
+  },
+  {
+    "run": "M4_intersection_dev_blind_continuous_liftlaplace_eb_k10_pool_std1",
+    "n": 319,
+    "n_features": 15,
+    "model": "logistic",
+    "base_rate_improved": 0.3510971786833856,
+    "oof_auc": 0.6895272601794342,
+    "mean_delta_always_on": 0.007236951197202676,
+    "mean_delta_never_on": 0.0,
+    "mean_delta_oracle": 0.023283206230046982,
+    "ceiling_recovery": 0.08864557099948377,
+    "best_rule": {
+      "rule": "max_lift_above_0.008",
+      "feature": "max_lift",
+      "threshold": 0.00780461847703541,
+      "pct_open": 0.799373040752351,
+      "mean_delta": 0.008852275187692672
+    }
+  }
+]
