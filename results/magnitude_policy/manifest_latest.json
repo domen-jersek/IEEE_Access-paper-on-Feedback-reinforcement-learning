@@ -1,0 +1,65 @@
+{
+  "run_id": "magnitude_policy_20260922_145812",
+  "script": "experiments/18_magnitude_policy.py",
+  "timestamp_utc": "2026-09-22T14:58:43.614152+00:00",
+  "argv": [
+    "experiments/18_magnitude_policy.py"
+  ],
+  "args": {
+    "seed": 42,
+    "regime": "random",
+    "verbose": false,
+    "features_dir": "results/gate_study_general",
+    "tag": "",
+    "n_resamples": 2000
+  },
+  "config": null,
+  "git": {
+    "sha": "84184422602ea116ee42c9be2881b70dec2dc027",
+    "dirty": true,
+    "branch": "main"
+  },
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "hostname": "AilabStudent",
+  "packages": {
+    "numpy": "2.0.2",
+    "pandas": "2.2.3",
+    "scipy": "1.14.1",
+    "scikit-learn": "1.6.0",
+    "sentence-transformers": "5.1.0",
+    "transformers": "4.53.1",
+    "torch": "2.7.1",
+    "faiss-cpu": "1.11.0.post1",
+    "openai": "2.6.1",
+    "rouge-score": "0.1.2",
+    "bert-score": "0.3.13",
+    "rank-bm25": "0.2.2",
+    "xgboost": null
+  },
+  "inputs": {
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\gate_study_general\\features_dev.parquet": "fac2165b35725a7d883f03854cd96e4393703cb457be5669415376104d66cad8",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\gate_study_general\\features_eval.parquet": "24cf9df9a838fd3b7d7108f29eff2d4d5a41dd56c06711592c4804894a440239"
+  },
+  "extra": {
+    "n_features": 34,
+    "quality": {
+      "gbr": {
+        "r2": 0.4704451596543733,
+        "mae": 0.06995028864706836,
+        "spearman": 0.14582721117519476
+      },
+      "ridge": {
+        "r2": 0.15678961770125777,
+        "mae": 0.09074700283398632,
+        "spearman": 0.1572905590084677
+      },
+      "sign_auc": {
+        "auc": 0.6992637687645324,
+        "auc_ci_lower": 0.6762337831449593,
+        "auc_ci_upper": 0.7207613038662765,
+        "auc_n_resamples": 2000
+      }
+    }
+  }
+}

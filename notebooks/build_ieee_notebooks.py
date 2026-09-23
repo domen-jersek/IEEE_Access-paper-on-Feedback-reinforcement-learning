@@ -362,9 +362,14 @@ for _, r in curve.iterrows():
 ax.set(xlabel="Base proxy quality", ylabel="Best feedback gain", title="Retriever strength vs feedback gain")
 plt.tight_layout(); L.savefig("03_retriever_strength", run_ids=[]); plt.show()
 """),
-        reading("""Weaker retrievers (BM25) benefit most from feedback — feedback partly compensates for weak
-lexical retrieval — while stronger retrievers gain less but still positively. This is a useful
-deployment property: the method is most valuable exactly where retrieval alone is not enough."""),
+        reading("""The offline proxy says the largest gains are on the weakest base (BM25, +0.097) and
+that dense MiniLM has the best base top-1 quality (0.799) with a solid gain (+0.053); the generated
+evidence sharpens this: the calibrated blind gain found on dense MiniLM (+0.007/+0.010) does not
+transfer to a hybrid retriever (−0.006) and only weakly to a cross-encoder base (+0.004), while
+baseline answer quality across the three retrievers is essentially identical (cosine 0.654–0.658).
+Best-cell gains are selected over ~300 cells and are therefore optimistic; the trend, not the level,
+is the finding. Note also that the alternate-retriever runs use different lift configurations, so
+retriever and calibration are confounded there."""),
 
         section("What does not work?",
                 "Two candidate mechanisms were tested and rejected: a semantic relevance filter and feedback on a hybrid retriever.",
@@ -384,9 +389,9 @@ display(pd.DataFrame([hyb["metrics"]]).round(4))
 """),
         reading("""The semantic relevance filter is consistently *worse* than the base routings on every
 retriever, so the hypothesis that suppressing semantically distant candidates helps is rejected —
-fine-scope metadata already captures that distinction. The hybrid-retriever run is significantly
-negative, showing the calibrated blind gain found on dense MiniLM does not transfer to a hybrid
-retriever. Both results are reported to bound the method's scope rather than hidden."""),
+fine-scope metadata already captures that distinction. The generated hybrid-retriever run is negative
+(−0.006 generated cosine), showing the calibrated blind gain found on dense MiniLM does not transfer
+to a hybrid retriever. Both results are reported to bound the method's scope rather than hidden."""),
         markdown("""## Conclusion — when does feedback help
 
 Feedback benefit is conditional on retrieval difficulty, evidence coverage, scope, and — decisively
@@ -535,6 +540,43 @@ the conditioned optimum. There is no single aggressiveness that is optimal for b
 motivates two legitimate responses: pick a conservative prior when feedback quality is unknown, or
 learn a per-ticket control policy that sets the aggressiveness (notebook 05)."""),
 
+        section("Which lift formula? A systematic ablation",
+                "Compare the Laplace family against the tanh and Bayesian-LCB formulas across routings and scaling, conditioned and blind.",
+                "results/retriever_ladder_liftablation{,_blind}/grid.csv",
+                "Offline proxy, single retriever (dense MiniLM); best-cell values are optimistic."),
+        explain("Extract the best cell per lift family for both protocols and plot them."),
+        code("""
+def _family(frame):
+    return (frame["lift"].str.split("|").str[0]
+            .str.replace(r"_k[0-9.]+$", "", regex=True)
+            .str.replace(r"_s[0-9.]+$", "", regex=True))
+
+rows = []
+for tag, protocol in [("liftablation", "conditioned"), ("liftablation_blind", "blind")]:
+    grid = L.load_ladder_grid(tag)
+    grid = grid[grid["routing"] != "none"].copy()
+    grid["family"] = _family(grid)
+    for fam, part in grid.groupby("family"):
+        best = part.sort_values("minilm_d_proxy_top1", ascending=False).iloc[0]
+        rows.append({"protocol": protocol, "family": fam, "best_gain": best["minilm_d_proxy_top1"],
+                     "routing": best["routing"], "lift": best["lift"],
+                     "ci_lo": best["primary_ci_lo"], "ci_hi": best["primary_ci_hi"],
+                     "p": best["primary_wilcoxon_p"]})
+ablation = pd.DataFrame(rows)
+display(ablation.round(4))
+fig, ax = plt.subplots(figsize=(9, 4.6))
+sns.barplot(data=ablation, x="family", y="best_gain", hue="protocol",
+            palette={"conditioned": "#16856b", "blind": "#c44e52"}, ax=ax)
+ax.set(ylabel="Best offline proxy gain (top-1)", title="Lift-formula ablation")
+plt.tight_layout(); L.savefig("04_lift_ablation", run_ids=[]); plt.show()
+"""),
+        reading("""Under both protocols the ordering is the same: empirical-Bayes centred Laplace is
+best, tanh is a close second, legacy Laplace is third, and the Bayesian lower-confidence-bound variant
+is last. The gaps are modest (conditioned 0.036–0.053; blind 0.005–0.011) but consistent, and the
+formula is a free modelling choice. Legacy Laplace is weakest under blind feedback because its
+zero-inflated evidence saturates the negative cap; tanh is more forgiving; EB centring dominates
+because it removes the scope base-rate bias."""),
+
         section("Do the generated finalists confirm the prior modeling?",
                 "Compare generated dev results for legacy Laplace, empirical-Bayes, and the calibrated backoff on both protocols, with independent metrics.",
                 "results/rescored/method_comparison_v2.csv", "Single dev seed; eval and robustness in notebook 06."),
@@ -545,11 +587,12 @@ cols = ["run", "delta_cosine_mean", "delta_cosine_wilcoxon_p", "delta_cosine_bge
         "delta_cosine_bge_wilcoxon_p", "delta_bertscore_f1_mean", "delta_bertscore_f1_wilcoxon_p"]
 display(resc[[c for c in cols if c in resc]].round(4))
 """),
-        reading("""The generated runs reproduce the ladder's direction: legacy Laplace is strongly
-negative under ticket-only feedback, the calibrated prior removes that harm and is mildly positive,
-and resolution-informed runs remain positive. Independent metrics (BGE cosine, BERTScore) agree in
-sign, so the effect is not an artefact of the MiniLM family used for retrieval. Magnitudes are
-small and not individually significant on dev, which we state honestly."""),
+        reading("""The generated runs reproduce the ladder's direction on both dev and the untouched
+eval split: legacy Laplace is strongly negative under ticket-only feedback (−0.038 eval), the
+calibrated prior removes that harm (+0.002 to +0.005, not individually significant), and
+resolution-informed runs remain positive (+0.014 to +0.016). Independent metrics (BGE cosine, and
+BERTScore for the eval runs) agree in sign, so the effect is not an artefact of the MiniLM family used
+for retrieval. Magnitudes are small, which we state honestly."""),
         markdown("""## Recommended prior (method card, part 1)
 
 Use the empirical-Bayes centered Laplace lift with a fixed cap, hierarchical backoff at minimum
@@ -601,84 +644,94 @@ exists, and how large the potential bonus is. Because none of them is team- or c
 policy learned on them can transfer across organizations."""),
 
         section("Does a policy help under ticket-only feedback?",
-                "Train a logistic policy on generated dev labels with out-of-fold probabilities and evaluate its policy value.",
-                "results/gate_pilot_blind/{gate_pilot.csv,policy.csv}", "Pilot on dev; eval confirmation follows."),
-        explain("Show the out-of-fold AUC and, for each threshold, the mean generated delta under the policy, alongside always-on, never-on, and oracle."),
+                "Use the fixed general gate study (grouped CV by ticket, thresholds frozen on dev) and its counterfactual decomposition.",
+                "results/gate_study_general/{learned_gate.csv,learned_gate_decomposition.csv}",
+                "The definitive study; the earlier per-run pilot numbers were superseded by the methodology fix."),
+        explain("Show the eval AUC, the dev-frozen policy value, and the counterfactual decomposition for the two blind Laplace configurations."),
         code("""
-pilot = L.load_gate_pilot("blind"); policy = L.load_gate_pilot_policy("blind")
-display(pilot[["run", "n", "oof_auc", "mean_delta_always_on", "mean_delta_oracle", "ceiling_recovery"]].round(4))
-display(policy.round(4))
-fig, ax = plt.subplots(figsize=(10, 5))
-sns.lineplot(data=policy[policy["policy"].isin(["learned", "always_on", "oracle"])],
-             x="threshold", y="mean_delta", hue="run", style="policy", marker="o", ax=ax)
-ax.axhline(0, color="black", lw=1); ax.set(ylabel="Mean generated delta under policy", title="Policy value (ticket-only feedback)")
+learned = L.load_gate_study_learned()
+decomp = L.load_gate_study_decomposition()
+blind = learned[(learned["protocol"] == "blind") & (learned["config_key"].str.contains("laplace"))]
+display(blind[["config_key", "dev_threshold", "eval_auc", "eval_auc_ci_lower", "eval_auc_ci_upper",
+               "always_on", "eval_policy", "eval_policy_ci_lower", "eval_policy_ci_upper",
+               "pct_open", "gain_vs_always_on", "ceiling_recovery"]].round(4))
+display(decomp[decomp["config_key"].str.contains("laplace")].round(4))
+fig, ax = plt.subplots(figsize=(9, 4.6))
+sub = learned[learned["config_key"].str.contains("laplace")].copy()
+sub["label"] = sub["config_key"] + " / " + sub["protocol"]
+sns.barplot(data=sub.melt(id_vars=["label"], value_vars=["always_on", "eval_policy", "oracle"]),
+            x="label", y="value", hue="variable", ax=ax)
+ax.axhline(0, color="black", lw=1); ax.set(ylabel="Mean generated delta", title="Gate policy value (eval, dev-frozen threshold)")
 plt.tight_layout(); L.savefig("05_policy_blind", run_ids=[]); plt.show()
 """),
-        reading("""Under ticket-only feedback the policy clearly helps: always-on is strongly negative,
-while opening only the upper portion of predicted tickets recovers a substantial part of the oracle
-ceiling (roughly 0.6–0.7 in the earlier analysis). The AUC is modest (about 0.63–0.71), but because
-the alternative is strongly negative, even a modest ranking is valuable. This is the deployment
-setting where the control policy earns its place."""),
+        reading("""Under uncalibrated ticket-only feedback the gate clearly helps: always-on is −0.038
+and the dev-frozen policy is +0.001 to +0.002, recovering 0.54–0.56 of the oracle ceiling. The
+decomposition shows why: the gate closes 152–235 tickets whose counterfactual mean delta is
+−0.07 to −0.10, i.e. a genuinely harmful subset. The AUC is modest (0.59–0.61), but because the
+alternative is strongly negative even a modest ranking is valuable. This is the deployment setting
+where the control policy earns its place."""),
 
         section("Does a policy help under resolution-informed feedback?",
-                "Repeat the same OOF policy evaluation on the resolution-informed runs.",
-                "results/gate_pilot_conditioned/gate_pilot.csv", "Same features and label; only the feedback protocol changes."),
-        explain("Print the conditioned policy summary and compare its AUC and ceiling recovery to the blind case."),
+                "Repeat on the conditioned configurations with the same fixed methodology.",
+                "results/gate_study_general/learned_gate.csv",
+                "Same features and labels; only the feedback protocol changes."),
+        explain("Compare AUC, dev-frozen policy value and recovery across protocols."),
         code("""
-cond = L.load_gate_pilot("conditioned")
-display(cond[["run", "n", "oof_auc", "mean_delta_always_on", "mean_delta_oracle", "ceiling_recovery"]].round(4))
-focus = pd.concat([pilot.assign(protocol="blind"), cond.assign(protocol="conditioned")])
-fig, ax = plt.subplots(figsize=(10, 4.8))
-sns.barplot(data=focus, x="run", y="oof_auc", hue="protocol", ax=ax)
-ax.axhline(0.5, color="black", ls="--", lw=1); ax.set(ylabel="Out-of-fold AUC", title="Policy predictability by protocol")
+sub = learned[learned["config_key"].str.contains("laplace")].copy()
+sub["label"] = sub["config_key"] + " / " + sub["protocol"]
+fig, ax = plt.subplots(figsize=(9, 4.6))
+sns.barplot(data=sub, x="label", y="eval_auc", hue="protocol", ax=ax)
+ax.axhline(0.5, color="black", ls="--", lw=1); ax.set(ylabel="Eval AUC", title="Gate predictability by protocol")
 plt.tight_layout(); L.savefig("05_auc_by_protocol", run_ids=[]); plt.show()
+display(sub[["label", "eval_auc", "always_on", "eval_policy", "gain_vs_always_on", "ceiling_recovery"]].round(4))
 """),
-        reading("""Under resolution-informed feedback the AUC is near chance (about 0.53–0.56) and the
-policy cannot beat always-on. There is nothing to fix: the prior is already well-behaved and the
-remaining per-ticket variance is not predictable from pre-generation features. The honest conclusion
-is that a control policy is justified only when feedback reliability is low."""),
+        reading("""Under resolution-informed feedback the gate is essentially neutral: the frozen
+policy matches always-on within ±0.0005 (team AUC 0.56; intersection AUC 0.66 but no recoverable
+headroom because always-on is already positive). The decomposition shows the closed set is mostly
+no-op tickets with a slightly positive mean, so closing them cannot help. The honest conclusion is
+that a control policy is justified only when feedback reliability is low and harm is concentrated."""),
 
         section("Is a learned policy worth it, or does a simple rule suffice?",
-                "Compare the best learned threshold policy against the best single-feature rule on the same tickets.",
-                "results/gate_pilot_*/rules.csv", "Rules are interpretable; the comparison bounds the value of learning."),
-        explain("For each run, show the best learned policy value and the best simple rule value side by side."),
+                "Compare the learned gate against the best single-feature static rule derived on dev.",
+                "results/gate_study_general/{static_gate.csv,static_gate_eval.csv}",
+                "Rules are interpretable; the comparison bounds the value of learning."),
+        explain("Show the best static rule on dev and its eval policy per configuration."),
         code("""
-rows = []
-for tag in ["blind", "conditioned"]:
-    pol = L.load_gate_pilot_policy(tag); rl = L.load_gate_pilot_rules(tag)
-    learned = pol[pol["policy"] == "learned"].groupby("run")["mean_delta"].max()
-    rules = rl.groupby("run")["mean_delta"].max()
-    for run in learned.index:
-        rows.append({"run": run, "protocol": tag, "best_learned": learned[run],
-                     "best_rule": rules.get(run, np.nan)})
-cmp = pd.DataFrame(rows); display(cmp.round(4))
+static = L.load_gate_study_static(); static_eval = L.load_gate_study_static_eval()
+display(static.head(5).round(4))
+display(static_eval.round(4))
 """),
-        reading("""Under ticket-only feedback the learned policy beats the best single-feature rule,
-justifying the classifier. Under resolution-informed feedback both are dominated by always-on, again
-showing that no policy is needed there. The simple rule (open when baseline confidence is low) is a
-useful interpretable fallback but is not sufficient on its own."""),
+        reading("""The best dev rule opens feedback when the weakest of the baseline top-5 similarities is
+below ~0.95 (dev policy +0.0096, 80% open). On eval it is positive on the calibrated blind
+configuration (+0.003) but clearly below the learned gate's recovery on the uncalibrated blind
+configurations, where the learned gate closes a sharply harmful subset. A simple rule is a useful
+interpretable fallback; the learned gate adds real value only when the harm is concentrated and
+multi-feature."""),
 
         section("Does calibration already do the policy's job?",
-                "Compare the policy value on the uncalibrated (legacy Laplace) prior against the calibrated prior.",
-                "results/gate_pilot_blind{,_eb}/gate_pilot.csv", "Same features; different prior behind the feedback."),
-        explain("Print both blind policy summaries side by side."),
+                "Compare the gate on the uncalibrated (legacy Laplace) prior against the calibrated (EB) prior.",
+                "results/gate_study_general/{learned_gate.csv,learned_gate_decomposition.csv}",
+                "Same features; different prior behind the feedback."),
+        explain("Show the decomposition for the calibrated blind configuration next to the uncalibrated ones."),
         code("""
-pl = L.load_gate_pilot("blind"); peb = L.load_gate_pilot("blind_eb")
-both = pd.concat([pl.assign(prior="legacy Laplace"), peb.assign(prior="calibrated EB")])
-display(both[["prior", "run", "oof_auc", "mean_delta_always_on", "mean_delta_oracle", "ceiling_recovery"]].round(4))
+show = decomp[decomp["protocol"] == "blind"].copy()
+display(show[["config_key", "dev_threshold", "n_open", "n_closed", "mean_delta_closed", "harm_rate_closed",
+              "policy_value", "gain_vs_always_on"]].round(4))
 """),
-        reading("""On the uncalibrated prior the policy recovers a large fraction of the ceiling, turning a
-clearly negative always-on into a positive policy. On the calibrated prior, always-on is already
-near-safe, so the policy's *additional* value is small even though its AUC is higher. Calibration
-and control are therefore **substitutes**: either discipline the prior or gate a raw one. We
-recommend calibration as the default (it needs no labels) and keep the policy for settings where the
-prior cannot be trusted."""),
+        reading("""On the uncalibrated prior the gate closes a strongly harmful subset (mean −0.07 to
+−0.10) and recovers most of the ceiling. On the calibrated prior (backoff EB) the gate closes tickets
+that are 62% no-ops (mean +0.006), so it shaves a small positive tail and loses −0.003. Calibration
+and control are therefore **substitutes**: either discipline the prior or gate a raw one. We recommend
+calibration as the default (it needs no labels) and keep the policy for settings where the prior
+cannot be trusted."""),
         markdown("""## Conclusion — the control policy
 
-A pre-generation policy is valuable exactly when feedback is unreliable and always-on is harmful.
-Under ticket-only feedback it turns a negative always-on into a positive policy and recovers most of
-the oracle ceiling; under resolution-informed feedback it is unnecessary. The next notebook confirms
-the resulting recommendation on the untouched eval split."""),
+A pre-generation policy is valuable exactly when feedback is unreliable and harm is concentrated.
+Under uncalibrated ticket-only feedback the gate closes a sharply harmful subset and recovers 0.54–0.56
+of the oracle ceiling; once the prior is calibrated, or under resolution-informed feedback, the closed
+set is mostly no-ops and the gate is neutral. The next notebook reports the final results and the claim
+ledger; notebook 07 generalises the gate across all signals and replaces sign classification with
+expected-value modelling."""),
     ],
 )
 
@@ -696,32 +749,52 @@ NB06 = notebook(
 
 Chosen on dev before the eval split was touched:
 
-- **Scope:** hierarchical backoff (intersection → team → class → global), minimum evidence 2.
+- **Scope:** hierarchical backoff (intersection → team → class → global), minimum evidence 2; fine
+  fixed scopes (team, team∩class) as the resolution-informed optimum.
 - **Prior:** empirical-Bayes centered Laplace, κ=2, cap ±0.20.
 - **Scaling:** pool-relative (λ=0.5) for the ticket-only setting; absolute for resolution-informed.
-- **Control policy:** learned gate over pre-generation features, used only when feedback reliability is low.
+- **Control policy:** a pre-generation gate over pool-distribution and cosine features, used only
+  where harm is concentrated; expected-value (magnitude) modelling when a per-ticket action is needed.
 
 Reported alongside: legacy Laplace fine-scope feedback as the resolution-informed optimum, and the
-ticket-only results as the reliability lower bound."""),
+ticket-only results as the reliability lower bound. All generated dev/eval runs share one generation
+regime (model + system prompt + cache); the regenerated dev runs carry an explicit regime id and
+warm-cache flag in their summaries."""),
 
         section("What are the generated dev results across all methods and both protocols?",
-                "Assemble every generated dev run's summary into one table and show the protocol reversal.",
-                "results/*_dev_*/*_summary.json", "Dev is used for development; eval is reported next."),
-        explain("Build the conditioned-vs-blind dev table and plot it."),
+                "Assemble the canonical dev runs into one table and show the protocol reversal.",
+                "results/<run>/*_summary.json", "All rows share one generation regime; eval is reported next."),
+        explain("Build the conditioned-vs-blind dev table from the canonical runs and plot it."),
         code("""
-runs = L.load_run_summaries()
-pivot = runs.pivot_table(index=["method", "agg"], columns="protocol", values="mean_delta_cosine")
-display(pivot.round(4))
-fig, ax = plt.subplots(figsize=(11, 5))
-sns.barplot(data=runs[runs["protocol"].isin(["conditioned", "blind"])], x="method", y="mean_delta_cosine",
-            hue="protocol", palette={"conditioned": "#16856b", "blind": "#c44e52"}, ax=ax)
-ax.axhline(0, color="black", lw=1); ax.set(ylabel="Generated-answer cosine delta", title="Conditioned vs blind (dev)")
+CANON = {
+    "M1 global": {"conditioned": "M1_global_dev_conditioned_continuous", "blind": "M1_global_dev_blind_continuous"},
+    "M2 team": {"conditioned": "M2_team_dev_conditioned_continuous", "blind": "M2_team_dev_blind_continuous"},
+    "M3 class": {"conditioned": "M3_class_dev_conditioned_continuous", "blind": "M3_class_dev_blind_continuous"},
+    "M4 intersection": {"conditioned": "M4_intersection_dev_conditioned_continuous", "blind": "M4_intersection_dev_blind_continuous"},
+    "M5 backoff (EB)": {"conditioned": "M5_backoff_dev_conditioned_continuous_liftlaplace_eb_pool_std0.5_minev2",
+                       "blind": "M5_backoff_dev_blind_continuous_liftlaplace_eb_pool_std0.5_minev2"},
+}
+rows = []
+for method, by_protocol in CANON.items():
+    for protocol, folder in by_protocol.items():
+        summary = L.load_summary(folder)
+        rows.append({"method": method, "protocol": protocol, "n": summary["total_valid"],
+                     "mean_delta_cosine": summary["metrics"]["mean_delta_cosine"]})
+dev_table = pd.DataFrame(rows)
+display(dev_table.pivot(index="method", columns="protocol", values="mean_delta_cosine").round(4))
+fig, ax = plt.subplots(figsize=(10, 4.8))
+sns.barplot(data=dev_table, x="method", y="mean_delta_cosine", hue="protocol",
+            palette={"conditioned": "#16856b", "blind": "#c44e52"}, ax=ax)
+ax.axhline(0, color="black", lw=1); ax.set(ylabel="Generated-answer cosine delta",
+                                           title="Conditioned vs blind (dev, same generation regime)")
 plt.tight_layout(); L.savefig("06_dev_protocol_reversal", run_ids=[]); plt.show()
 """),
-        reading("""The table is the paper's headline motif: the methods with positive deltas under
-resolution-informed feedback have negative deltas under ticket-only feedback, and vice versa for the
-broad scopes. The sign of the effect is controlled by how the feedback was produced, not by the
-routing alone."""),
+        reading("""The table is the paper's headline motif, now measured entirely within one generation
+regime: resolution-informed fine-scope feedback is positive (team +0.022, intersection +0.031) while
+the same methods are negative under ticket-only feedback (team −0.034, intersection −0.051). Broad
+scopes (global, class) are negative under both protocols, and the calibrated empirical-Bayes prior is
+mildly positive under both (+0.005 conditioned, +0.010 blind). The sign of the effect is controlled by
+how the feedback was produced, not by the routing alone."""),
 
         section("Do the results hold on the untouched eval split?",
                 "Summaries for the eval runs across protocols and the locked configuration.",
@@ -733,9 +806,10 @@ eval_rows = reg[reg["out_dir"].str.contains("_eval_", na=False)][["script", "out
 display(eval_rows.tail(12).to_string(index=False))
 """),
         reading("""On eval the reversal repeats: resolution-informed fine-scope feedback is positive
-(+0.013 to +0.015) and ticket-only feedback is negative (−0.038). The calibrated ticket-only
-configuration is near zero to slightly positive, and the unseen-procedure (disjoint) variant is
-mildly positive. The eval split confirms the dev conclusions without any tuning."""),
+(+0.0138 team, +0.0151 intersection; the gated intersection run reaches +0.0164) and ticket-only
+feedback is negative (−0.038). The calibrated ticket-only configuration is near zero (+0.002) and the
+unseen-procedure (disjoint) variant is mildly positive (+0.005); neither is individually significant.
+The eval split confirms the dev conclusions without any tuning."""),
 
         section("Do independent metrics agree?",
                 "MiniLM cosine, BGE cosine, ROUGE-L, and BERTScore deltas for the finalists.",
@@ -751,30 +825,89 @@ ax.axhline(0, color="black", lw=1); ax.tick_params(axis="x", rotation=60); ax.se
 plt.tight_layout(); L.savefig("06_independent_metrics", run_ids=[]); plt.show()
 """),
         reading("""The independent metrics move in the same direction as the retrieval-family cosine, so
-the effects are not an artefact of using the same model family for retrieval and scoring. Magnitudes
-are small; the resolution-informed conditioned run with empirical-Bayes even reaches significance on
-BERTScore (about +0.013), which is the strongest independent confirmation in the study."""),
+the effects are not an artefact of using the same model family for retrieval and scoring. The gated
+resolution-informed intersection run is the strongest independent confirmation: BGE +0.0130 (p=.0002)
+and BERTScore +0.0160, with cosine +0.0164 (p=.028). Magnitudes are small throughout; BERTScore is
+computed for the eval and gated runs only (dev rows show BGE/ROUGE, computed in the combined rescore)."""),
+
+        section("Do independent LLM judges agree?",
+                "Pairwise answer quality from a non-OpenAI judge (Claude Sonnet 5) on a 100-ticket eval subsample, both orders, win only when consistent.",
+                "results/answer_judge/{summary.json,scores.csv}", "Oracle-conditioned judge: it sees the reference reply."),
+        explain("Show net win rate, position consistency, and agreement with the cosine sign."),
+        code("""
+judge = L.load_answer_judge_summary()
+jrows = [{"run": run, **stats} for run, stats in judge["runs"].items()]
+jtable = pd.DataFrame(jrows)
+display(jtable[["run", "n", "n_identical", "feedback_wins", "baseline_wins",
+                "net_win_rate", "position_consistency", "agreement_with_cosine_sign"]].round(3))
+"""),
+        reading("""The independent judge confirms the direction of the resolution-informed effect
+(intersection net win rate +0.31; gated +0.31, i.e. the gate changes almost nothing there) and sees
+essentially no difference under calibrated ticket-only feedback (+0.03 ungated; −0.05 gated with 58%
+identical answers). Two caveats are reported rather than hidden: the judge flips order in ~25–30% of
+pairs, and per-ticket agreement with the embedding-metric sign is low (0.35–0.40) even where the
+aggregate direction agrees. The judge is oracle-conditioned (it sees the reference reply), so it is an
+upper-bound evaluator, consistent with the conditioned feedback protocol."""),
+
+        section("Does the conditioned effect survive a different generator?",
+                "Repeat the eval finalists with a non-OpenAI generator (Gemini 3.8 Flash) on the same retrieval and feedback.",
+                "results/*_gengemini38flash/*_summary.json",
+                "A different generation regime by design; compared within itself."),
+        explain("Compare gemini-generated deltas with the luna runs on the same tickets."),
+        code("""
+pairs = [
+    ("M2 conditioned", "M2_team_eval_conditioned_continuous", "M2_team_eval_conditioned_continuous_gengemini38flash"),
+    ("M4 conditioned", "M4_intersection_eval_conditioned_continuous", "M4_intersection_eval_conditioned_continuous_gengemini38flash"),
+    ("M5 blind (calibrated)", "M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2",
+     "M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gengemini38flash"),
+]
+rows = []
+for label, luna_folder, gem_folder in pairs:
+    luna = L.load_summary(luna_folder)["metrics"]["mean_delta_cosine"]
+    gem = L.load_summary(gem_folder)["metrics"]["mean_delta_cosine"]
+    rows.append({"config": label, "luna": luna, "gemini-3.8-flash": gem})
+cross = pd.DataFrame(rows)
+display(cross.round(4))
+fig, ax = plt.subplots(figsize=(9, 4.4))
+sns.barplot(data=cross.melt(id_vars="config", var_name="generator", value_name="delta"),
+            x="config", y="delta", hue="generator", ax=ax)
+ax.axhline(0, color="black", lw=1); ax.set(ylabel="Mean generated-answer cosine delta",
+                                           title="Cross-generator robustness")
+plt.tight_layout(); L.savefig("06_cross_generator", run_ids=[]); plt.show()
+"""),
+        reading("""The conditioned effect is not a luna artefact: with Gemini 3.8 Flash as the generator
+it is larger (M2 +0.029 vs +0.014; M4 +0.040 vs +0.015), and the calibrated blind configuration is
+mildly positive (+0.007 vs +0.002). This is a different generation regime by construction (different
+model and cache), so it is compared only within itself, and it addresses the same-model
+judge/generator tie: the feedback judge never sees generated answers, and a second generator family
+reproduces the direction."""),
 
         section("Is the locked configuration robust to seeds and unseen procedures?",
                 "Multi-seed dev runs and the disjoint eval run for the locked configuration.",
                 "results/M5_backoff_*seed*/_summary.json; results/M5_backoff_*disjoint*/_summary.json",
                 "Feedback source shifts slightly across seeds by construction."),
-        explain("Print the locked configuration's seed and disjoint summaries."),
+        explain("Print the seed and disjoint summaries for the calibrated blind winner and the conditioned finalists."),
         code("""
-import glob, json
+import json
 rows = []
-patterns = ["M5_backoff_*seed*", "M5_backoff_*disjoint"]
+patterns = ["M5_backoff_*seed*", "M5_backoff_*disjoint",
+            "M2_team_*seed*", "M2_team_*disjoint", "M4_intersection_*seed*", "M4_intersection_*disjoint"]
 for pat in patterns:
     for folder in sorted(L.RESULTS.glob(pat)):
-        for f in folder.glob("*_summary.json"):
-            s = json.loads(f.read_text(encoding="utf-8"))
-            rows.append({"run": s["experiment_id"], "n": s["total_valid"], "mean_delta_cosine": s["metrics"]["mean_delta_cosine"]})
-display(pd.DataFrame(rows).round(4))
+        files = sorted(folder.glob("*_summary.json"), key=lambda p: p.stat().st_mtime)
+        if not files:
+            continue
+        s = json.loads(files[-1].read_text(encoding="utf-8"))
+        rows.append({"run": s["experiment_id"], "n": s["total_valid"],
+                     "mean_delta_cosine": s["metrics"]["mean_delta_cosine"]})
+display(pd.DataFrame(rows).sort_values("run").round(4))
 """),
-        reading("""Across seeds the locked configuration is small and mixed in sign, and it is mildly
-positive on unseen procedures. The honest reading is that the calibrated ticket-only result is a
-*de-risking* of feedback rather than a large gain; the large, reliable effect in this study is the
-resolution-informed one."""),
+        reading("""Across seeds the conditioned effect is direction-consistent but smaller than on seed
+42: intersection +0.015 (seed 123) and +0.013 (seed 456), team +0.006/−0.001; on the
+procedure-disjoint split the conditioned effect persists (intersection +0.015, team +0.010). The
+calibrated blind winner is small and mixed in sign across seeds and mildly positive on unseen
+procedures. The honest reading is that the resolution-informed effect is the reliable one; the
+ticket-only calibrated result is a *de-risking* of feedback rather than a large gain."""),
 
         section("What is the claim ledger?",
                 "Every paper claim mapped to the notebook section and artifact that supports it, with readiness.",
@@ -783,33 +916,267 @@ resolution-informed one."""),
         code("""
 status = L.artifact_status().set_index("section")["available"].to_dict()
 claims = pd.DataFrame([
-    ["Feedback benefit is conditional and oracle-inflated", "03 / analysis", "dev + eval summaries", True],
+    ["Feedback benefit is conditional on how it is produced (protocol reversal)", "06 / results", "canonical dev table; eval registry", True],
     ["Fine scopes help; broad pooling harms", "03 / analysis", "retriever_ladder grids", status.get("Granularity: ladder", False)],
-    ["The failure is a calibration/scaling defect", "04 / modeling", "saturation.csv; blind grid", status.get("Granularity: blind ladder", False)],
-    ["Pool-relative scaling rescues ticket-only feedback", "04 / modeling", "retriever_ladder_blind/grid.csv", status.get("Granularity: blind ladder", False)],
-    ["The learned blend collapses (null)", "04 / modeling", "blend_eb/learned_weights.json", status.get("Granularity: blend", False)],
-    ["A pre-generation policy recovers the ceiling when feedback is unreliable", "05 / modeling", "gate_pilot_blind", status.get("Gate pilot: blind", False)],
-    ["A policy is unnecessary under resolution-informed feedback", "05 / modeling", "gate_pilot_conditioned", status.get("Gate pilot: blind", False)],
-    ["Independent metrics agree with the retrieval metric", "06 / results", "rescored/method_comparison_v2.csv", status.get("Validity: rescoring", False)],
+    ["Judge scores are zero-inflated; naive Laplace lift saturates and harms under realistic feedback", "04 / modeling", "feedback_calibration/saturation.csv", status.get("Validity: calibration", False)],
+    ["Empirical-Bayes centering + pool-relative scaling removes the harm (gains not individually significant)", "04 / modeling", "rescored/method_comparison_v2.csv", status.get("Validity: rescoring", False)],
+    ["Lift-formula ordering is stable: EB > tanh > Laplace > LCB", "04 / modeling", "retriever_ladder_liftablation{,_blind}/grid.csv", (L.RESULTS / "retriever_ladder_liftablation" / "grid.csv").exists()],
+    ["The gate is risk control: recovers 0.54–0.56 of the ceiling where harm is concentrated, neutral otherwise", "05 / modeling", "gate_study_general/learned_gate{,_decomposition}.csv", (L.RESULTS / "gate_study_general" / "learned_gate_decomposition.csv").exists()],
+    ["Expected-value modelling beats sign-only gating; magnitude action selection is positive", "07 / modeling", "magnitude_policy/policy_table.csv", (L.RESULTS / "magnitude_policy" / "policy_table.csv").exists()],
+    ["Independent metrics and an independent LLM judge agree in direction on the conditioned effect", "06 / results", "rescored/method_comparison_v2.csv; answer_judge/summary.json", status.get("Pairwise judge", False)],
+    ["Negative results: semantic filter, blend null, sign-only multi-action, retriever transfer", "03/07", "ladder grids; multi_action.csv", True],
 ], columns=["claim", "section", "artifact", "ready"])
 display(claims)
 """),
         markdown("""## Method card and limitations
 
 **Recommended configuration.** Empirical-Bayes centered Laplace lift, hierarchical backoff
-(minimum evidence 2), pool-relative scaling when feedback reliability is unknown; a learned
-pre-generation policy only for unreliable feedback.
+(minimum evidence 2), pool-relative scaling when feedback reliability is unknown; a pre-generation
+policy only where harm is concentrated (uncalibrated or unreliable feedback); expected-value
+modelling when a per-ticket action must be chosen.
 
 **When it helps.** On moderately uncertain retrievals with trustworthy (resolution-informed)
-feedback; the effect reverses when feedback is ticket-only and unreliable.
+feedback; the effect reverses when feedback is ticket-only and unreliable, where calibration is the
+safer response than gating.
 
-**Limitations.** One organizational corpus; LLM-generated feedback; generated evidence concentrated
-on seed 42 with limited multi-seed coverage; ticket-only gains are small and not individually
-significant; resolution-informed judging uses the historical resolution and overstates what a
-real-time user without resolution knowledge could provide. The offline proxy is valid for
-configuration selection only."""),
+**Limitations.** One organizational corpus (1,595 tickets; dev 319, eval 398); feedback is
+LLM-judge-simulated, not human (the conditioned protocol is oracle-informed and simulates an expert
+with access to the historical resolution, so it is an upper bound); the judge and the primary
+generator are the same model, mitigated only by a second generator in the robustness runs; generated
+evidence is concentrated on seed 42, with multi-seed/disjoint coverage for the calibrated blind
+winner; ticket-only gains are small and not individually significant; the offline proxy is valid for
+configuration selection only; per-ticket agreement between the embedding metric and the LLM judge is
+low even when aggregate directions agree."""),
     ],
 )
+
+
+# ===========================================================================
+# 07 — MODELING: the general gate (all signals, dev -> eval)
+# ===========================================================================
+
+NB07 = notebook(
+    "Modeling a General Benefit Gate",
+    "MODELING",
+    "one gate across all routing signals and both protocols, trained on dev and applied to eval",
+    [
+        markdown("""## The general-gate idea
+
+The previous notebook gated one configuration at a time. Here we ask a stronger question:
+is there a **single, general pattern** that predicts whether *any* feedback configuration will
+help a ticket? We treat every *(ticket, configuration)* pair as one sample, describe the pool
+that the configuration would produce, and predict the generated-answer benefit. The gate is
+trained on the **dev** pairs (all routing signals, both feedback protocols) and applied
+unchanged to the **eval** pairs. If a feature carries a genuine signal it must work across
+signals, not just for the configuration that happened to do best on average."""),
+
+        section("What does a gate see for a (ticket, configuration) pair?",
+                "Pool-distribution features (how much the configuration can move the ranking), cosine-correlation features (query-candidate semantics and retrieval-feedback agreement), and routing evidence per scope. No reference reply is used.",
+                "results/gate_study_general/features_{dev,eval}.parquet",
+                "These features are all computable before generation."),
+        explain("Load the dev feature table, show its shape, and summarise the pool, cosine and routing families."),
+        code("""
+dev = L.load_gate_study_features("dev")
+print("dev samples:", dev.shape, " configs:", sorted(dev["config_key"].unique()))
+pool_cols = ["lift_max", "lift_std", "n_promotable", "best_promotion_margin", "n_top_changed", "score_lift_corr", "intervention_scale"]
+cos_cols = ["semantic_top1", "semantic_mean", "semantic_std", "semantic_lift_corr"]
+route_cols = ["coverage_intersection", "coverage_team", "max_lift_intersection", "max_lift_team", "evidence_intersection_top5"]
+display(dev[pool_cols + cos_cols + route_cols].describe().T.round(4))
+"""),
+        reading("""Every pool is described by how large its possible lift is and how many candidates
+could actually be promoted, by how similar the query and its candidates are, and by how much
+evidence each scope holds. `n_promotable` and `best_promotion_margin` are the "how much can this
+pool move" quantities; `score_lift_corr` and `semantic_lift_corr` measure whether feedback agrees
+with similarity; `intervention_scale` records how large the intervention was."""),
+
+        section("Which features actually correlate with real benefit on dev?",
+                "Correlate each feature with the generated delta across all dev (ticket, configuration) pairs.",
+                "results/gate_study_general/features_dev.parquet", "Correlation is descriptive and pools protocols."),
+        explain("Compute Pearson correlation of each feature with the generated delta and rank them."),
+        code("""
+from scipy.stats import spearmanr
+feat_cols = [c for c in dev.columns if c not in ("config_key", "protocol", "agg", "split", "ticket_id", "delta")]
+rows = []
+for c in feat_cols:
+    x = dev[c].to_numpy(float); y = dev["delta"].to_numpy(float)
+    ok = np.isfinite(x) & np.isfinite(y)
+    if ok.sum() < 30 or np.std(x[ok]) == 0:
+        continue
+    rows.append({"feature": c, "pearson": float(np.corrcoef(x[ok], y[ok])[0, 1]),
+                 "spearman": float(spearmanr(x[ok], y[ok]).statistic)})
+corr = pd.DataFrame(rows).sort_values("spearman", key=lambda s: s.abs(), ascending=False)
+display(corr.head(15).round(3))
+fig, ax = plt.subplots(figsize=(10, 5)); top = corr.head(12).iloc[::-1]
+ax.barh(top["feature"], top["spearman"], color="#2a6fbb"); ax.axvline(0, color="black", lw=1)
+ax.set(xlabel="Spearman correlation with generated delta", title="Which features carry a general signal")
+plt.tight_layout(); L.savefig("07_feature_signal", run_ids=[]); plt.show()
+"""),
+        reading("""The features that correlate most strongly are not the raw retrieval scores but the
+intervention-shape quantities: how many candidates the configuration would promote, how large the
+best promotion margin is, and whether feedback agrees with similarity. In other words, the general
+signal is *how the pool is reshaped*, not how similar the query and its top candidate are. This is
+the pattern the user asked us to look for, and it holds across signals."""),
+
+        section("Static threshold gate: the best single rule derived on dev",
+                "Sweep single-feature thresholds on dev and pick the rule with the best dev policy value; freeze it and apply to eval.",
+                "results/gate_study_general/static_gate.csv", "One rule for all signals; interpretable baseline."),
+        explain("Show the best static rules on dev, then their eval policy value per configuration."),
+        code("""
+static = L.load_gate_study_static()
+display(static.head(8).round(4))
+"""),
+        reading("""The best single rule on dev opens feedback only where the weakest of the baseline
+top-5 similarities is below ~0.95 — i.e. where the pool is weakly aligned and feedback has room to
+help. It is a single interpretable rule that applies to every signal, and its dev policy value is
+positive (+0.0096 at 80% open). The next cell shows how it transfers to eval."""),
+
+        section("Learned general gate: trained on dev, applied to eval",
+                "Logistic gate on the deployable features across all dev (ticket, configuration) pairs, grouped CV by ticket, thresholds frozen on dev; applied unchanged to eval.",
+                "results/gate_study_general/learned_gate.csv; summary.json", "Eval is scored once; no threshold tuning on eval."),
+        explain("Show the grouped dev out-of-fold AUC with its clustered CI and the eval AUC, dev-frozen policy value and ceiling recovery per configuration."),
+        code("""
+learned = L.load_gate_study_learned()
+summary = L.load_gate_study_summary()
+print("dev out-of-fold AUC (grouped CV by ticket): %.3f [%.3f, %.3f]" % (
+    summary["dev_deployable_oof_auc"], summary["dev_deployable_oof_auc_ci_lower"],
+    summary["dev_deployable_oof_auc_ci_upper"]))
+display(learned[["config_key", "protocol", "n_dev_tickets", "dev_threshold", "dev_policy", "n_eval",
+                 "eval_auc", "eval_auc_ci_lower", "eval_auc_ci_upper", "always_on", "eval_policy",
+                 "eval_policy_ci_lower", "eval_policy_ci_upper", "pct_open", "gain_vs_always_on",
+                 "ceiling_recovery"]].round(4))
+fig, ax = plt.subplots(figsize=(11, 5))
+ev = learned.dropna(subset=["eval_auc"])
+sns.barplot(data=ev, x="config_key", y="eval_auc", hue="protocol", ax=ax)
+ax.axhline(0.5, color="black", ls="--", lw=1); ax.set(ylabel="Eval AUC", title="General gate: eval predictability by protocol")
+plt.tight_layout(); L.savefig("07_general_gate_auc", run_ids=[]); plt.show()
+"""),
+        reading("""A single gate trained on dev across every routing signal reaches a grouped out-of-fold
+AUC of 0.699 [0.676, 0.721] — folds are assigned by ticket, so no ticket appears in both train and
+validation, and the interval resamples tickets. On eval it stays above chance for every configuration
+(0.56–0.74). Crucially it was never fit to a single configuration, so this is a general benefit
+signal. Under uncalibrated ticket-only feedback it opens selectively and recovers 0.54–0.56 of the
+oracle ceiling (turning a strongly negative always-on into a small positive). Under resolution-informed
+feedback, where always-on is already positive, the gate matches it within ±0.0005; on the calibrated
+ticket-only prior it closes mostly no-op tickets and loses −0.003. The decomposition in the next cell
+explains exactly why."""),
+
+        section("Why does the gate help — or hurt? The open/closed decomposition",
+                "For each configuration, compare the counterfactual mean delta and harm rate of the tickets the frozen gate closes versus the ones it keeps.",
+                "results/gate_study_general/learned_gate_decomposition.csv",
+                "Counterfactual: a closed ticket would have kept the ungated feedback delta."),
+        explain("Show the decomposition table and plot the closed-set mean delta."),
+        code("""
+decomp = L.load_gate_study_decomposition()
+display(decomp[["config_key", "protocol", "dev_threshold", "n_open", "n_closed", "pct_open",
+                "mean_delta_all", "mean_delta_open", "mean_delta_closed", "harm_rate_open",
+                "harm_rate_closed", "gain_vs_always_on"]].round(4))
+fig, ax = plt.subplots(figsize=(11, 4.6))
+d = decomp.copy(); d["label"] = d["config_key"] + " / " + d["protocol"]
+sns.barplot(data=d, x="label", y="mean_delta_closed", hue="protocol", ax=ax)
+ax.axhline(0, color="black", lw=1); ax.tick_params(axis="x", rotation=25)
+ax.set(ylabel="Counterfactual mean delta of closed tickets", title="What the gate removes")
+plt.tight_layout(); L.savefig("07_gate_decomposition", run_ids=[]); plt.show()
+"""),
+        reading("""The decomposition is the honest explanation of the gate's value. On the uncalibrated
+ticket-only configurations the gate closes 152–235 tickets whose counterfactual mean delta is
+−0.07 to −0.10 (56–60% of them harmful): it removes real harm. On the calibrated ticket-only prior it
+closes 220 tickets that are 62% no-ops with a mean of +0.006: it removes a small positive tail and
+loses. Under resolution-informed feedback the closed sets are 55–90% no-ops with a mean near +0.003:
+neutral. A gate can only help when the harm is concentrated enough to be identified; calibration
+removes the concentration, so calibration and gating are substitutes."""),
+
+        section("How much does the reference-reply proxy add (oracle diagnostic)?",
+                "Repeat the gate with the offline proxy delta added as a feature; this uses the reference reply and is not deployable.",
+                "results/gate_study_general/learned_gate_proxy.csv", "Diagnostic upper bound only."),
+        explain("Compare the deployable gate against the proxy-augmented gate on eval."),
+        code("""
+proxy = L.load_gate_study_proxy()
+cmp = learned.dropna(subset=["ceiling_recovery"]).merge(
+    proxy[["config_key", "protocol", "ceiling_recovery"]], on=["config_key", "protocol"], suffixes=("_deployable", "_proxy"))
+display(cmp[["config_key", "protocol", "eval_auc", "always_on", "oracle", "eval_policy",
+             "ceiling_recovery_deployable", "ceiling_recovery_proxy"]].round(4))
+"""),
+        reading("""Adding the reference-reply proxy raises the recoverable fraction only modestly, which
+is consistent with the earlier proxy-validity finding: the proxy is a weak per-ticket signal. The
+practical consequence is that a deployable gate — one that never sees the answer — already captures
+most of what is recoverable, so the oracle proxy is not worth its leakage."""),
+
+        section("Multi-action selection: choosing a configuration per ticket",
+                "Let the gate pick, per eval ticket, the configuration with the highest predicted benefit.",
+                "results/gate_study_general/multi_action.csv", "Exploratory; reported honestly even though it does not win."),
+        explain("Show the multi-action policy value against always-on-best-fixed, never-on, and the oracle action."),
+        code("""
+multi = L.load_gate_study_multi(); display(multi.round(4))
+"""),
+        reading("""Selecting the highest-probability configuration per ticket does *not* beat simply
+using the best fixed configuration: the gate's probabilities are not calibrated to effect
+magnitude, so the selector sometimes chooses an intervention that is unlikely to help much. The
+oracle action (choose the best configuration with hindsight) is much higher, showing the headroom
+exists but is not reachable with sign-only predictions. This is a documented negative result; the
+next section replaces it with expected-value action selection."""),
+
+        section("Magnitude-aware policy: expected value instead of probability",
+                "Regress the expected delta (HistGradientBoosting) on the same features with grouped CV, freeze a cost cutoff on dev, and choose actions by expected value.",
+                "results/magnitude_policy/{policy_table.csv,decomposition.csv,action_selection.csv}",
+                "No API calls; policy values are reconstructible from the stored deltas."),
+        explain("Compare the sign gate, the expected-value GBR and Ridge, then show the action-selection comparison."),
+        code("""
+mag = L.load_magnitude_policy(); mag_summary = L.load_magnitude_summary()
+print("dev OOF quality (GBR):", {k: round(v, 3) for k, v in mag_summary["quality"]["gbr"].items()})
+display(mag[["config_key", "protocol", "policy", "threshold", "always_on", "eval_policy",
+             "eval_policy_ci_lower", "eval_policy_ci_upper", "pct_open", "gain_vs_always_on",
+             "ceiling_recovery"]].round(4))
+actions = L.load_magnitude_actions(); display(actions.round(4))
+fig, ax = plt.subplots(figsize=(10, 4.4))
+sns.barplot(data=actions, x="policy", y="mean_delta", ax=ax)
+ax.axhline(0, color="black", lw=1); ax.set(ylabel="Mean achieved delta", title="Action selection (eval)")
+plt.tight_layout(); L.savefig("07_magnitude_action", run_ids=[]); plt.show()
+"""),
+        reading("""The expected-delta model explains a substantial share of dev variance (R² ≈ 0.47,
+dominated by between-configuration differences; within-configuration rank correlation ρ ≈ 0.17) and
+beats the sign gate on every blind configuration: intersection +0.0074, team +0.0024, backoff +0.0035,
+versus +0.0023/+0.0010/−0.0011 for the sign gate. The reason is visible in the decomposition: it
+closes much smaller and far more harmful subsets (46–66 tickets with means of −0.28 to −0.35). Under
+resolution-informed feedback it is neutral-to-slightly-positive (+0.0008 to +0.0013). Action selection
+by expected value is now positive: +0.0116 [+0.0034, +0.0205] with 19% abstention, versus −0.0079 for
+the sign-based selector and +0.0002 for the best fixed configuration (oracle +0.0571). The headroom is
+still large; the modelling direction, however, is settled: predict magnitude, not sign."""),
+
+        section("Turning the gate on: live gated evaluation",
+                "So far the gate's value was reconstructed post-hoc (a closed gate returns the baseline, delta 0). Here we document and run the *live* pipeline, where the gate actually decides during retrieval.",
+                "results/*_gated/*_summary.json; results/gate_study_general/gate_model.joblib",
+                "A live run verifies the integration; it is required when the gate selects among configurations."),
+        explain("Explain the live path and show the live gated run summaries when they exist."),
+        code("""
+gated = L.load_gated_runs()
+if gated.empty:
+    display(Markdown("**PENDING:** no live gated runs yet. Produce them with, e.g.\\n"
+        "`python experiments/04_evaluate.py --method M5_backoff --lift laplace_eb --prior-strength 2 "
+        "--scale-mode pool_std --pool-lambda 0.5 --min-evidence 2 --feedback-protocol blind "
+        "--gating-model results/gate_study_general/gate_model.joblib --gating-threshold 0.3`"))
+else:
+    display(gated.round(4))
+"""),
+        reading("""The live gated run is the deployed artifact: at inference the pipeline computes the
+same pool-distribution and cosine features, evaluates the saved gate, and if the probability of help
+is below the dev-chosen threshold it keeps the baseline ranking (no feedback). Because the generation
+cache holds both prompt branches, these runs cost almost nothing. The live numbers match the
+dev-frozen post-hoc policy values (e.g. intersection conditioned eval +0.0164 live vs +0.0146
+post-hoc; calibrated blind +0.0014 vs −0.0011), which is the integration check. Independent metrics
+confirm the conditioned gated run: BGE +0.0130 (p=.0002), BERTScore +0.0160, cosine +0.0164 (p=.028);
+the calibrated blind gated run remains null (+0.0014 cosine, p=.74). The model file
+`gate_model.joblib` and the thresholds in `gate_meta.json` are the frozen artifacts; they are fit on
+dev and applied to eval unchanged."""),
+        markdown("""## Conclusion — the general gate
+
+A single gate trained across all routing signals and both protocols learns a general benefit signal
+(grouped dev OOF AUC 0.699 [0.676, 0.721]) and transfers to eval above chance for every configuration.
+It is risk control, not gain: it recovers 0.54–0.56 of the ceiling where harm is concentrated
+(uncalibrated ticket-only feedback) and is neutral once calibration has removed that concentration.
+The open/closed decomposition explains why, and expected-value (magnitude) modelling — not sign
+classification — is the right layer when a per-ticket action must be chosen: it closes smaller, more
+harmful subsets and turns action selection positive (+0.0116 [+0.0034, +0.0205])."""),
+])
 
 
 OUTPUTS = {
@@ -818,6 +1185,7 @@ OUTPUTS = {
     "04_modeling_the_prior.ipynb": NB04,
     "05_modeling_the_control_policy.ipynb": NB05,
     "06_final_results_and_claims.ipynb": NB06,
+    "07_general_gate.ipynb": NB07,
 }
 
 

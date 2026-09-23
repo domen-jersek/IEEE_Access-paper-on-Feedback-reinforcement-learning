@@ -125,6 +125,35 @@ def git_info() -> dict:
     return out
 
 
+def safe_platform() -> str:
+    """`platform.platform()` can raise or hang on Windows when a WMI query times out.
+
+    Fall back to the individual getters and finally to environment variables so a
+    manifest write never kills an evaluation run.
+    """
+    try:
+        return platform.platform()
+    except Exception:
+        pass
+    parts = []
+    for getter in (platform.system, platform.release, platform.machine):
+        try:
+            parts.append(str(getter()))
+        except Exception:
+            parts.append("?")
+    joined = "-".join(p for p in parts if p and p != "?")
+    if joined:
+        return joined
+    return f"{sys.platform}-{os.environ.get('PROCESSOR_ARCHITECTURE', 'unknown')}"
+
+
+def safe_hostname() -> str:
+    try:
+        return socket.gethostname()
+    except Exception:
+        return ""
+
+
 _PKG_SNAPSHOT: Optional[dict] = None
 
 
@@ -196,8 +225,8 @@ def write_run_manifest(
         "config": _jsonable(config),
         "git": git_info(),
         "python": sys.version,
-        "platform": platform.platform(),
-        "hostname": socket.gethostname(),
+        "platform": safe_platform(),
+        "hostname": safe_hostname(),
         "packages": package_versions(),
         "inputs": {str(p): file_sha256(Path(p)) for p in inputs},
         "extra": _jsonable(extra or {}),

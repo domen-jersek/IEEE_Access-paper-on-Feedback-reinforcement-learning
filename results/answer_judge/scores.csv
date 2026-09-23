@@ -1,0 +1,501 @@
+run,ticket_id,identical,verdict,order1,order2,position_consistent,delta_cosine,expected_class,expected_team
+M4_intersection_eval_conditioned_continuous,R-1014,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous,R-1138,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous,R-1162,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous,R-1187,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous,R-1248,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous,R-1473,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous,R-1591,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous,R-267,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous,R-417,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous,R-618,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous,R-642,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous,R-666,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous,R-1008,False,1,B,A,True,0.07329064607620239,admin_rights,(GI-CF) Robot Process Automation
+M4_intersection_eval_conditioned_continuous,R-1010,False,0,A,TIE,False,0.08731907606124878,vpn_access,"(GI-IaaS) Network Cloud (Azure, Remote Access)"
+M4_intersection_eval_conditioned_continuous,R-103,False,0,B,TIE,False,0.08918464183807373,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-1088,False,1,B,A,True,0.21132272481918335,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-1100,False,-1,A,B,True,-0.05860108137130737,offboarding,(LF) IT Office Access Italy
+M4_intersection_eval_conditioned_continuous,R-1136,False,1,B,A,True,0.07062441110610962,offboarding,(LF) IT Office Access Italy
+M4_intersection_eval_conditioned_continuous,R-1137,False,1,B,A,True,0.08486056327819824,offboarding,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous,R-1159,False,0,TIE,B,False,-0.18166744709014893,other,(GI-UX) Account Management
+M4_intersection_eval_conditioned_continuous,R-1174,False,0,TIE,B,False,-0.04583853483200073,vpn_access,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous,R-1182,False,1,B,A,True,0.25855356454849243,hardware_support,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-1200,False,-1,A,B,True,0.04408329725265503,hardware_support,(GI-UX) Mobile Device Management
+M4_intersection_eval_conditioned_continuous,R-1212,False,1,B,A,True,0.1924639344215393,admin_rights,(GI-CF) Robot Process Automation
+M4_intersection_eval_conditioned_continuous,R-1221,False,0,A,A,False,0.06822961568832397,admin_rights,(GI-CF) Robot Process Automation
+M4_intersection_eval_conditioned_continuous,R-1237,False,0,TIE,TIE,True,-0.022058486938476562,vpn_access,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous,R-1253,False,0,B,TIE,False,-0.007623791694641113,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M4_intersection_eval_conditioned_continuous,R-1265,False,0,TIE,A,False,0.03351888060569763,other,(GI-SaaS) Salesforce
+M4_intersection_eval_conditioned_continuous,R-1266,False,1,B,A,True,0.08222430944442749,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-1288,False,0,TIE,TIE,True,-0.02637350559234619,absence,(GI-SaaS) Salesforce
+M4_intersection_eval_conditioned_continuous,R-1321,False,0,TIE,TIE,True,-0.03647893667221069,admin_rights,(BF) Information Security Office
+M4_intersection_eval_conditioned_continuous,R-1330,False,0,B,B,False,0.0007433295249938965,project_tools,(GI-IaaS) Development Platform
+M4_intersection_eval_conditioned_continuous,R-1343,False,0,B,TIE,False,-0.004885077476501465,software_license,(GI-IaaS) Admin - License & Asset Management
+M4_intersection_eval_conditioned_continuous,R-1364,False,1,B,A,True,-0.020773276686668396,software_support,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous,R-1414,False,-1,A,B,True,-0.11347341537475586,onboarding,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous,R-1443,False,0,TIE,B,False,0.13125711679458618,other,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-1450,False,1,B,A,True,0.1321583390235901,offboarding,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-1466,False,0,TIE,TIE,True,-0.061596453189849854,other,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous,R-1490,False,0,A,TIE,False,-0.014555037021636963,vpn_access,"(GI-IaaS) Network On-Prem (LAN,WLAN,WAN 2nd level)"
+M4_intersection_eval_conditioned_continuous,R-1499,False,0,TIE,TIE,True,-0.025798916816711426,admin_rights,(BF) Information Security Office
+M4_intersection_eval_conditioned_continuous,R-1500,False,1,B,A,True,-0.01654505729675293,admin_rights,(GI-CF) Robot Process Automation
+M4_intersection_eval_conditioned_continuous,R-1507,False,0,TIE,TIE,True,0.008610725402832031,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M4_intersection_eval_conditioned_continuous,R-1543,False,1,B,A,True,0.043737053871154785,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M4_intersection_eval_conditioned_continuous,R-1578,False,1,B,A,True,-0.025459080934524536,other,(GI-SaaS) Salesforce
+M4_intersection_eval_conditioned_continuous,R-183,False,1,B,A,True,-0.021532058715820312,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-192,False,0,TIE,TIE,True,0.12181496620178223,vpn_access,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous,R-201,False,1,B,A,True,0.30304737389087677,email_support,(GI-UX) Unified Communication
+M4_intersection_eval_conditioned_continuous,R-206,False,1,B,A,True,0.00946664810180664,other,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous,R-265,False,1,B,A,True,0.01849883794784546,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-280,False,0,TIE,TIE,True,-0.049766480922698975,admin_rights,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous,R-287,False,1,B,A,True,0.0029800236225128174,software_support,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous,R-295,False,0,TIE,TIE,True,0.025647401809692383,admin_rights,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous,R-296,False,-1,A,B,True,-0.055271148681640625,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-301,False,1,B,A,True,0.2764376103878021,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-377,False,1,B,A,True,0.5398637652397156,software_support,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous,R-392,False,0,TIE,TIE,True,0.0652323067188263,software_support,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous,R-412,False,1,B,A,True,0.2774762511253357,onboarding,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous,R-424,False,1,B,A,True,-0.018851935863494873,offboarding,(LF) IT Office Access Italy
+M4_intersection_eval_conditioned_continuous,R-429,False,1,B,A,True,0.06030076742172241,other,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-43,False,1,B,A,True,0.155897855758667,software_support,(GI-UX) Windows
+M4_intersection_eval_conditioned_continuous,R-439,False,0,TIE,B,False,0.0372198224067688,vpn_access,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous,R-443,False,1,B,A,True,-0.1599217653274536,software_support,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-447,False,1,B,A,True,0.23919135332107544,other,(GI-UX) Office365 & MS-Teams
+M4_intersection_eval_conditioned_continuous,R-457,False,0,TIE,TIE,True,-0.028559982776641846,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M4_intersection_eval_conditioned_continuous,R-461,False,-1,A,B,True,-0.16294962167739868,offboarding,(LF) IT Office Access Italy
+M4_intersection_eval_conditioned_continuous,R-498,False,1,B,A,True,0.20995888113975525,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-50,False,0,A,TIE,False,0.10911065340042114,vpn_access,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-500,False,-1,A,B,True,-0.1749483346939087,vpn_access,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous,R-53,False,1,B,A,True,0.07239353656768799,software_license,(GI-IaaS) Admin - License & Asset Management
+M4_intersection_eval_conditioned_continuous,R-535,False,0,B,B,False,-0.0963628888130188,admin_rights,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous,R-544,False,0,TIE,TIE,True,0.006982207298278809,other,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous,R-55,False,0,TIE,TIE,True,0.06296122074127197,enterprise_systems,(GI-SaaS) Salesforce
+M4_intersection_eval_conditioned_continuous,R-567,False,-1,A,B,True,0.023481905460357666,software_license,(GI-IaaS) Development Platform
+M4_intersection_eval_conditioned_continuous,R-588,False,1,B,A,True,0.026075243949890137,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-598,False,1,B,A,True,0.15271639823913574,onboarding,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous,R-629,False,1,B,A,True,0.08787459135055542,onboarding,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous,R-64,False,0,TIE,TIE,True,-0.18308070302009583,email_support,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-659,False,-1,A,B,True,-0.13302594423294067,admin_rights,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-676,False,0,B,B,False,0.025143682956695557,other,(GI-CyberSec) Cybersecurity
+M4_intersection_eval_conditioned_continuous,R-728,False,1,B,A,True,0.09942305088043213,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M4_intersection_eval_conditioned_continuous,R-747,False,0,TIE,TIE,True,0.05530518293380737,other,(GI-IaaS) Development Platform
+M4_intersection_eval_conditioned_continuous,R-770,False,0,TIE,TIE,True,-0.035221219062805176,software_license,(GI-IaaS) Development Platform
+M4_intersection_eval_conditioned_continuous,R-779,False,1,B,A,True,-0.08789074420928955,onboarding,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous,R-831,False,1,B,A,True,-0.02787882089614868,hr_tools,(GI-SaaS) Salesforce
+M4_intersection_eval_conditioned_continuous,R-835,False,1,B,A,True,0.008194267749786377,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-837,False,0,TIE,B,False,0.05781036615371704,admin_rights,(GI-CF) Robot Process Automation
+M4_intersection_eval_conditioned_continuous,R-847,False,0,B,TIE,False,0.17165207862854004,admin_rights,(GI-CF) Robot Process Automation
+M4_intersection_eval_conditioned_continuous,R-879,False,0,TIE,TIE,True,-0.11322128772735596,other,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-889,False,-1,A,B,True,0.012413322925567627,admin_rights,(GI-CF) Robot Process Automation
+M4_intersection_eval_conditioned_continuous,R-890,False,0,TIE,TIE,True,-0.04174378514289856,other,(GI-UX) Windows
+M4_intersection_eval_conditioned_continuous,R-916,False,0,TIE,A,False,-0.28693509101867676,vpn_access,"(GI-IaaS) Network On-Prem (LAN,WLAN,WAN 2nd level)"
+M4_intersection_eval_conditioned_continuous,R-927,False,0,TIE,B,False,-0.015533417463302612,other,"(GI-IaaS) Network Cloud (Azure, Remote Access)"
+M4_intersection_eval_conditioned_continuous,R-94,False,0,TIE,TIE,True,-0.06318396329879761,collaboration,(GI-UX) Account Management
+M4_intersection_eval_conditioned_continuous,R-96,False,1,B,A,True,0.1128574013710022,hardware_support,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous,R-961,False,0,TIE,TIE,True,0.08746588230133057,other,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous,R-962,False,0,TIE,TIE,True,0.020099282264709473,absence,(GI-SaaS) Salesforce
+M4_intersection_eval_conditioned_continuous,R-963,False,0,TIE,TIE,True,-0.022547245025634766,admin_rights,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous,R-978,False,0,B,B,False,0.13365763425827026,admin_rights,(GI-UX) Windows
+M4_intersection_eval_conditioned_continuous,R-980,False,0,TIE,TIE,True,0.041269004344940186,vpn_access,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous,R-996,False,1,B,A,True,0.038555920124053955,vpn_access,(GI-UX) Network Access
+M2_team_eval_conditioned_continuous,R-1162,True,0,TIE,TIE,,,,
+M2_team_eval_conditioned_continuous,R-1591,True,0,TIE,TIE,,,,
+M2_team_eval_conditioned_continuous,R-618,True,0,TIE,TIE,,,,
+M2_team_eval_conditioned_continuous,R-642,True,0,TIE,TIE,,,,
+M2_team_eval_conditioned_continuous,R-1008,False,1,B,A,True,0.02006569504737854,admin_rights,(GI-CF) Robot Process Automation
+M2_team_eval_conditioned_continuous,R-1010,False,0,B,TIE,False,0.03310960531234741,vpn_access,"(GI-IaaS) Network Cloud (Azure, Remote Access)"
+M2_team_eval_conditioned_continuous,R-1014,False,1,B,A,True,0.00295865535736084,onboarding,(GI-UX) Account Management
+M2_team_eval_conditioned_continuous,R-103,False,0,TIE,TIE,True,-0.029654741287231445,software_license,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-1088,False,1,B,A,True,0.08920419216156006,software_license,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-1100,False,-1,A,B,True,-0.05860108137130737,offboarding,(LF) IT Office Access Italy
+M2_team_eval_conditioned_continuous,R-1136,False,0,A,TIE,False,-0.11427241563796997,offboarding,(LF) IT Office Access Italy
+M2_team_eval_conditioned_continuous,R-1137,False,-1,A,B,True,-0.16404950618743896,offboarding,(GI-UX) File & Print
+M2_team_eval_conditioned_continuous,R-1138,False,-1,A,B,True,-0.4298883080482483,offboarding,(GI-UX) Account Management
+M2_team_eval_conditioned_continuous,R-1159,False,0,A,A,False,-0.09363448619842529,other,(GI-UX) Account Management
+M2_team_eval_conditioned_continuous,R-1174,False,-1,A,B,True,-0.03412783145904541,vpn_access,(GI-UX) Network Access
+M2_team_eval_conditioned_continuous,R-1182,False,1,B,A,True,0.25342631340026855,hardware_support,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-1187,False,0,TIE,TIE,True,0.11400550603866577,enterprise_systems,(GI-IaaS) Admin - Local IT purchase
+M2_team_eval_conditioned_continuous,R-1200,False,-1,A,B,True,0.04408329725265503,hardware_support,(GI-UX) Mobile Device Management
+M2_team_eval_conditioned_continuous,R-1212,False,1,B,A,True,0.1924639344215393,admin_rights,(GI-CF) Robot Process Automation
+M2_team_eval_conditioned_continuous,R-1221,False,0,A,A,False,0.06822961568832397,admin_rights,(GI-CF) Robot Process Automation
+M2_team_eval_conditioned_continuous,R-1237,False,0,TIE,TIE,True,0.004204869270324707,vpn_access,(GI-UX) Network Access
+M2_team_eval_conditioned_continuous,R-1248,False,0,TIE,TIE,True,0.005721375346183777,software_support,(GI-UX) Office365 & MS-Teams
+M2_team_eval_conditioned_continuous,R-1253,False,1,B,A,True,-0.02723592519760132,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M2_team_eval_conditioned_continuous,R-1265,False,0,TIE,A,False,-0.01893410086631775,other,(GI-SaaS) Salesforce
+M2_team_eval_conditioned_continuous,R-1266,False,1,B,A,True,0.043403565883636475,software_license,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-1288,False,0,B,TIE,False,-0.04500192403793335,absence,(GI-SaaS) Salesforce
+M2_team_eval_conditioned_continuous,R-1321,False,0,TIE,TIE,True,-0.03647893667221069,admin_rights,(BF) Information Security Office
+M2_team_eval_conditioned_continuous,R-1330,False,-1,A,B,True,-0.10472702980041504,project_tools,(GI-IaaS) Development Platform
+M2_team_eval_conditioned_continuous,R-1343,False,0,TIE,TIE,True,0.10423892736434937,software_license,(GI-IaaS) Admin - License & Asset Management
+M2_team_eval_conditioned_continuous,R-1364,False,1,B,A,True,-0.013320952653884888,software_support,(GI-UX) Network Access
+M2_team_eval_conditioned_continuous,R-1414,False,-1,A,B,True,-0.30121707916259766,onboarding,(GI-UX) File & Print
+M2_team_eval_conditioned_continuous,R-1443,False,0,B,B,False,0.10361510515213013,other,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-1450,False,0,B,B,False,0.1026301383972168,offboarding,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-1466,False,0,TIE,TIE,True,0.12658968567848206,other,(GI-UX) Network Access
+M2_team_eval_conditioned_continuous,R-1473,False,-1,A,B,True,-0.07451272010803223,onboarding,(GI-UX) Account Management
+M2_team_eval_conditioned_continuous,R-1490,False,0,A,A,False,0.07032126188278198,vpn_access,"(GI-IaaS) Network On-Prem (LAN,WLAN,WAN 2nd level)"
+M2_team_eval_conditioned_continuous,R-1499,False,0,TIE,TIE,True,-0.017636656761169434,admin_rights,(BF) Information Security Office
+M2_team_eval_conditioned_continuous,R-1500,False,1,B,A,True,-0.014950573444366455,admin_rights,(GI-CF) Robot Process Automation
+M2_team_eval_conditioned_continuous,R-1507,False,1,B,A,True,0.12367129325866699,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M2_team_eval_conditioned_continuous,R-1543,False,0,TIE,TIE,True,-0.0999305248260498,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M2_team_eval_conditioned_continuous,R-1578,False,0,TIE,TIE,True,0.007830679416656494,other,(GI-SaaS) Salesforce
+M2_team_eval_conditioned_continuous,R-183,False,1,B,A,True,-0.059229493141174316,software_license,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-192,False,-1,A,B,True,0.0449678897857666,vpn_access,(GI-UX) Network Access
+M2_team_eval_conditioned_continuous,R-201,False,1,B,A,True,0.30977798998355865,email_support,(GI-UX) Unified Communication
+M2_team_eval_conditioned_continuous,R-206,False,0,TIE,TIE,True,0.04657655954360962,other,(GI-UX) File & Print
+M2_team_eval_conditioned_continuous,R-265,False,1,B,A,True,0.07273674011230469,software_license,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-267,False,1,B,A,True,0.09122943878173828,other,(GI-SaaS) SAP & Synertrade
+M2_team_eval_conditioned_continuous,R-280,False,0,TIE,TIE,True,-0.038790613412857056,admin_rights,(GI-UX) File & Print
+M2_team_eval_conditioned_continuous,R-287,False,1,B,A,True,0.05697169899940491,software_support,(GI-UX) File & Print
+M2_team_eval_conditioned_continuous,R-295,False,0,TIE,A,False,-0.07355096936225891,admin_rights,(GI-UX) File & Print
+M2_team_eval_conditioned_continuous,R-296,False,0,B,B,False,0.05643749237060547,software_license,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-301,False,1,B,A,True,0.1576208770275116,software_license,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-377,False,1,B,A,True,0.16454580426216125,software_support,(GI-UX) File & Print
+M2_team_eval_conditioned_continuous,R-392,False,-1,A,B,True,0.07530349493026733,software_support,(GI-UX) File & Print
+M2_team_eval_conditioned_continuous,R-412,False,0,B,B,False,0.12651777267456055,onboarding,(GI-UX) File & Print
+M2_team_eval_conditioned_continuous,R-417,False,0,TIE,B,False,0.009648680686950684,offboarding,(GI-UX) Account Management
+M2_team_eval_conditioned_continuous,R-424,False,1,B,A,True,0.08718645572662354,offboarding,(LF) IT Office Access Italy
+M2_team_eval_conditioned_continuous,R-429,False,0,TIE,A,False,0.07337725162506104,other,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-43,False,1,B,A,True,0.10878574848175049,software_support,(GI-UX) Windows
+M2_team_eval_conditioned_continuous,R-439,False,0,TIE,B,False,0.0372198224067688,vpn_access,(GI-UX) Network Access
+M2_team_eval_conditioned_continuous,R-443,False,0,TIE,A,False,-0.09130114316940308,software_support,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-447,False,1,B,A,True,0.23919135332107544,other,(GI-UX) Office365 & MS-Teams
+M2_team_eval_conditioned_continuous,R-457,False,0,A,TIE,False,-0.0031415820121765137,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M2_team_eval_conditioned_continuous,R-461,False,-1,A,B,True,-0.19389492273330688,offboarding,(LF) IT Office Access Italy
+M2_team_eval_conditioned_continuous,R-498,False,1,B,A,True,0.10559853911399841,software_license,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-50,False,-1,A,B,True,0.062224626541137695,vpn_access,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-500,False,-1,A,B,True,-0.18656352162361145,vpn_access,(GI-UX) Network Access
+M2_team_eval_conditioned_continuous,R-53,False,1,B,A,True,0.07239353656768799,software_license,(GI-IaaS) Admin - License & Asset Management
+M2_team_eval_conditioned_continuous,R-535,False,1,B,A,True,-0.17181211709976196,admin_rights,(GI-UX) File & Print
+M2_team_eval_conditioned_continuous,R-544,False,1,B,A,True,0.24645689129829407,other,(GI-UX) Network Access
+M2_team_eval_conditioned_continuous,R-55,False,0,TIE,B,False,0.045183777809143066,enterprise_systems,(GI-SaaS) Salesforce
+M2_team_eval_conditioned_continuous,R-567,False,0,A,TIE,False,0.013685166835784912,software_license,(GI-IaaS) Development Platform
+M2_team_eval_conditioned_continuous,R-588,False,1,B,A,True,0.09271055459976196,software_license,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-598,False,0,B,TIE,False,0.0241851806640625,onboarding,(GI-UX) File & Print
+M2_team_eval_conditioned_continuous,R-629,False,0,TIE,TIE,True,-0.03891396522521973,onboarding,(GI-UX) File & Print
+M2_team_eval_conditioned_continuous,R-64,False,0,TIE,A,False,0.01202303171157837,email_support,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-659,False,1,B,A,True,0.016551733016967773,admin_rights,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-666,False,1,B,A,True,0.038531720638275146,onboarding,(GI-UX) Account Management
+M2_team_eval_conditioned_continuous,R-676,False,0,B,B,False,0.025143682956695557,other,(GI-CyberSec) Cybersecurity
+M2_team_eval_conditioned_continuous,R-728,False,0,TIE,TIE,True,-0.013033270835876465,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M2_team_eval_conditioned_continuous,R-747,False,0,TIE,TIE,True,-0.0012089163064956665,other,(GI-IaaS) Development Platform
+M2_team_eval_conditioned_continuous,R-770,False,0,TIE,TIE,True,-0.035221219062805176,software_license,(GI-IaaS) Development Platform
+M2_team_eval_conditioned_continuous,R-779,False,1,B,A,True,-0.08789074420928955,onboarding,(GI-UX) File & Print
+M2_team_eval_conditioned_continuous,R-831,False,0,B,B,False,-0.061027348041534424,hr_tools,(GI-SaaS) Salesforce
+M2_team_eval_conditioned_continuous,R-835,False,1,B,A,True,0.04722386598587036,software_license,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-837,False,0,TIE,B,False,0.05781036615371704,admin_rights,(GI-CF) Robot Process Automation
+M2_team_eval_conditioned_continuous,R-847,False,0,B,TIE,False,0.17165207862854004,admin_rights,(GI-CF) Robot Process Automation
+M2_team_eval_conditioned_continuous,R-879,False,0,TIE,TIE,True,-0.23830926418304443,other,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-889,False,-1,A,B,True,0.012413322925567627,admin_rights,(GI-CF) Robot Process Automation
+M2_team_eval_conditioned_continuous,R-890,False,0,TIE,TIE,True,-0.04045790433883667,other,(GI-UX) Windows
+M2_team_eval_conditioned_continuous,R-916,False,0,TIE,A,False,-0.28693509101867676,vpn_access,"(GI-IaaS) Network On-Prem (LAN,WLAN,WAN 2nd level)"
+M2_team_eval_conditioned_continuous,R-927,False,0,A,TIE,False,-0.06825587153434753,other,"(GI-IaaS) Network Cloud (Azure, Remote Access)"
+M2_team_eval_conditioned_continuous,R-94,False,0,TIE,TIE,True,0.011917710304260254,collaboration,(GI-UX) Account Management
+M2_team_eval_conditioned_continuous,R-96,False,1,B,A,True,-0.01840686798095703,hardware_support,(GI-UX) Group
+M2_team_eval_conditioned_continuous,R-961,False,-1,A,B,True,-0.37827804684638977,other,(GI-UX) File & Print
+M2_team_eval_conditioned_continuous,R-962,False,0,TIE,B,False,-0.06568503379821777,absence,(GI-SaaS) Salesforce
+M2_team_eval_conditioned_continuous,R-963,False,1,B,A,True,0.12425777316093445,admin_rights,(GI-UX) File & Print
+M2_team_eval_conditioned_continuous,R-978,False,0,B,B,False,0.16505074501037598,admin_rights,(GI-UX) Windows
+M2_team_eval_conditioned_continuous,R-980,False,0,TIE,TIE,True,0.05940002202987671,vpn_access,(GI-UX) Network Access
+M2_team_eval_conditioned_continuous,R-996,False,1,B,A,True,-0.010347068309783936,vpn_access,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous_gated,R-1010,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous_gated,R-1014,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous_gated,R-1138,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous_gated,R-1162,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous_gated,R-1187,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous_gated,R-1248,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous_gated,R-1473,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous_gated,R-1507,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous_gated,R-1591,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous_gated,R-267,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous_gated,R-417,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous_gated,R-424,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous_gated,R-618,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous_gated,R-642,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous_gated,R-666,True,0,TIE,TIE,,,,
+M4_intersection_eval_conditioned_continuous_gated,R-1008,False,1,B,A,True,0.02006569504737854,admin_rights,(GI-CF) Robot Process Automation
+M4_intersection_eval_conditioned_continuous_gated,R-103,False,0,B,TIE,False,0.08918464183807373,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-1088,False,1,B,A,True,0.21132272481918335,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-1100,False,-1,A,B,True,-0.05860108137130737,offboarding,(LF) IT Office Access Italy
+M4_intersection_eval_conditioned_continuous_gated,R-1136,False,1,B,A,True,0.07062441110610962,offboarding,(LF) IT Office Access Italy
+M4_intersection_eval_conditioned_continuous_gated,R-1137,False,1,B,A,True,0.08486056327819824,offboarding,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous_gated,R-1159,False,0,TIE,B,False,-0.18166744709014893,other,(GI-UX) Account Management
+M4_intersection_eval_conditioned_continuous_gated,R-1174,False,0,TIE,B,False,-0.04583853483200073,vpn_access,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous_gated,R-1182,False,1,B,A,True,0.25855356454849243,hardware_support,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-1200,False,-1,A,B,True,0.04408329725265503,hardware_support,(GI-UX) Mobile Device Management
+M4_intersection_eval_conditioned_continuous_gated,R-1212,False,1,B,A,True,0.1924639344215393,admin_rights,(GI-CF) Robot Process Automation
+M4_intersection_eval_conditioned_continuous_gated,R-1221,False,0,A,A,False,0.06822961568832397,admin_rights,(GI-CF) Robot Process Automation
+M4_intersection_eval_conditioned_continuous_gated,R-1237,False,0,TIE,TIE,True,-0.022058486938476562,vpn_access,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous_gated,R-1253,False,0,B,TIE,False,-0.007623791694641113,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M4_intersection_eval_conditioned_continuous_gated,R-1265,False,0,TIE,A,False,0.03351888060569763,other,(GI-SaaS) Salesforce
+M4_intersection_eval_conditioned_continuous_gated,R-1266,False,1,B,A,True,0.08222430944442749,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-1288,False,0,TIE,TIE,True,-0.02637350559234619,absence,(GI-SaaS) Salesforce
+M4_intersection_eval_conditioned_continuous_gated,R-1321,False,0,TIE,TIE,True,-0.03647893667221069,admin_rights,(BF) Information Security Office
+M4_intersection_eval_conditioned_continuous_gated,R-1330,False,0,B,B,False,0.0007433295249938965,project_tools,(GI-IaaS) Development Platform
+M4_intersection_eval_conditioned_continuous_gated,R-1343,False,0,B,TIE,False,-0.004885077476501465,software_license,(GI-IaaS) Admin - License & Asset Management
+M4_intersection_eval_conditioned_continuous_gated,R-1364,False,1,B,A,True,-0.020773276686668396,software_support,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous_gated,R-1414,False,-1,A,B,True,-0.11347341537475586,onboarding,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous_gated,R-1443,False,0,TIE,B,False,0.13125711679458618,other,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-1450,False,1,B,A,True,0.1321583390235901,offboarding,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-1466,False,0,TIE,TIE,True,-0.061596453189849854,other,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous_gated,R-1490,False,0,A,TIE,False,-0.014555037021636963,vpn_access,"(GI-IaaS) Network On-Prem (LAN,WLAN,WAN 2nd level)"
+M4_intersection_eval_conditioned_continuous_gated,R-1499,False,0,TIE,TIE,True,-0.025798916816711426,admin_rights,(BF) Information Security Office
+M4_intersection_eval_conditioned_continuous_gated,R-1500,False,1,B,A,True,-0.01654505729675293,admin_rights,(GI-CF) Robot Process Automation
+M4_intersection_eval_conditioned_continuous_gated,R-1543,False,1,B,A,True,0.043737053871154785,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M4_intersection_eval_conditioned_continuous_gated,R-1578,False,1,B,A,True,-0.025459080934524536,other,(GI-SaaS) Salesforce
+M4_intersection_eval_conditioned_continuous_gated,R-183,False,1,B,A,True,-0.021532058715820312,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-192,False,0,TIE,TIE,True,0.12181496620178223,vpn_access,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous_gated,R-201,False,1,B,A,True,0.30304737389087677,email_support,(GI-UX) Unified Communication
+M4_intersection_eval_conditioned_continuous_gated,R-206,False,1,B,A,True,0.00946664810180664,other,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous_gated,R-265,False,1,B,A,True,0.01849883794784546,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-280,False,0,TIE,TIE,True,-0.049766480922698975,admin_rights,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous_gated,R-287,False,1,B,A,True,0.0029800236225128174,software_support,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous_gated,R-295,False,0,TIE,TIE,True,0.025647401809692383,admin_rights,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous_gated,R-296,False,-1,A,B,True,-0.055271148681640625,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-301,False,1,B,A,True,0.2764376103878021,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-377,False,1,B,A,True,0.5398637652397156,software_support,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous_gated,R-392,False,0,TIE,TIE,True,0.0652323067188263,software_support,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous_gated,R-412,False,1,B,A,True,0.2774762511253357,onboarding,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous_gated,R-429,False,1,B,A,True,0.06030076742172241,other,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-43,False,1,B,A,True,0.155897855758667,software_support,(GI-UX) Windows
+M4_intersection_eval_conditioned_continuous_gated,R-439,False,0,TIE,B,False,0.0372198224067688,vpn_access,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous_gated,R-443,False,1,B,A,True,-0.1599217653274536,software_support,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-447,False,1,B,A,True,0.23919135332107544,other,(GI-UX) Office365 & MS-Teams
+M4_intersection_eval_conditioned_continuous_gated,R-457,False,0,TIE,TIE,True,-0.028559982776641846,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M4_intersection_eval_conditioned_continuous_gated,R-461,False,-1,A,B,True,-0.16294962167739868,offboarding,(LF) IT Office Access Italy
+M4_intersection_eval_conditioned_continuous_gated,R-498,False,1,B,A,True,0.20995888113975525,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-50,False,0,A,TIE,False,0.10911065340042114,vpn_access,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-500,False,-1,A,B,True,-0.1749483346939087,vpn_access,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous_gated,R-53,False,1,B,A,True,0.07239353656768799,software_license,(GI-IaaS) Admin - License & Asset Management
+M4_intersection_eval_conditioned_continuous_gated,R-535,False,0,B,B,False,-0.0963628888130188,admin_rights,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous_gated,R-544,False,0,TIE,TIE,True,0.006982207298278809,other,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous_gated,R-55,False,0,TIE,TIE,True,0.06296122074127197,enterprise_systems,(GI-SaaS) Salesforce
+M4_intersection_eval_conditioned_continuous_gated,R-567,False,-1,A,B,True,0.023481905460357666,software_license,(GI-IaaS) Development Platform
+M4_intersection_eval_conditioned_continuous_gated,R-588,False,1,B,A,True,0.026075243949890137,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-598,False,1,B,A,True,0.15271639823913574,onboarding,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous_gated,R-629,False,1,B,A,True,0.08787459135055542,onboarding,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous_gated,R-64,False,0,TIE,TIE,True,-0.18308070302009583,email_support,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-659,False,-1,A,B,True,-0.13302594423294067,admin_rights,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-676,False,0,B,B,False,0.025143682956695557,other,(GI-CyberSec) Cybersecurity
+M4_intersection_eval_conditioned_continuous_gated,R-728,False,1,B,A,True,0.09942305088043213,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M4_intersection_eval_conditioned_continuous_gated,R-747,False,0,TIE,TIE,True,0.05530518293380737,other,(GI-IaaS) Development Platform
+M4_intersection_eval_conditioned_continuous_gated,R-770,False,0,TIE,TIE,True,-0.035221219062805176,software_license,(GI-IaaS) Development Platform
+M4_intersection_eval_conditioned_continuous_gated,R-779,False,1,B,A,True,-0.08789074420928955,onboarding,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous_gated,R-831,False,1,B,A,True,-0.02787882089614868,hr_tools,(GI-SaaS) Salesforce
+M4_intersection_eval_conditioned_continuous_gated,R-835,False,1,B,A,True,0.008194267749786377,software_license,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-837,False,0,TIE,B,False,0.05781036615371704,admin_rights,(GI-CF) Robot Process Automation
+M4_intersection_eval_conditioned_continuous_gated,R-847,False,0,B,TIE,False,0.17165207862854004,admin_rights,(GI-CF) Robot Process Automation
+M4_intersection_eval_conditioned_continuous_gated,R-879,False,0,TIE,TIE,True,-0.11322128772735596,other,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-889,False,-1,A,B,True,0.012413322925567627,admin_rights,(GI-CF) Robot Process Automation
+M4_intersection_eval_conditioned_continuous_gated,R-890,False,0,TIE,TIE,True,-0.04174378514289856,other,(GI-UX) Windows
+M4_intersection_eval_conditioned_continuous_gated,R-916,False,0,TIE,A,False,-0.28693509101867676,vpn_access,"(GI-IaaS) Network On-Prem (LAN,WLAN,WAN 2nd level)"
+M4_intersection_eval_conditioned_continuous_gated,R-927,False,0,TIE,B,False,-0.015533417463302612,other,"(GI-IaaS) Network Cloud (Azure, Remote Access)"
+M4_intersection_eval_conditioned_continuous_gated,R-94,False,0,TIE,TIE,True,-0.06318396329879761,collaboration,(GI-UX) Account Management
+M4_intersection_eval_conditioned_continuous_gated,R-96,False,1,B,A,True,0.1128574013710022,hardware_support,(GI-UX) Group
+M4_intersection_eval_conditioned_continuous_gated,R-961,False,0,TIE,TIE,True,0.08746588230133057,other,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous_gated,R-962,False,0,TIE,TIE,True,0.020099282264709473,absence,(GI-SaaS) Salesforce
+M4_intersection_eval_conditioned_continuous_gated,R-963,False,0,TIE,TIE,True,-0.022547245025634766,admin_rights,(GI-UX) File & Print
+M4_intersection_eval_conditioned_continuous_gated,R-978,False,0,B,B,False,0.13365763425827026,admin_rights,(GI-UX) Windows
+M4_intersection_eval_conditioned_continuous_gated,R-980,False,0,TIE,TIE,True,0.041269004344940186,vpn_access,(GI-UX) Network Access
+M4_intersection_eval_conditioned_continuous_gated,R-996,False,1,B,A,True,0.038555920124053955,vpn_access,(GI-UX) Network Access
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1010,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1014,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1100,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1136,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1138,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1159,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1162,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1174,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1182,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1200,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1212,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1221,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1237,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1248,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1253,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1265,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1288,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1321,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1343,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1414,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1450,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1466,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1473,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1499,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1500,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1507,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1543,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1591,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-201,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-267,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-377,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-392,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-412,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-417,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-424,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-429,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-498,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-53,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-535,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-544,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-55,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-588,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-598,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-618,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-629,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-642,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-666,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-728,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-779,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-831,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-837,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-847,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-879,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-890,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-916,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-96,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-962,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-978,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1008,False,-1,A,B,True,0.13616067171096802,admin_rights,(GI-CF) Robot Process Automation
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-103,False,-1,A,B,True,-0.05756312608718872,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1088,False,0,TIE,TIE,True,0.051159679889678955,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1137,False,0,A,A,False,0.10908913612365723,offboarding,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1187,False,0,B,TIE,False,0.09708148241043091,enterprise_systems,(GI-IaaS) Admin - Local IT purchase
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1266,False,0,TIE,TIE,True,0.008344709873199463,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1330,False,1,B,A,True,-0.025223970413208008,project_tools,(GI-IaaS) Development Platform
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1364,False,1,B,A,True,-0.021515443921089172,software_support,(GI-UX) Network Access
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1443,False,0,TIE,B,False,0.2230021357536316,other,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1490,False,0,TIE,TIE,True,-0.012627720832824707,vpn_access,"(GI-IaaS) Network On-Prem (LAN,WLAN,WAN 2nd level)"
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-1578,False,-1,A,B,True,-0.19454355537891388,other,(GI-SaaS) Salesforce
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-183,False,0,B,TIE,False,0.050896644592285156,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-192,False,-1,A,B,True,0.1565185785293579,vpn_access,(GI-UX) Network Access
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-206,False,1,B,A,True,0.12527650594711304,other,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-265,False,0,B,TIE,False,-0.02829277515411377,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-280,False,0,TIE,B,False,0.059450626373291016,admin_rights,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-287,False,0,TIE,TIE,True,-0.014933794736862183,software_support,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-295,False,0,B,TIE,False,0.00846165418624878,admin_rights,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-296,False,0,B,B,False,0.04759979248046875,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-301,False,-1,A,B,True,0.02962210774421692,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-43,False,0,TIE,TIE,True,-0.0010715723037719727,software_support,(GI-UX) Windows
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-439,False,1,B,A,True,0.08782535791397095,vpn_access,(GI-UX) Network Access
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-443,False,1,B,A,True,-0.26564353704452515,software_support,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-447,False,0,TIE,TIE,True,-0.033841729164123535,other,(GI-UX) Office365 & MS-Teams
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-457,False,0,TIE,TIE,True,0.17708873748779297,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-461,False,-1,A,B,True,-0.16294962167739868,offboarding,(LF) IT Office Access Italy
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-50,False,-1,A,B,True,0.022290289402008057,vpn_access,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-500,False,0,TIE,TIE,True,0.013935387134552002,vpn_access,(GI-UX) Network Access
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-567,False,0,B,TIE,False,0.04003936052322388,software_license,(GI-IaaS) Development Platform
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-64,False,0,TIE,TIE,True,0.03380101919174194,email_support,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-659,False,0,B,B,False,-0.06411778926849365,admin_rights,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-676,False,1,B,A,True,0.051794469356536865,other,(GI-CyberSec) Cybersecurity
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-747,False,0,A,TIE,False,0.03613206744194031,other,(GI-IaaS) Development Platform
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-770,False,0,TIE,TIE,True,-0.01782912015914917,software_license,(GI-IaaS) Development Platform
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-835,False,0,B,TIE,False,0.0365409255027771,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-889,False,0,B,B,False,-0.09925198554992676,admin_rights,(GI-CF) Robot Process Automation
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-927,False,-1,A,B,True,0.017790526151657104,other,"(GI-IaaS) Network Cloud (Azure, Remote Access)"
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-94,False,0,TIE,TIE,True,0.007973968982696533,collaboration,(GI-UX) Account Management
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-961,False,0,TIE,TIE,True,0.08271020650863647,other,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-963,False,0,TIE,TIE,True,-0.07485726475715637,admin_rights,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-980,False,0,TIE,TIE,True,0.17180317640304565,vpn_access,(GI-UX) Network Access
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated,R-996,False,0,TIE,TIE,True,0.01569145917892456,vpn_access,(GI-UX) Network Access
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1014,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1138,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1162,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1174,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1182,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1200,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1221,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1237,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1288,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1321,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1343,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1450,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1466,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1473,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1499,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1500,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1591,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-267,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-392,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-417,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-498,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-544,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-55,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-588,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-618,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-629,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-666,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-837,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-847,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-879,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-890,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-978,True,0,TIE,TIE,,,,
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1008,False,-1,A,B,True,0.13616067171096802,admin_rights,(GI-CF) Robot Process Automation
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1010,False,0,B,B,False,0.07023376226425171,vpn_access,"(GI-IaaS) Network Cloud (Azure, Remote Access)"
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-103,False,-1,A,B,True,-0.05756312608718872,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1088,False,0,TIE,TIE,True,0.051159679889678955,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1100,False,-1,A,B,True,-0.03456658124923706,offboarding,(LF) IT Office Access Italy
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1136,False,0,B,TIE,False,0.00500178337097168,offboarding,(LF) IT Office Access Italy
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1137,False,0,A,A,False,0.10908913612365723,offboarding,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1159,False,0,TIE,TIE,True,-0.06968969106674194,other,(GI-UX) Account Management
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1187,False,0,B,TIE,False,0.09708148241043091,enterprise_systems,(GI-IaaS) Admin - Local IT purchase
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1212,False,0,B,B,False,-0.0029985904693603516,admin_rights,(GI-CF) Robot Process Automation
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1248,False,0,TIE,TIE,True,-0.01466706395149231,software_support,(GI-UX) Office365 & MS-Teams
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1253,False,1,B,A,True,-0.04169589281082153,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1265,False,0,TIE,A,False,0.10505679249763489,other,(GI-SaaS) Salesforce
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1266,False,0,TIE,TIE,True,0.008344709873199463,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1330,False,1,B,A,True,-0.025223970413208008,project_tools,(GI-IaaS) Development Platform
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1364,False,1,B,A,True,-0.021515443921089172,software_support,(GI-UX) Network Access
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1414,False,-1,A,B,True,-0.1990693211555481,onboarding,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1443,False,0,TIE,B,False,0.2230021357536316,other,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1490,False,0,TIE,TIE,True,-0.012627720832824707,vpn_access,"(GI-IaaS) Network On-Prem (LAN,WLAN,WAN 2nd level)"
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1507,False,1,B,A,True,0.10830521583557129,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1543,False,1,B,A,True,0.04342007637023926,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-1578,False,-1,A,B,True,-0.19454355537891388,other,(GI-SaaS) Salesforce
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-183,False,0,B,TIE,False,0.050896644592285156,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-192,False,-1,A,B,True,0.1565185785293579,vpn_access,(GI-UX) Network Access
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-201,False,1,B,A,True,0.330607071518898,email_support,(GI-UX) Unified Communication
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-206,False,1,B,A,True,0.12527650594711304,other,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-265,False,0,B,TIE,False,-0.02829277515411377,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-280,False,0,TIE,B,False,0.059450626373291016,admin_rights,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-287,False,0,TIE,TIE,True,-0.014933794736862183,software_support,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-295,False,0,B,TIE,False,0.00846165418624878,admin_rights,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-296,False,0,B,B,False,0.04759979248046875,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-301,False,-1,A,B,True,0.02962210774421692,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-377,False,0,TIE,TIE,True,-0.012654483318328857,software_support,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-412,False,0,TIE,TIE,True,0.030413329601287842,onboarding,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-424,False,0,TIE,B,False,-0.0835498571395874,offboarding,(LF) IT Office Access Italy
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-429,False,0,TIE,TIE,True,-0.0805811882019043,other,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-43,False,0,TIE,TIE,True,-0.0010715723037719727,software_support,(GI-UX) Windows
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-439,False,1,B,A,True,0.08782535791397095,vpn_access,(GI-UX) Network Access
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-443,False,1,B,A,True,-0.26564353704452515,software_support,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-447,False,0,TIE,TIE,True,-0.033841729164123535,other,(GI-UX) Office365 & MS-Teams
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-457,False,0,TIE,TIE,True,0.17708873748779297,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-461,False,-1,A,B,True,-0.16294962167739868,offboarding,(LF) IT Office Access Italy
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-50,False,-1,A,B,True,0.022290289402008057,vpn_access,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-500,False,0,TIE,TIE,True,-0.023564159870147705,vpn_access,(GI-UX) Network Access
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-53,False,0,TIE,TIE,True,-0.015418052673339844,software_license,(GI-IaaS) Admin - License & Asset Management
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-535,False,0,B,B,False,-0.042225420475006104,admin_rights,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-567,False,0,B,TIE,False,0.04003936052322388,software_license,(GI-IaaS) Development Platform
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-598,False,0,TIE,TIE,True,-0.02772355079650879,onboarding,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-64,False,0,TIE,TIE,True,0.03380101919174194,email_support,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-642,False,0,TIE,TIE,True,-0.03126710653305054,other,(BF) Information Security Office
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-659,False,0,B,B,False,-0.06411778926849365,admin_rights,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-676,False,1,B,A,True,0.051794469356536865,other,(GI-CyberSec) Cybersecurity
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-728,False,1,B,A,True,0.14211654663085938,offboarding,(GI-IaaS) Backend Application Srv. & Project Support
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-747,False,0,TIE,TIE,True,0.035217657685279846,other,(GI-IaaS) Development Platform
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-770,False,0,TIE,TIE,True,-0.01782912015914917,software_license,(GI-IaaS) Development Platform
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-779,False,0,TIE,B,False,-0.20785021781921387,onboarding,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-831,False,0,A,TIE,False,0.013528823852539062,hr_tools,(GI-SaaS) Salesforce
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-835,False,0,B,TIE,False,0.0365409255027771,software_license,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-889,False,0,B,B,False,-0.09925198554992676,admin_rights,(GI-CF) Robot Process Automation
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-916,False,0,TIE,TIE,True,0.030464529991149902,vpn_access,"(GI-IaaS) Network On-Prem (LAN,WLAN,WAN 2nd level)"
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-927,False,-1,A,B,True,0.017790526151657104,other,"(GI-IaaS) Network Cloud (Azure, Remote Access)"
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-94,False,0,TIE,TIE,True,0.007973968982696533,collaboration,(GI-UX) Account Management
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-96,False,1,B,A,True,-0.024744510650634766,hardware_support,(GI-UX) Group
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-961,False,0,TIE,TIE,True,0.08271020650863647,other,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-962,False,0,TIE,TIE,True,0.04965782165527344,absence,(GI-SaaS) Salesforce
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-963,False,0,TIE,TIE,True,-0.07485726475715637,admin_rights,(GI-UX) File & Print
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-980,False,0,TIE,TIE,True,0.17180317640304565,vpn_access,(GI-UX) Network Access
+M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2,R-996,False,0,TIE,TIE,True,0.01569145917892456,vpn_access,(GI-UX) Network Access

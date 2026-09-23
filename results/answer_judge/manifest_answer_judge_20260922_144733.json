@@ -1,0 +1,66 @@
+{
+  "run_id": "answer_judge_20260922_144733",
+  "script": "experiments/09_llm_judge_pairwise.py",
+  "timestamp_utc": "2026-09-22T14:57:41.623004+00:00",
+  "argv": [
+    "experiments/09_llm_judge_pairwise.py",
+    "--judge-model",
+    "anthropic/claude-sonnet-5",
+    "--runs",
+    "M4_intersection_eval_conditioned_continuous",
+    "M2_team_eval_conditioned_continuous",
+    "M4_intersection_eval_conditioned_continuous_gated",
+    "M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated",
+    "M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2"
+  ],
+  "args": {
+    "seed": 42,
+    "regime": "random",
+    "verbose": false,
+    "judge_model": "anthropic/claude-sonnet-5",
+    "runs": [
+      "M4_intersection_eval_conditioned_continuous",
+      "M2_team_eval_conditioned_continuous",
+      "M4_intersection_eval_conditioned_continuous_gated",
+      "M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated",
+      "M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2"
+    ],
+    "n": 100,
+    "concurrency": 4
+  },
+  "config": null,
+  "git": {
+    "sha": "84184422602ea116ee42c9be2881b70dec2dc027",
+    "dirty": true,
+    "branch": "main"
+  },
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "hostname": "AilabStudent",
+  "packages": {
+    "numpy": "2.5.3",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "sentence-transformers": "6.0.1",
+    "transformers": "5.17.0",
+    "torch": "2.14.0",
+    "faiss-cpu": "1.15.0",
+    "openai": "3.13.0",
+    "rouge-score": "0.1.2",
+    "bert-score": "0.3.13",
+    "rank-bm25": "0.2.2",
+    "xgboost": "3.4.1"
+  },
+  "inputs": {
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M4_intersection_eval_conditioned_continuous\\M4_intersection_eval_conditioned_continuous_20260920_134826_details.json": "b20a99ca8d194892b967e077e6ce325ab0a277c469f09022bcd4b26dc78c68d6",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M2_team_eval_conditioned_continuous\\M2_team_eval_conditioned_continuous_20260920_134848_details.json": "6d859fa3ee66695cee48840942330d677ebdc809dbd7356d7d4d08c047635da0",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M4_intersection_eval_conditioned_continuous_gated\\M4_intersection_eval_conditioned_continuous_gated_20260921_125720_details.json": "e2aab792b5af7d477d8774d8df2731fc5a37156d36c3df56d9747ece6736ec68",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated\\M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated_20260921_122402_details.json": "cbacec6b4577ff8c857513319f272271c9ffbd4c18a77e03685b3a73198b2e50",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\results\\M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2\\M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_20260920_133900_details.json": "a14ef1f28654358d3b7761f7cd6795601b57d6c5f8dbadfe8ef703f35165d03e"
+  },
+  "extra": {
+    "cache_hits": 282,
+    "cache_misses": 476
+  }
+}

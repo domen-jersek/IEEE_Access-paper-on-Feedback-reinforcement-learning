@@ -18,6 +18,7 @@ import pandas as pd
 
 from ..config import EvalConfig
 from ..generation.client import LLMClient
+from ..generation.regime import generation_regime
 from ..evaluation.protocol import evaluate_one_ticket
 
 log = logging.getLogger(__name__)
@@ -38,6 +39,7 @@ class EvaluationRunner:
         priors=None,
         retriever_name: str = "dense_minilm",
         text_sim=None,
+        gate=None,
     ):
         self.config = config
         self.dataset = dataset.set_index("seq_id")
@@ -47,6 +49,7 @@ class EvaluationRunner:
         self.priors = priors
         self.retriever_name = retriever_name
         self.text_sim = text_sim
+        self.gate = gate
         self.results_dir = Path(results_dir)
         self.results_dir.mkdir(parents=True, exist_ok=True)
         self.concurrency = concurrency
@@ -77,6 +80,7 @@ class EvaluationRunner:
                         self.feedback_scores, self.config, self.llm_client,
                         priors=self.priors, retriever_name=self.retriever_name,
                         text_sim=self.text_sim,
+                        gate=self.gate,
                     )
                     result["_config_hash"] = self.config.config_hash
                     async with results_lock:
@@ -109,6 +113,22 @@ class EvaluationRunner:
         detail_path.write_text(json.dumps(result_clean, indent=2, ensure_ascii=False), encoding="utf-8")
 
         valid = [r for r in results if r is not None]
+        regime = generation_regime(
+            model=self.config.generator_model,
+            cache_path=self.llm_client._cache_path,
+            temperature=self.config.temperature,
+            cache_rows_before=self.llm_client.cache_rows_before,
+            cache_rows_after=self.llm_client.cache_row_count(),
+            hits=self.llm_client.cache_hits,
+            misses=self.llm_client.cache_misses,
+        )
+        if regime["cache_enabled"] and regime["warm"] is False:
+            log.warning(
+                "Generation regime %s had %d cache miss(es): this run mixes newly "
+                "generated answers with cached ones and must not be compared against "
+                "other runs as if it were warm.",
+                regime["regime_id"], regime["cache_misses"],
+            )
         summary = {
             "experiment_id": self.config.experiment_id,
             "config": self.config.to_dict(),
@@ -123,6 +143,7 @@ class EvaluationRunner:
                 "hits": self.llm_client.cache_hits,
                 "misses": self.llm_client.cache_misses,
             },
+            "generation_regime": regime,
             "metrics": self._compute_summary(valid, [r["ticket_id"] for r in valid]),
         }
         summary_path = self.results_dir / f"{self.config.experiment_id}_{ts}_summary.json"

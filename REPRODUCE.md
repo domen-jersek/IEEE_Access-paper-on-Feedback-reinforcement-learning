@@ -98,19 +98,38 @@ explanation on every output:
 | `03_when_feedback_helps.ipynb` | analysis | conditional benefit, evidence, scope, volume, ceilings, retriever ladder, negative controls |
 | `04_modeling_the_prior.ipynb` | modeling | lift formulas, centering, pool-relative scaling, backoff, blend null, aggression tradeoff |
 | `05_modeling_the_control_policy.ipynb` | modeling | pre-generation gating, dev→eval methodology, policy value, ceiling recovery |
-| `06_final_results_and_claims.ipynb` | results | locked configuration, dev + eval results, robustness, independent metrics, claim ledger |
+| `06_final_results_and_claims.ipynb` | results | locked configuration, dev + eval results, robustness, independent metrics, judge, claim ledger |
+| `07_general_gate.ipynb` | modeling | general gate (grouped CV, dev-frozen thresholds), decomposition, magnitude policy, live gated runs |
 
-## P5 — semantic relevance filter and gate pilot
+## P5 — general gate study (fixed methodology)
 
 ```powershell
-# offline sweeps of the semantic-filter routings (conditioned + blind)
+# one gate across all routing signals and both protocols, dev -> eval
+# (GroupKFold by ticket, thresholds frozen on dev, clustered CIs, decomposition)
+python experiments/17_gate_study.py --tag general
+
+# semantic relevance-filter routings (offline negative result)
 python experiments/11_retriever_ladder.py --routings M4_intersection M5_backoff semantic_intersection_tau0.6 semantic_intersection_tau0.7 semantic_backoff_tau0.6 semantic_backoff_tau0.7 --tag semantic
 python experiments/11_retriever_ladder.py --feedback-protocol blind --routings M4_intersection M5_backoff semantic_intersection_tau0.6 semantic_intersection_tau0.7 semantic_backoff_tau0.6 semantic_backoff_tau0.7 --tag semantic_blind
-
-# learned-gate pilot on generated dev labels (free; train/CV on dev)
-python experiments/16_gate_pilot.py --runs results/M2_team_dev_blind_continuous results/M4_intersection_dev_blind_continuous --feedback-protocol blind --tag blind
-python experiments/16_gate_pilot.py --runs results/M2_team_dev_conditioned_continuous results/M4_intersection_dev_conditioned_continuous --tag conditioned
 ```
+
+## P6 — magnitude-aware control policy
+
+```powershell
+# expected-delta regression + cost-sensitive policy + action selection (free)
+python experiments/18_magnitude_policy.py
+
+# live gated evaluation (dev verification + eval; cache-only after the prompts are warm)
+python experiments/04_evaluate.py --method M4_intersection --gating-model results/gate_study_general/gate_model.joblib --gating-threshold 0.3
+python experiments/04_evaluate.py --method M4_intersection --split eval --gating-model results/gate_study_general/gate_model.joblib --gating-threshold 0.3
+python experiments/04_evaluate.py --method M5_backoff --lift laplace_eb --prior-strength 2 --scale-mode pool_std --pool-lambda 0.5 --min-evidence 2 --feedback-protocol blind --gating-model results/gate_study_general/gate_model.joblib --gating-threshold 0.3
+python experiments/04_evaluate.py --method M5_backoff --lift laplace_eb --prior-strength 2 --scale-mode pool_std --pool-lambda 0.5 --min-evidence 2 --feedback-protocol blind --split eval --gating-model results/gate_study_general/gate_model.joblib --gating-threshold 0.3
+```
+
+Regeneration note
+- Dev runs generated before 2026-09-17 had no response cache and are not reproducible; the affected
+  dev configurations were regenerated on 2026-09-22 and now carry a `generation_regime` block
+  (regime id, cache hits/misses, `warm` flag). Only warm runs of the same regime are compared.
 
 Notes
 - Baseline runs generate once per ticket (feedback == baseline), so a baseline run costs half a method run.

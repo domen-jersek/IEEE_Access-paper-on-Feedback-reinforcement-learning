@@ -1,0 +1,126 @@
+{
+  "run_id": "M2_team_eval_conditioned_continuous_gengemini38flash_20260922_183820",
+  "script": "experiments/04_evaluate.py",
+  "timestamp_utc": "2026-09-22T18:38:20.970266+00:00",
+  "argv": [
+    "experiments/04_evaluate.py",
+    "--method",
+    "M2_team",
+    "--generator-model",
+    "google/gemini-3.8-flash",
+    "--split",
+    "eval"
+  ],
+  "args": {
+    "seed": 42,
+    "regime": "random",
+    "verbose": false,
+    "method": "M2_team",
+    "split": "eval",
+    "feedback_protocol": "conditioned",
+    "agg_mode": "continuous",
+    "generator_model": "google/gemini-3.8-flash",
+    "retriever": "dense_minilm",
+    "lift": "laplace",
+    "prior_strength": 2.0,
+    "scale_mode": "absolute",
+    "pool_lambda": 1.0,
+    "min_evidence": 3.0,
+    "blend_weights": null,
+    "semantic_tau": null,
+    "gating_model": null,
+    "gating_threshold": null,
+    "search_k": 100,
+    "top_k": 5,
+    "limit": null,
+    "concurrency": 4,
+    "metric_set": "core",
+    "tag": "",
+    "no_cache": false,
+    "notes": ""
+  },
+  "config": {
+    "experiment_id": "M2_team_eval_conditioned_continuous_gengemini38flash",
+    "lift": {
+      "name": "laplace",
+      "alpha": 1.0,
+      "beta": 1.0,
+      "multiplier": 0.8,
+      "cap": 0.2,
+      "positive_only": false,
+      "sensitivity": 3.5,
+      "lcb_k": 1.0
+    },
+    "routing": {
+      "name": "categorical",
+      "w_global": 0.0,
+      "w_class": 0.0,
+      "w_team": 1.0,
+      "require_semantic": false
+    },
+    "gating": {
+      "name": "none",
+      "faiss_ceiling": 1.0,
+      "fuzzy_low": 0.0,
+      "fuzzy_high": 0.0,
+      "miracle_tau": 0.0
+    },
+    "generator_model": "google/gemini-3.8-flash",
+    "judge_model": "openai/gpt-5.6-luna",
+    "embedding_model": "all-MiniLM-L6-v2",
+    "top_k": 5,
+    "search_k": 100,
+    "temperature": 0.0,
+    "regime": "random",
+    "seed": 42
+  },
+  "git": {
+    "sha": "84184422602ea116ee42c9be2881b70dec2dc027",
+    "dirty": true,
+    "branch": "main"
+  },
+  "python": "3.12.8 (tags/v3.12.8:2dc476b, Dec  3 2024, 19:30:04) [MSC v.1942 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "hostname": "AilabStudent",
+  "packages": {
+    "numpy": "2.0.2",
+    "pandas": "2.2.3",
+    "scipy": "1.14.1",
+    "scikit-learn": "1.6.0",
+    "sentence-transformers": "5.1.0",
+    "transformers": "4.53.1",
+    "torch": "2.7.1",
+    "faiss-cpu": "1.11.0.post1",
+    "openai": "2.6.1",
+    "rouge-score": "0.1.2",
+    "bert-score": "0.3.13",
+    "rank-bm25": "0.2.2",
+    "xgboost": null
+  },
+  "inputs": {
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\dataset.parquet": "32453a69c847e32f6dd97859c475192171ccffe3f6c97ba06ff0a706df947a83",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\splits\\split_seed42.json": "a2361b8637c8e807673466f4df02d57a111debca3d8d8ffc8ae6faa86eb4a7e9",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\feedback_conditioned.db": "8faf7d7321a2ac9f4472abb222eeabf3d149e3e69a19b88b53909fa48617fdc3",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\faiss_index\\faiss.index": "3b4051a5dcb27f4933f6fb413590914c0bd84ab86f61c5ee9ec308360119a5c7",
+    "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\processed\\faiss_index\\faiss_metadata.parquet": "aa020e4b299515827671887e941a8a494308d54d147ed039c66ef90af1d6db2a"
+  },
+  "extra": {
+    "n_queries": 398,
+    "config_hash": "5c69a80ae0b4",
+    "generation_cache": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\cache\\generation_cache.db",
+    "generation_regime": {
+      "regime_id": "7ff7586e7a8a2f24",
+      "model": "google/gemini-3.8-flash",
+      "temperature": 0.0,
+      "system_prompt_sha256": "524098066b407de3",
+      "cache_path": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\cache\\generation_cache.db",
+      "cache_enabled": true,
+      "cache_rows_before": null,
+      "cache_rows_after": null,
+      "cache_hits": null,
+      "cache_misses": null,
+      "warm": null
+    },
+    "feedback_priors_global": 0.22789179954441915
+  }
+}

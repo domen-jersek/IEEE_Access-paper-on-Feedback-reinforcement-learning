@@ -1,0 +1,59 @@
+{
+  "experiment_id": "M4_intersection_dev_conditioned_continuous_gated",
+  "config": {
+    "experiment_id": "M4_intersection_dev_conditioned_continuous_gated",
+    "lift": {
+      "name": "laplace",
+      "alpha": 1.0,
+      "beta": 1.0,
+      "multiplier": 0.8,
+      "cap": 0.2,
+      "positive_only": false,
+      "sensitivity": 3.5,
+      "lcb_k": 1.0
+    },
+    "routing": {
+      "name": "categorical_intersection",
+      "w_global": 0.0,
+      "w_class": 1.0,
+      "w_team": 1.0,
+      "require_semantic": false
+    },
+    "gating": {
+      "name": "learned",
+      "faiss_ceiling": 1.0,
+      "fuzzy_low": 0.0,
+      "fuzzy_high": 0.0,
+      "miracle_tau": 0.0
+    },
+    "generator_model": "openai/gpt-5.6-luna",
+    "judge_model": "openai/gpt-5.6-luna",
+    "embedding_model": "all-MiniLM-L6-v2",
+    "top_k": 5,
+    "search_k": 100,
+    "temperature": 0.0,
+    "regime": "random",
+    "seed": 42
+  },
+  "config_hash": "e6299c11f139",
+  "generated_utc": "2026-09-21T12:57:48.090028+00:00",
+  "total_queries": 319,
+  "total_valid": 319,
+  "total_skipped": 0,
+  "retriever": "dense_minilm",
+  "generation_cache": {
+    "path": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\cache\\generation_cache.db",
+    "hits": 352,
+    "misses": 236
+  },
+  "metrics": {
+    "n_tickets": 319,
+    "mean_delta_cosine": 0.03198624287839967,
+    "median_delta_cosine": 0.0,
+    "std_delta_cosine": 0.11664149238912935,
+    "pct_improved": 0.4827586206896552,
+    "pct_worsened": 0.34796238244514105,
+    "pct_unchanged": 0.16927899686520376,
+    "mean_delta_rouge_l": 0.024765961155533967
+  }
+}

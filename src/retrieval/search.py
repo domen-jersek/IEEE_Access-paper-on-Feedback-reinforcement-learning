@@ -203,11 +203,15 @@ def apply_feedback_to_pool(
     query_team: str,
     priors=None,
     semantic_sims: Optional[np.ndarray] = None,
+    gate: Optional[dict] = None,
+    query_id: Optional[str] = None,
 ) -> pd.DataFrame:
     """Add feedback_lift_raw / lift_scope / feedback_lift / enhanced_score / gate columns to a pool.
 
     `semantic_sims` (optional, aligned with `pool` rows) feeds the semantic
-    relevance filter; when omitted the filter is inactive.
+    relevance filter and the gate's cosine features; when omitted those are inactive.
+    `gate` (optional dict with keys model/features/threshold) enables the learned
+    control policy: when P(help) < threshold the pool keeps its baseline ranking.
     """
     results = pool.reset_index(drop=True)
 
@@ -246,6 +250,19 @@ def apply_feedback_to_pool(
             results["gate_reason"] = f"static_ceiling_{gating_cfg.faiss_ceiling}"
         else:
             results["gate_active"] = False
+    elif gating_cfg.name == "learned" and gate is not None and query_id is not None:
+        from ..gate.pool_features import gate_features_from_pool
+        x = gate_features_from_pool(results, config.lift, config.routing, query_id, query_class, query_team,
+                                    feedback_scores, priors, gate["features"], semantic_sims=semantic_sims)
+        proba = float(gate["model"].predict_proba(x.reshape(1, -1))[0, 1])
+        results["gate_proba"] = proba
+        if proba < float(gate["threshold"]):
+            results["feedback_lift"] = 0.0
+            results["enhanced_score"] = results["faiss_score"]
+            results["gate_active"] = True
+            results["gate_reason"] = f"learned_p{proba:.3f}_below_{gate['threshold']:.2f}"
+        else:
+            results["gate_active"] = False
     elif gating_cfg.name == "learned":
         results["gate_active"] = None
     else:
@@ -269,12 +286,13 @@ def retrieve_feedback(
     semantic_sims: Optional[np.ndarray] = None,
     text_sim=None,
     query_id: Optional[str] = None,
+    gate: Optional[dict] = None,
 ):
     pool = _search(faiss_index, query_text, query_embedding, search_k, exclude_idxs)
     if semantic_sims is None and text_sim is not None and query_id is not None:
         semantic_sims = np.array([text_sim.s(query_id, str(cid)) for cid in pool["seq_id"]], dtype=float)
     results = apply_feedback_to_pool(pool, feedback_scores, config, query_class, query_team, priors,
-                                     semantic_sims=semantic_sims)
+                                     semantic_sims=semantic_sims, gate=gate, query_id=query_id)
 
     pool = results
     # NOTE: default (non-stable) sort kept on purpose — identical tie-ordering to the SIKDD runs.

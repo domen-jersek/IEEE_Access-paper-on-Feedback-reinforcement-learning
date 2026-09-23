@@ -1,8 +1,16 @@
 # Feedback as a Learnable Retrieval Prior
 
-**A clean, modular research environment for studying human-feedback-driven retrieval
+**A clean, modular research environment for studying LLM-judge feedback-driven retrieval
 re-ranking in retrieval-augmented generation (RAG) for IT support ticket first-reply
 generation.**
+
+> **Framing note.** The feedback signal in this environment is produced by an LLM judge
+> (simulated user/expert feedback), not by human raters. The *conditioned* protocol is
+> resolution-informed (the judge sees the historical ground-truth reply), so it simulates an
+> expert with access to the resolution and is an upper bound; the *blind* protocol is the
+> deployable, ticket-only setting. All generated runs are anchored to one generation regime
+> (model + system prompt + response cache); every summary records a `generation_regime` block
+> with the regime id, cache hit/miss counts, and a `warm` flag.
 
 Jožef Stefan Institute, Ljubljana, Slovenia
 
@@ -51,9 +59,9 @@ generate a first reply. The central problem this work addresses:
 > troubleshooting ticket) yet require entirely different resolutions (a software-install
 > form redirect vs. VPN troubleshooting steps).
 
-The idea under study is to **augment retrieval with human feedback**: historical
-candidates that past users rated as useful get promoted in the ranking, even if they
-are less textually similar to the query. The key open questions are:
+The idea under study is to **augment retrieval with simulated feedback from an LLM judge**:
+historical candidates that a judge (or, in deployment, past users) rated as useful get promoted
+in the ranking, even if they are less textually similar to the query. The key open questions are:
 
 1. **When** does feedback help, and when does it hurt?
 2. **Can we predict** (before generation) whether feedback will help or hurt a given
@@ -343,6 +351,20 @@ Five random seeds produce independent splits. Headline results are reported as
 
 ---
 
+### Statistical and provenance rules (P0–P6)
+
+- **Grouped CV.** Gate models use `GroupKFold` by ticket; a ticket contributes one row per
+  configuration, so row-level folds would leak.
+- **Dev-frozen thresholds.** Policy cutoffs are selected on dev only; eval threshold sweeps are
+  diagnostics, never the reported policy.
+- **Clustered intervals.** Bootstrap CIs resample tickets, not rows.
+- **Counterfactual decomposition.** Every gate is reported with the open/closed mean delta and
+  harm rates of the tickets it removes (`learned_gate_decomposition.csv`).
+- **Generation regimes.** Runs are comparable only within a regime; summaries record the regime id
+  and a warm-cache flag, and the gate study prefers warm, anchored label sources.
+- **Oracle framing.** Conditioned feedback is resolution-informed and reported as an upper bound;
+  the blind protocol is the deployable result.
+
 ## How to run the pipeline
 
 ### 0. Setup
@@ -514,8 +536,10 @@ pytest tests/ -v
 | `10_feedback_calibration.py` | `--protocols`, `--saturation-queries` | `results/feedback_calibration/{report.json, reliability_*.csv, saturation.csv}` |
 | `11_retriever_ladder.py` | `--split`, `--retrievers`, `--routings`, `--scale-modes`, `--kappas` | `results/retriever_ladder/{grid.csv, ladder_curve.csv, per_ticket.parquet, pools/}` |
 | `12_learn_blend.py` | `--retriever`, `--lift`, `--scale-mode`, `--step` | `results/blend/{learned_weights.json, grid_train.csv, dev_eval.csv, gate_features_*.parquet}` |
+| `17_gate_study.py` | `--tag`, `--retriever` | `results/gate_study_<tag>/{features_*.parquet, learned_gate.csv, learned_gate_decomposition.csv, learned_gate_proxy.csv, learned_gate_eval_sweep.csv, static_gate*.csv, multi_action.csv, gate_model.joblib, gate_meta.json, summary.json}` |
+| `18_magnitude_policy.py` | `--features-dir`, `--tag` | `results/magnitude_policy/{policy_table.csv, decomposition.csv, action_selection.csv, dev/eval_predictions.parquet, summary.json}` |
 
-See `REPRODUCE.md` for the ordered command list of the P0–P4 research programme.
+See `REPRODUCE.md` for the ordered command list of the P0–P6 research programme.
 
 ## Reproducibility
 

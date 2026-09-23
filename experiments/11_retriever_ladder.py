@@ -69,7 +69,8 @@ def build_routings(semantic_taus: list[float]) -> dict[str, RoutingConfig]:
     return out
 
 
-def lift_variants(scale_modes: list[str], lambdas: list[float], kappas: list[float]) -> dict[str, LiftConfig]:
+def lift_variants(scale_modes: list[str], lambdas: list[float], kappas: list[float],
+                  tanh_sensitivities: list[float], lcb_ks: list[float]) -> dict[str, LiftConfig]:
     out = {}
     for sm in scale_modes:
         lams = lambdas if sm == "pool_std" else [1.0]
@@ -78,6 +79,12 @@ def lift_variants(scale_modes: list[str], lambdas: list[float], kappas: list[flo
             out[f"laplace|{tag}"] = LiftConfig(name="laplace", scale_mode=sm, pool_lambda=lam)
             for k in kappas:
                 out[f"laplace_eb_k{k:g}|{tag}"] = LiftConfig.laplace_eb(prior_strength=k, scale_mode=sm, pool_lambda=lam)
+            for s in tanh_sensitivities:
+                out[f"tanh_s{s:g}|{tag}"] = LiftConfig(name="tanh", multiplier=0.80, cap=0.20,
+                                                       sensitivity=s, scale_mode=sm, pool_lambda=lam)
+            for k in lcb_ks:
+                out[f"bayesian_lcb_k{k:g}|{tag}"] = LiftConfig(name="bayesian_lcb", multiplier=0.80, cap=0.20,
+                                                               lcb_k=k, scale_mode=sm, pool_lambda=lam)
     return out
 
 
@@ -89,6 +96,10 @@ def main() -> None:
     parser.add_argument("--scale-modes", nargs="*", default=["absolute", "pool_std"])
     parser.add_argument("--lambdas", nargs="*", type=float, default=[0.5, 1.0, 2.0])
     parser.add_argument("--kappas", nargs="*", type=float, default=[2.0, 10.0])
+    parser.add_argument("--tanh-sensitivities", nargs="*", type=float, default=[3.5],
+                        help="tanh lift sensitivity values (lift-formula ablation)")
+    parser.add_argument("--lcb-ks", nargs="*", type=float, default=[1.0],
+                        help="Bayesian-LCB k values (lift-formula ablation)")
     parser.add_argument("--sim-models", nargs="*", default=["minilm", "bge"])
     parser.add_argument("--search-k", type=int, default=100)
     parser.add_argument("--top-k", type=int, default=5)
@@ -133,7 +144,8 @@ def main() -> None:
     enc = TicketEncoder("all-MiniLM-L6-v2")
     text_sim = TicketTextSimilarity(df, encoder=enc) if needs_semantic else None
 
-    lifts = lift_variants(args.scale_modes, args.lambdas, args.kappas)
+    lifts = lift_variants(args.scale_modes, args.lambdas, args.kappas,
+                          args.tanh_sensitivities, args.lcb_ks)
     grid_rows, ticket_frames, curve_rows = [], [], []
     for rname in args.retrievers:
         log.info("=== retriever: %s ===", rname)

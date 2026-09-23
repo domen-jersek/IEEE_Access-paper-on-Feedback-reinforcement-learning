@@ -1,0 +1,58 @@
+{
+  "judge_model": "anthropic/claude-sonnet-5",
+  "generator_model": "openai/gpt-5.6-luna",
+  "prompt_version": "pairwise_v1",
+  "n_subsample": 100,
+  "runs": {
+    "M2_team_eval_conditioned_continuous": {
+      "n": 100,
+      "n_identical": 4,
+      "feedback_wins": 32,
+      "baseline_wins": 15,
+      "ties_or_inconsistent": 49,
+      "net_win_rate": 0.17708333333333334,
+      "position_consistency": 0.6979166666666666,
+      "agreement_with_cosine_sign": 0.3541666666666667
+    },
+    "M4_intersection_eval_conditioned_continuous": {
+      "n": 100,
+      "n_identical": 12,
+      "feedback_wins": 36,
+      "baseline_wins": 9,
+      "ties_or_inconsistent": 43,
+      "net_win_rate": 0.3068181818181818,
+      "position_consistency": 0.7727272727272727,
+      "agreement_with_cosine_sign": 0.38636363636363635
+    },
+    "M4_intersection_eval_conditioned_continuous_gated": {
+      "n": 100,
+      "n_identical": 15,
+      "feedback_wins": 35,
+      "baseline_wins": 9,
+      "ties_or_inconsistent": 41,
+      "net_win_rate": 0.3058823529411765,
+      "position_consistency": 0.7764705882352941,
+      "agreement_with_cosine_sign": 0.4
+    },
+    "M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2": {
+      "n": 100,
+      "n_identical": 32,
+      "feedback_wins": 12,
+      "baseline_wins": 10,
+      "ties_or_inconsistent": 46,
+      "net_win_rate": 0.029411764705882353,
+      "position_consistency": 0.7058823529411765,
+      "agreement_with_cosine_sign": 0.17647058823529413
+    },
+    "M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gated": {
+      "n": 100,
+      "n_identical": 58,
+      "feedback_wins": 6,
+      "baseline_wins": 8,
+      "ties_or_inconsistent": 28,
+      "net_win_rate": -0.047619047619047616,
+      "position_consistency": 0.6904761904761905,
+      "agreement_with_cosine_sign": 0.14285714285714285
+    }
+  }
+}

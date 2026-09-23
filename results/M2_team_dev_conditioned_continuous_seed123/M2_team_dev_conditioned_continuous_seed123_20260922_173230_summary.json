@@ -1,0 +1,72 @@
+{
+  "experiment_id": "M2_team_dev_conditioned_continuous_seed123",
+  "config": {
+    "experiment_id": "M2_team_dev_conditioned_continuous_seed123",
+    "lift": {
+      "name": "laplace",
+      "alpha": 1.0,
+      "beta": 1.0,
+      "multiplier": 0.8,
+      "cap": 0.2,
+      "positive_only": false,
+      "sensitivity": 3.5,
+      "lcb_k": 1.0
+    },
+    "routing": {
+      "name": "categorical",
+      "w_global": 0.0,
+      "w_class": 0.0,
+      "w_team": 1.0,
+      "require_semantic": false
+    },
+    "gating": {
+      "name": "none",
+      "faiss_ceiling": 1.0,
+      "fuzzy_low": 0.0,
+      "fuzzy_high": 0.0,
+      "miracle_tau": 0.0
+    },
+    "generator_model": "openai/gpt-5.6-luna",
+    "judge_model": "openai/gpt-5.6-luna",
+    "embedding_model": "all-MiniLM-L6-v2",
+    "top_k": 5,
+    "search_k": 100,
+    "temperature": 0.0,
+    "regime": "random",
+    "seed": 123
+  },
+  "config_hash": "c3e68a294b04",
+  "generated_utc": "2026-09-22T17:32:32.752363+00:00",
+  "total_queries": 319,
+  "total_valid": 319,
+  "total_skipped": 0,
+  "retriever": "dense_minilm",
+  "generation_cache": {
+    "path": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\cache\\generation_cache.db",
+    "hits": 624,
+    "misses": 0
+  },
+  "generation_regime": {
+    "regime_id": "51fd9f4b37e900bb",
+    "model": "openai/gpt-5.6-luna",
+    "temperature": 0.0,
+    "system_prompt_sha256": "524098066b407de3",
+    "cache_path": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\cache\\generation_cache.db",
+    "cache_enabled": true,
+    "cache_rows_before": 10294,
+    "cache_rows_after": 10294,
+    "cache_hits": 624,
+    "cache_misses": 0,
+    "warm": true
+  },
+  "metrics": {
+    "n_tickets": 319,
+    "mean_delta_cosine": 0.006260192085956705,
+    "median_delta_cosine": 0.0,
+    "std_delta_cosine": 0.11879453389404465,
+    "pct_improved": 0.49216300940438873,
+    "pct_worsened": 0.4608150470219436,
+    "pct_unchanged": 0.047021943573667714,
+    "mean_delta_rouge_l": 0.008754211040062144
+  }
+}

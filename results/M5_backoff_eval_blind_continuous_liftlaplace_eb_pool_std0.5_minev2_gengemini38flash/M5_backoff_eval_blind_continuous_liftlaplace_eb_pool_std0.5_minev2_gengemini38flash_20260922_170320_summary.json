@@ -1,0 +1,75 @@
+{
+  "experiment_id": "M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gengemini38flash",
+  "config": {
+    "experiment_id": "M5_backoff_eval_blind_continuous_liftlaplace_eb_pool_std0.5_minev2_gengemini38flash",
+    "lift": {
+      "name": "laplace_eb",
+      "alpha": 1.0,
+      "beta": 1.0,
+      "multiplier": 0.8,
+      "cap": 0.2,
+      "positive_only": false,
+      "sensitivity": 3.5,
+      "lcb_k": 1.0,
+      "scale_mode": "pool_std",
+      "pool_lambda": 0.5
+    },
+    "routing": {
+      "name": "backoff",
+      "w_global": 0.0,
+      "w_class": 0.0,
+      "w_team": 0.0,
+      "require_semantic": false,
+      "min_evidence": 2.0
+    },
+    "gating": {
+      "name": "none",
+      "faiss_ceiling": 1.0,
+      "fuzzy_low": 0.0,
+      "fuzzy_high": 0.0,
+      "miracle_tau": 0.0
+    },
+    "generator_model": "google/gemini-3.8-flash",
+    "judge_model": "openai/gpt-5.6-luna",
+    "embedding_model": "all-MiniLM-L6-v2",
+    "top_k": 5,
+    "search_k": 100,
+    "temperature": 0.0,
+    "regime": "random",
+    "seed": 42
+  },
+  "config_hash": "cf3238523f49",
+  "generated_utc": "2026-09-22T17:03:23.462575+00:00",
+  "total_queries": 398,
+  "total_valid": 398,
+  "total_skipped": 0,
+  "retriever": "dense_minilm",
+  "generation_cache": {
+    "path": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\cache\\generation_cache.db",
+    "hits": 38,
+    "misses": 623
+  },
+  "generation_regime": {
+    "regime_id": "7ff7586e7a8a2f24",
+    "model": "google/gemini-3.8-flash",
+    "temperature": 0.0,
+    "system_prompt_sha256": "524098066b407de3",
+    "cache_path": "C:\\Users\\ailab\\Documents\\code\\financial-pilot-ea\\paper_ieee_access\\data\\cache\\generation_cache.db",
+    "cache_enabled": true,
+    "cache_rows_before": 8982,
+    "cache_rows_after": 10293,
+    "cache_hits": 38,
+    "cache_misses": 623,
+    "warm": false
+  },
+  "metrics": {
+    "n_tickets": 398,
+    "mean_delta_cosine": 0.006557138421427664,
+    "median_delta_cosine": 0.0,
+    "std_delta_cosine": 0.07824011416289911,
+    "pct_improved": 0.31909547738693467,
+    "pct_worsened": 0.2613065326633166,
+    "pct_unchanged": 0.41959798994974873,
+    "mean_delta_rouge_l": 0.005937063352422683
+  }
+}

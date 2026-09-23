@@ -297,6 +297,90 @@ def load_gate_pilot_rules(tag: str = "blind") -> pd.DataFrame:
                 f"python experiments/16_gate_pilot.py --tag {tag} ...")
 
 
+def _gate_study_dir(tag: str) -> Path:
+    return RESULTS / f"gate_study_{tag}"
+
+
+def load_gate_study_summary(tag: str = "general") -> dict:
+    return _json(_gate_study_dir(tag) / "summary.json", f"python experiments/17_gate_study.py --tag {tag}")
+
+
+def load_gate_study_features(split: str = "dev", tag: str = "general") -> pd.DataFrame:
+    path = _require(_gate_study_dir(tag) / f"features_{split}.parquet",
+                    f"python experiments/17_gate_study.py --tag {tag}")
+    return pd.read_parquet(path)
+
+
+def load_gate_study_static(tag: str = "general") -> pd.DataFrame:
+    return _csv(_gate_study_dir(tag) / "static_gate.csv", f"python experiments/17_gate_study.py --tag {tag}")
+
+
+def load_gate_study_learned(tag: str = "general") -> pd.DataFrame:
+    return _csv(_gate_study_dir(tag) / "learned_gate.csv", f"python experiments/17_gate_study.py --tag {tag}")
+
+
+def load_gate_study_proxy(tag: str = "general") -> pd.DataFrame:
+    return _csv(_gate_study_dir(tag) / "learned_gate_proxy.csv", f"python experiments/17_gate_study.py --tag {tag}")
+
+
+def load_gate_study_multi(tag: str = "general") -> pd.DataFrame:
+    return _csv(_gate_study_dir(tag) / "multi_action.csv", f"python experiments/17_gate_study.py --tag {tag}")
+
+
+def load_gate_study_decomposition(tag: str = "general") -> pd.DataFrame:
+    return _csv(_gate_study_dir(tag) / "learned_gate_decomposition.csv",
+                f"python experiments/17_gate_study.py --tag {tag}")
+
+
+def load_gate_study_static_eval(tag: str = "general") -> pd.DataFrame:
+    return _csv(_gate_study_dir(tag) / "static_gate_eval.csv",
+                f"python experiments/17_gate_study.py --tag {tag}")
+
+
+def load_gate_study_eval_sweep(tag: str = "general") -> pd.DataFrame:
+    """Diagnostic only: eval-threshold sweep, never used to choose the policy."""
+    return _csv(_gate_study_dir(tag) / "learned_gate_eval_sweep.csv",
+                f"python experiments/17_gate_study.py --tag {tag}")
+
+
+def _magnitude_dir(tag: str = "") -> Path:
+    return RESULTS / ("magnitude_policy" + (f"_{tag}" if tag else ""))
+
+
+def load_magnitude_summary(tag: str = "") -> dict:
+    return _json(_magnitude_dir(tag) / "summary.json", "python experiments/18_magnitude_policy.py")
+
+
+def load_magnitude_policy(tag: str = "") -> pd.DataFrame:
+    return _csv(_magnitude_dir(tag) / "policy_table.csv", "python experiments/18_magnitude_policy.py")
+
+
+def load_magnitude_decomposition(tag: str = "") -> pd.DataFrame:
+    return _csv(_magnitude_dir(tag) / "decomposition.csv", "python experiments/18_magnitude_policy.py")
+
+
+def load_magnitude_actions(tag: str = "") -> pd.DataFrame:
+    return _csv(_magnitude_dir(tag) / "action_selection.csv", "python experiments/18_magnitude_policy.py")
+
+
+def load_gated_rescored() -> pd.DataFrame:
+    """Independent metrics for live gated runs, from the combined rescored table."""
+    frame = load_rescore_comparison()
+    return frame[frame["run"].fillna("").str.endswith("_gated")].copy()
+
+
+def load_gated_runs() -> pd.DataFrame:
+    """Summaries of live gated evaluation runs (folders ending in `_gated`)."""
+    rows = []
+    for path in RESULTS.glob("*_gated/*_summary.json"):
+        summary = json.loads(path.read_text(encoding="utf-8"))
+        metrics = summary.get("metrics", {})
+        rows.append({"run": path.parent.name, "n": summary.get("total_valid"),
+                     "mean_delta_cosine": metrics.get("mean_delta_cosine"),
+                     "pct_improved": metrics.get("pct_improved"), "pct_worsened": metrics.get("pct_worsened")})
+    return pd.DataFrame(rows).sort_values("run").reset_index(drop=True) if rows else pd.DataFrame()
+
+
 def load_gate_dev_eval(tag: str = "gate_eb_m4") -> dict:
     return _json(RESULTS / tag / "dev_eval.json", "python experiments/05_gate_cv.py ... --tag eb_m4")
 

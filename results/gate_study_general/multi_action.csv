@@ -1,0 +1,5 @@
+policy,mean_delta
+always_on_best_fixed,0.00024343519494985814
+learned_multi_action,-0.007946120762270898
+never_on,0.0
+oracle_action,0.057111368135516365

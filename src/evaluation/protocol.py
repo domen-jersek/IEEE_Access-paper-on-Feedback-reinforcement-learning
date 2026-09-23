@@ -85,6 +85,7 @@ async def evaluate_one_ticket(
     priors=None,
     retriever_name: str = "dense_minilm",
     text_sim=None,
+    gate=None,
 ) -> dict:
     query_title = str(query_row["Title_anon"])
     query_desc = str(query_row.get("Description_anon", "") or "")
@@ -111,7 +112,7 @@ async def evaluate_one_ticket(
         faiss_index, query_embedding, config.top_k, exclude_idxs,
         feedback_scores, config, query_class, query_team, config.search_k,
         query_text=query_text, priors=priors, return_pool=True,
-        text_sim=text_sim, query_id=query_id,
+        text_sim=text_sim, query_id=query_id, gate=gate,
     )
 
     bl_candidates = baseline_df.to_dict("records")
@@ -171,6 +172,7 @@ async def evaluate_one_ticket(
         "pool_features": pool_features,
         "retrieval_overlap": compute_overlap(baseline_df, feedback_df),
         "gate_active": bool(feedback_df["gate_active"].iloc[0]) if "gate_active" in feedback_df.columns else False,
+        "gate_proba": float(feedback_df["gate_proba"].iloc[0]) if "gate_proba" in feedback_df.columns else None,
         # --- P0 additions ---
         "query_description": query_desc,
         "generator_model": config.generator_model,

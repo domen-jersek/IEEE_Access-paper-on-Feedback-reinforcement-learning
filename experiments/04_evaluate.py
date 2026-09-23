@@ -39,13 +39,14 @@ from experiments.utils import (  # noqa: E402  (sets USE_TF=0 before transformer
     setup_logging, load_dataset, load_split, split_path, get_arg_parser,
     set_seeds, write_run_manifest, append_registry, short_model_name, cache_dir, make_run_id,
 )
-from src.config import ProjectPaths, DEFAULT_METHODS, EvalConfig, LiftConfig, RoutingConfig, RETRIEVERS
+from src.config import ProjectPaths, DEFAULT_METHODS, EvalConfig, LiftConfig, RoutingConfig, GatingConfig, RETRIEVERS
 from src.retrieval.encoder import TicketEncoder
 from src.retrieval.index import FAISSIndex
 from src.retrieval.retrievers import build_retriever
 from src.retrieval.semantic import TicketTextSimilarity
 from src.feedback.loader import load_feedback_bundle
 from src.evaluation.runner import EvaluationRunner
+from src.generation.regime import generation_regime
 
 
 def build_config(args, base_cfg: EvalConfig) -> tuple[EvalConfig, str]:
@@ -97,6 +98,8 @@ def build_config(args, base_cfg: EvalConfig) -> tuple[EvalConfig, str]:
         suffix_parts.append(f"seed{args.seed}")
     if args.tag:
         suffix_parts.append(args.tag)
+    if args.gating_model:
+        suffix_parts.append("gated")
 
     folder = f"{args.method}_{args.split}_{args.feedback_protocol}_{args.agg_mode}"
     if suffix_parts:
@@ -106,7 +109,7 @@ def build_config(args, base_cfg: EvalConfig) -> tuple[EvalConfig, str]:
         experiment_id=folder,
         lift=lift,
         routing=routing,
-        gating=base_cfg.gating,
+        gating=GatingConfig.learned() if args.gating_model else base_cfg.gating,
         generator_model=gen_model,
         judge_model=base_cfg.judge_model,
         regime=args.regime,
@@ -137,6 +140,10 @@ async def main_async() -> None:
     parser.add_argument("--blend-weights", type=str, default=None)
     parser.add_argument("--semantic-tau", type=float, default=None,
                         help="Query<->candidate text cosine threshold for M7/M8 semantic routings")
+    parser.add_argument("--gating-model", type=str, default=None,
+                        help="Path to a gate_model.joblib from 17_gate_study.py (enables live gating)")
+    parser.add_argument("--gating-threshold", type=float, default=None,
+                        help="Override the gate threshold stored in the model file")
     parser.add_argument("--search-k", type=int, default=100)
     parser.add_argument("--top-k", type=int, default=5)
     parser.add_argument("--limit", type=int, default=None)
@@ -191,10 +198,19 @@ async def main_async() -> None:
     log.info("=== Configuring evaluation ===")
     base_cfg = DEFAULT_METHODS[args.method]
     config, folder = build_config(args, base_cfg)
-    text_sim = TicketTextSimilarity(df, encoder=encoder) if config.routing.name.startswith("semantic") else None
+    gate = None
+    if args.gating_model:
+        import joblib
+        gate = joblib.load(args.gating_model)
+        if args.gating_threshold is not None:
+            gate["threshold"] = float(args.gating_threshold)
+        log.info("Learned gate loaded: %d features, threshold=%.3f", len(gate["features"]), float(gate["threshold"]))
+    text_sim = TicketTextSimilarity(df, encoder=encoder) if (config.routing.name.startswith("semantic") or gate is not None) else None
     results_dir = paths.results / folder
     cache_path = None if args.no_cache else cache_dir() / "generation_cache.db"
     run_id = make_run_id(folder)
+    regime = generation_regime(model=config.generator_model, cache_path=cache_path,
+                               temperature=config.temperature)
 
     manifest = write_run_manifest(
         results_dir, script="experiments/04_evaluate.py", args=args, config=config.to_dict(),
@@ -202,6 +218,7 @@ async def main_async() -> None:
                 index_dir / "faiss.index", index_dir / "faiss_metadata.parquet"],
         extra={"n_queries": len(query_ids), "config_hash": config.config_hash,
                "generation_cache": str(cache_path) if cache_path else None,
+               "generation_regime": regime,
                "feedback_priors_global": priors.prior_mean("global") if priors else None},
         run_id=run_id,
     )
@@ -219,6 +236,7 @@ async def main_async() -> None:
         priors=priors,
         retriever_name=args.retriever,
         text_sim=text_sim,
+        gate=gate,
     )
 
     log.info("=== Running evaluation (%s) ===", folder)

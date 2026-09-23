@@ -8,7 +8,7 @@ from pathlib import Path
 
 os.environ.setdefault("MPLBACKEND", "Agg")
 HERE = Path(__file__).resolve().parent
-NOTEBOOKS = sorted(HERE.glob("0[2-6]_*.ipynb"))
+NOTEBOOKS = sorted(HERE.glob("0[2-7]_*.ipynb"))
 
 
 def validate(path: Path, execute: bool) -> None:

@@ -20,9 +20,9 @@ log = logging.getLogger(__name__)
 DEFAULT_BASE_URL = "https://openrouter.ai/api/v1"
 
 
-def _get_api_key() -> str:
+def _get_api_key(required: bool = True) -> Optional[str]:
     key = os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPENAI_API_KEY")
-    if not key:
+    if not key and required:
         raise RuntimeError(
             "No API key found. Set OPENROUTER_API_KEY or OPENAI_API_KEY in the environment."
         )
@@ -48,11 +48,39 @@ class LLMClient:
         self.cache_hits = 0
         self.cache_misses = 0
         self._semaphore = asyncio.Semaphore(max_concurrency)
-        self._client = AsyncOpenAI(api_key=_get_api_key(), base_url=_get_base_url())
+        # The API client is built lazily so a run whose prompts are all cached does
+        # not require an API key (useful for reproducing gated/ablated runs offline).
+        self._api_key = _get_api_key(required=False)
+        self._client = None
         self._cache_path = cache_path
+        self.cache_rows_before: Optional[int] = None
         if cache_path:
             cache_path.parent.mkdir(parents=True, exist_ok=True)
             self._init_cache()
+            self.cache_rows_before = self.cache_row_count()
+
+    def cache_row_count(self) -> Optional[int]:
+        """Current number of cached responses (read-only), or None when disabled."""
+        if not self._cache_path:
+            return None
+        conn = sqlite3.connect(f"file:{Path(self._cache_path).as_posix()}?mode=ro", uri=True)
+        try:
+            return int(conn.execute("SELECT COUNT(*) FROM cache").fetchone()[0])
+        except sqlite3.Error:
+            return None
+        finally:
+            conn.close()
+
+    @property
+    def client(self) -> AsyncOpenAI:
+        if self._client is None:
+            if not self._api_key:
+                raise RuntimeError(
+                    "No API key found and the requested prompt is not in the cache. "
+                    "Set OPENROUTER_API_KEY or OPENAI_API_KEY to make new calls."
+                )
+            self._client = AsyncOpenAI(api_key=self._api_key, base_url=_get_base_url())
+        return self._client
 
     def _init_cache(self) -> None:
         conn = sqlite3.connect(self._cache_path)
@@ -106,7 +134,7 @@ class LLMClient:
                     if system:
                         messages.append({"role": "system", "content": system})
                     messages.append({"role": "user", "content": prompt})
-                    response = await self._client.chat.completions.create(
+                    response = await self.client.chat.completions.create(
                         model=self.model,
                         messages=messages,
                         temperature=self.temperature,

@@ -1,0 +1,119 @@
+{
+  "features": [
+    "top1_score",
+    "top5_mean_score",
+    "top5_min_score",
+    "top5_std_score",
+    "retrieval_margin",
+    "pool_std",
+    "lift_max",
+    "lift_mean",
+    "lift_std",
+    "lift_min",
+    "lift_frac_positive",
+    "lift_frac_negative",
+    "n_promotable",
+    "best_promotion_margin",
+    "n_top_changed",
+    "score_lift_corr",
+    "intervention_scale",
+    "n_candidates",
+    "evidence_global_top5",
+    "coverage_global",
+    "max_lift_global",
+    "evidence_class_top5",
+    "coverage_class",
+    "max_lift_class",
+    "evidence_team_top5",
+    "coverage_team",
+    "max_lift_team",
+    "evidence_intersection_top5",
+    "coverage_intersection",
+    "max_lift_intersection",
+    "semantic_top1",
+    "semantic_mean",
+    "semantic_std",
+    "semantic_lift_corr"
+  ],
+  "dev_oof_auc": 0.6666492775101189,
+  "dev_thresholds": {
+    "backoff_eb|blind": {
+      "threshold": 0.3,
+      "dev_policy": 0.009254157216197644,
+      "always_on": 0.009587476829936886,
+      "n": 319
+    },
+    "backoff_eb|conditioned": {
+      "threshold": 0.3,
+      "dev_policy": 0.005762282537068693,
+      "always_on": 0.004601230161690787,
+      "n": 319
+    },
+    "class_laplace|blind": {
+      "threshold": 0.5,
+      "dev_policy": 0.004787021950120836,
+      "always_on": -0.06040340298815954,
+      "n": 319
+    },
+    "class_laplace|conditioned": {
+      "threshold": 0.6,
+      "dev_policy": 0.016490851263267492,
+      "always_on": -0.02496532511935339,
+      "n": 319
+    },
+    "global_laplace|blind": {
+      "threshold": 0.5,
+      "dev_policy": 0.004883174495450382,
+      "always_on": -0.031920251077432245,
+      "n": 319
+    },
+    "global_laplace|conditioned": {
+      "threshold": 0.6,
+      "dev_policy": 0.002056974041798272,
+      "always_on": -0.035617800622150815,
+      "n": 319
+    },
+    "global_laplace_binary|conditioned": {
+      "threshold": 0.5,
+      "dev_policy": 0.0018696267403031592,
+      "always_on": -0.028582335429318647,
+      "n": 319
+    },
+    "intersection_eb|blind": {
+      "threshold": 0.3,
+      "dev_policy": 0.007441667740621537,
+      "always_on": 0.007236951197202676,
+      "n": 319
+    },
+    "intersection_eb|conditioned": {
+      "threshold": 0.3,
+      "dev_policy": 0.007796885031144073,
+      "always_on": 0.00798560889163361,
+      "n": 319
+    },
+    "intersection_laplace|blind": {
+      "threshold": 0.5,
+      "dev_policy": 0.004563060066543029,
+      "always_on": -0.05061848172012915,
+      "n": 319
+    },
+    "intersection_laplace|conditioned": {
+      "threshold": 0.3,
+      "dev_policy": 0.021417919324483243,
+      "always_on": 0.021884093697541934,
+      "n": 319
+    },
+    "team_laplace|blind": {
+      "threshold": 0.4,
+      "dev_policy": 0.01232154310029876,
+      "always_on": -0.03360587145934658,
+      "n": 319
+    },
+    "team_laplace|conditioned": {
+      "threshold": 0.3,
+      "dev_policy": 0.018152966441405603,
+      "always_on": 0.01939115082395488,
+      "n": 319
+    }
+  }
+}
