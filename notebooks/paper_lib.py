@@ -461,3 +461,89 @@ def savefig(name: str, run_ids: Iterable[str] = (), dpi: int = 180) -> Path:
 
 def sidebar(figsize: tuple[float, float] = (8, 5)):
     return plt.subplots(figsize=figsize)
+
+
+# ---------------------------------------------------------------------------
+# Companion-notebook presentation helpers (message-first figures)
+# ---------------------------------------------------------------------------
+
+COND_COLOR = "#16856b"
+BLIND_COLOR = "#c44e52"
+NEUTRAL_COLOR = "#555555"
+ACCENT_COLOR = "#2a6fbb"
+WARN_COLOR = "#d17a22"
+PROTOCOL_COLORS = {"conditioned": COND_COLOR, "blind": BLIND_COLOR}
+METHOD_COLORS = {
+    "M1 global": "#777777", "M2 team": "#2a6fbb", "M3 class": "#d17a22",
+    "M4 team∩class": "#16856b", "M5 backoff+EB": "#8b4fb3", "baseline": "#222222",
+}
+
+
+def takeaway(ax, text: str, fontsize: int = 11) -> None:
+    """Message-first title: the figure says what it means, not what it plots."""
+    ax.set_title(text, fontsize=fontsize, fontweight="bold", loc="left")
+
+
+def note(ax, text: str, loc: str = "lower right", fontsize: int = 8, color: str = NEUTRAL_COLOR) -> None:
+    """Corner annotation for sample size, units, split, protocol."""
+    anchors = {
+        "lower right": (0.99, 0.02, "right", "bottom"),
+        "lower left": (0.01, 0.02, "left", "bottom"),
+        "upper right": (0.99, 0.98, "right", "top"),
+        "upper left": (0.01, 0.98, "left", "top"),
+    }
+    x, y, ha, va = anchors[loc]
+    ax.text(x, y, text, transform=ax.transAxes, ha=ha, va=va, fontsize=fontsize, color=color)
+
+
+def zero_hline(ax, **kwargs) -> None:
+    kwargs.setdefault("color", "black")
+    kwargs.setdefault("lw", 1)
+    ax.axhline(0.0, **kwargs)
+
+
+def forest(ax, labels, means, los, his, colors=None, title: str = "",
+           xlabel: str = "Mean generated-answer Δ cosine (95% CI)", annotate: bool = True):
+    """Horizontal forest plot with direct value labels."""
+    means = np.asarray(means, dtype=float)
+    los = np.asarray(los, dtype=float)
+    his = np.asarray(his, dtype=float)
+    los = np.minimum(los, means)
+    his = np.maximum(his, means)
+    y = np.arange(len(labels))[::-1]
+    colors = colors or [ACCENT_COLOR] * len(labels)
+    for m, lo, hi, yy, c in zip(means, los, his, y, colors):
+        ax.errorbar(m, yy, xerr=[[m - lo], [hi - m]], fmt="o", ms=5, color=c, ecolor=c,
+                    elinewidth=2, capsize=3, zorder=3)
+    if annotate:
+        for m, yy in zip(means, y):
+            ax.annotate(f"{m:+.3f}", (m, yy), textcoords="offset points", xytext=(0, 8),
+                        ha="center", fontsize=8, color=NEUTRAL_COLOR)
+    ax.set_yticks(y, labels)
+    zero_hline(ax, color=NEUTRAL_COLOR, lw=1, ls="--")
+    ax.set_xlabel(xlabel)
+    if title:
+        takeaway(ax, title)
+    ax.grid(axis="x", alpha=0.25)
+    return ax
+
+
+def effect_hist(ax, deltas, bins: int = 60, color: str = ACCENT_COLOR, title: str = ""):
+    """Per-ticket effect distribution with the mean marked."""
+    deltas = np.asarray(deltas, dtype=float)
+    ax.hist(deltas, bins=bins, color=color, alpha=0.75, edgecolor="white", linewidth=0.3)
+    ax.axvline(0.0, color="black", lw=1)
+    ax.axvline(deltas.mean(), color=WARN_COLOR, lw=2, ls="--")
+    ax.annotate(f"mean {deltas.mean():+.3f}", (deltas.mean(), ax.get_ylim()[1] * 0.92),
+                color=WARN_COLOR, fontsize=9, ha="left", xytext=(4, 0), textcoords="offset points")
+    if title:
+        takeaway(ax, title)
+    return ax
+
+
+def savefig_pdf(name: str, run_ids: Iterable[str] = ()) -> Path:
+    """Vector copy of a figure for the manuscript (same provenance index)."""
+    FIGDIR.mkdir(parents=True, exist_ok=True)
+    pdf = FIGDIR / f"ieee_{name}.pdf"
+    plt.savefig(pdf)
+    return pdf
