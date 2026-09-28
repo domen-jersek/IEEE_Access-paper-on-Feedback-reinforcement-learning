@@ -2,6 +2,9 @@
 
 | Figure | Producing run(s) |
 |---|---|
+| `ieee_02_corpus_composition.png` | derived from cited artifacts |
+| `ieee_02_judge_reliability.png` | derived from cited artifacts |
+| `ieee_02_proxy_validity.png` | derived from cited artifacts |
 | `ieee_03_benefit_by_difficulty.png` | derived from cited artifacts |
 | `ieee_03_benefit_by_coverage.png` | derived from cited artifacts |
 | `ieee_03_scope_ordering_protocol.png` | derived from cited artifacts |
@@ -23,6 +26,31 @@
 | `ieee_07_general_gate_auc.png` | derived from cited artifacts |
 | `ieee_07_gate_decomposition.png` | derived from cited artifacts |
 | `ieee_07_magnitude_action.png` | derived from cited artifacts |
-| `ieee_02_corpus_composition.png` | derived from cited artifacts |
-| `ieee_02_judge_reliability.png` | derived from cited artifacts |
-| `ieee_02_proxy_validity.png` | derived from cited artifacts |
+| `ieee_companion_02_corpus.png` | derived from cited artifacts |
+| `ieee_companion_03_protocols.png` | derived from cited artifacts |
+| `ieee_companion_03_judge_reliability.png` | derived from cited artifacts |
+| `ieee_companion_04_regimes.png` | derived from cited artifacts |
+| `ieee_companion_05_metric_correlation.png` | derived from cited artifacts |
+| `ieee_companion_05_effect_anatomy.png` | derived from cited artifacts |
+| `ieee_companion_06_protocol_reversal_dev.png` | derived from cited artifacts |
+| `ieee_companion_06_protocol_reversal_eval.png` | derived from cited artifacts |
+| `ieee_companion_07_scope.png` | derived from cited artifacts |
+| `ieee_companion_08_retriever.png` | derived from cited artifacts |
+| `ieee_companion_09_lift_shapes.png` | derived from cited artifacts |
+| `ieee_companion_09_lift_ablation.png` | derived from cited artifacts |
+| `ieee_companion_10_evidence_volume.png` | derived from cited artifacts |
+| `ieee_companion_11_saturation.png` | derived from cited artifacts |
+| `ieee_companion_12_rescue.png` | derived from cited artifacts |
+| `ieee_companion_13_negative_results.png` | derived from cited artifacts |
+| `ieee_companion_15_gate_architecture.png` | derived from cited artifacts |
+| `ieee_companion_16_gate_policy.png` | derived from cited artifacts |
+| `ieee_companion_16_gate_decomposition.png` | derived from cited artifacts |
+| `ieee_companion_17_substitution.png` | derived from cited artifacts |
+| `ieee_companion_18_magnitude.png` | derived from cited artifacts |
+| `ieee_companion_18_action_selection.png` | derived from cited artifacts |
+| `ieee_companion_20_independent_metrics.png` | derived from cited artifacts |
+| `ieee_companion_21_judge.png` | derived from cited artifacts |
+| `ieee_companion_22_robustness.png` | derived from cited artifacts |
+| `ieee_companion_23_cross_generator.png` | derived from cited artifacts |
+| `ieee_companion_24_proxy_validity.png` | derived from cited artifacts |
+| `ieee_companion_25_classes.png` | derived from cited artifacts |
