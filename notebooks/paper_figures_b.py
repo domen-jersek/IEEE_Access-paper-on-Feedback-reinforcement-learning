@@ -341,7 +341,9 @@ def fig10_validation() -> None:
             _dot(ax, i + offset, row["delta_cosine_mean"], _ci(row), color, ms=4.6, lw=0.9)
     for i, (_, _, gemini) in enumerate(pairs):
         row = resc_row(gemini)
-        ax.annotate(f"BGE p {row['delta_cosine_bge_wilcoxon_p']:.3f}", (i + 0.15, 0.062),
+        p_bge = row["delta_cosine_bge_wilcoxon_p"]
+        label = "BGE p<.001" if p_bge < 0.001 else f"BGE p={p_bge:.3f}"
+        ax.annotate(label, (i + 0.15, 0.062),
                     ha="center", va="bottom", fontsize=7, color="#555555")
     ax.set_xticks(x, [p[0] for p in pairs])
     ax.set_ylabel("mean Δcosine (eval)")
