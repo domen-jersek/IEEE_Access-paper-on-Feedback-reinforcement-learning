@@ -114,6 +114,22 @@ of changed tickets. This also explains why a mean whose interval excludes zero c
 coexist with a non-significant rank test (for example blind feedback on the
 duplicate panel: $-0.0214$ $[-0.0367, -0.0073]$ with p = .66).
 
+Three families were fixed before adjustment (conditioned and blind across panels;
+reply similarity; protocol contrast) and Holm-corrected within family. Blind harm
+on the random panel survives (.0009). The conditioned effect on random data does
+not (.1165), the duplicate effect does (.0106), and the strict effect does not
+(.1965). The protocol contrast survives on all panels (strict .0322), but the
+strict estimate ($+0.0085$) lies below its 80\% minimum detectable effect
+(0.0101): the design is not powered to estimate an effect of that size precisely.
+We report it as small and imprecisely estimated, not as evidence of absence.
+
+For retrievers, we repeated the comparison with the same evidence and lift under
+pool-relative scaling. The feedback gain is then similar for dense, lexical and
+hybrid retrieval (random: $+0.064$, $+0.060$, $+0.033$; strict: $+0.009$,
+$+0.006$, $+0.008$). The apparent dependence on retriever strength in the
+submitted paper is a scaling artefact: absolute lift units are cosine units and
+are not meaningful on BM25 scores.
+
 At retrieval level the legacy Laplace lift shows the same pattern more strongly:
 its conditioned top-1 proxy falls from $+0.034$ to $+0.002$ and is significant in
 0 of 5 group-aware splits on the strict panel, while the calibrated lift keeps a
@@ -139,12 +155,14 @@ openings), assigned groups atomically, and restricted the candidate index, BM25
 IDF, feedback rows, and priors to the training partition. Third, we regenerated
 every answer with the identical model, temperature and prompt. On the strictest
 panel, blind harm disappears (-0.0444 to +0.0008, p = .86), the protocol contrast
-shrinks six-fold but stays positive (+0.0085, p = .032), and the conditioned effect
-is small and metric-dependent (+0.0093 on cosine with p = .066 by rank test and
-non-significant ROUGE-L). We therefore move the disjoint panels into the main
-results, describe the calibrated method as removing harm without a robustly
-confirmed gain, and correct the "922 identical-reply tickets" claim: identical
-reply openings cover 922 tickets, identical full replies 238.
+shrinks six-fold but stays positive (+0.0085, Holm p = .032), and the conditioned
+effect is small and metric-dependent (+0.0093 on cosine with p = .066 by rank test,
+non-significant ROUGE-L, and below the study's 80% minimum detectable effect).
+With the same lift under pool-relative scaling, the feedback gain is similar
+across dense, BM25 and hybrid retrieval, so the earlier retriever-strength
+conclusion was a scaling artefact. The disjoint panels therefore belong in the
+main results, and the "922 identical-reply tickets" claim is corrected: 922
+tickets share a reply opening, while 238 share an identical full reply.
 ```
 
 ## D. Claim corrections required elsewhere

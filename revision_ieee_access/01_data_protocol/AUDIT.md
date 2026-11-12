@@ -112,6 +112,22 @@ One run logged a transient Windows `OSError` while writing `_interim.json`; the
 ticket was already appended and all runs report `valid == total`. The interim
 writer now catches filesystem errors so diagnostics can never drop a ticket.
 
+## Power, multiplicity and matched retrievers
+
+Holm correction within three pre-specified families: blind harm on random survives
+(.0009); the conditioned effect on random does not (.1165), duplicate does (.0106),
+strict does not (.1965). The strict protocol contrast survives (.0322) but is below
+its 80 % MDE (0.0101). Matched retrievers under pool-relative scaling show a
+similar feedback gain for dense, BM25 and hybrid retrieval, so the submitted
+retriever-strength conclusion is a scaling artefact. Details:
+`revision_ieee_access/01_data_protocol/tables/power_multiplicity.csv` and
+`matched_retrievers.csv`.
+
+The nine generated runs are sealed in
+`results/revision/frozen/frozen_runs_v1.json` (write-once, `frozen_id`
+`64c440e6…`); `27_freeze_runs.py --verify` re-hashes every details and summary
+file.
+
 Reproducibility note: the reply-similarity matrix is cached under `data/cache/`
 and was rebuilt once during this work after a synthetic test accidentally wrote a
 four-row matrix into the shared cache. A rerun with the rebuilt (canonical)

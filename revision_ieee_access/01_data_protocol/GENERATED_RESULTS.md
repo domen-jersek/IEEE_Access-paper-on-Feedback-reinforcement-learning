@@ -73,6 +73,47 @@ every mean by at most 0.0004 (conditioned strict +0.0093 → +0.0097; blind rand
 recorded here rather than silently repaired; the study arms use one evidence
 source per panel, so the displayed baseline is that run's own answer.
 
+## Multiplicity and design sensitivity (R1-M6, R2-7)
+
+Families were fixed before adjustment: **A (primary)** conditioned and blind across
+three panels (6 tests); **B** reply similarity (3); **C** conditioned-minus-blind
+contrast (3). Holm correction within each family; MDE at 80 % power from the
+observed per-ticket SD.
+
+| Panel | Source | Mean | p raw | p Holm | MDE (80 %) | mean / MDE |
+|---|---|---:|---:|---:|---:|---:|
+| random | blind | −0.0444 | .0002 | **.0009** | 0.0226 | 1.96 |
+| random | conditioned | +0.0105 | .0291 | .1165 | 0.0149 | 0.70 |
+| duplicate | conditioned | +0.0149 | .0021 | **.0106** | 0.0133 | 1.12 |
+| duplicate | blind | −0.0214 | .6552 | 1.000 | 0.0210 | 1.02 |
+| strict | conditioned | +0.0093 | .0655 | .1965 | 0.0103 | 0.90 |
+| strict | blind | +0.0008 | .8560 | 1.000 | 0.0106 | 0.08 |
+
+Protocol contrast survives Holm on all panels (random <1e−4, duplicate .0047,
+strict .0322), but the strict contrast (+0.0085) is **below** its 80 % MDE
+(0.0101): the study is not powered to estimate effects of that size precisely.
+This is a sensitivity statement, not evidence of absence. Two consequences for the
+paper: the conditioned effect on random data does **not** survive multiplicity
+correction, and no claim should rest on a p-value below the design's MDE.
+
+## Matched retrievers (R1-m4, R2-10)
+
+Same evidence, same lift (EB κ=2, intersection), two scaling modes:
+
+| Panel | Retriever | Baseline top-1 | Δ absolute | Δ pool-std |
+|---|---|---:|---:|---:|
+| random | dense MiniLM | 0.7621 | +0.0666 | +0.0334 |
+| random | BM25 | 0.7091 | +0.0022 | +0.0641 |
+| random | hybrid RRF | 0.7484 | +0.0586 | +0.0595 |
+| strict | dense MiniLM | 0.6104 | +0.0100 | +0.0078 |
+| strict | BM25 | 0.6047 | −0.0001 | +0.0088 |
+| strict | hybrid RRF | 0.6079 | +0.0000 | +0.0063 |
+
+The apparent dependence on retriever strength in the submitted paper is a scaling
+artefact: absolute lift units are cosine units and are meaningless on BM25 scores.
+With pool-relative scaling the feedback gain is similar across dense, lexical and
+hybrid retrieval. Claims about retriever strength must be withdrawn or restated.
+
 ## Freeze status
 
 These runs are the frozen source for the human study (`experiments/24_export_study.py`

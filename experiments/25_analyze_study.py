@@ -54,6 +54,14 @@ def _orient(df: pd.DataFrame) -> pd.DataFrame:
     out["preferred"] = out.apply(preferred, axis=1)
     out["baseline_better"] = out["preferred"].eq("baseline").astype(float)
     out["feedback_better"] = out["preferred"].eq("feedback").astype(float)
+
+    for flag in ("unsafe", "missing"):
+        a_column, b_column = f"a_{flag}", f"b_{flag}"
+        if a_column in out and b_column in out:
+            out[f"baseline_{flag}"] = np.where(out["a_side"].eq("baseline"),
+                                               out[a_column], out[b_column])
+            out[f"feedback_{flag}"] = np.where(out["a_side"].eq("feedback"),
+                                               out[a_column], out[b_column])
     return out
 
 
@@ -113,6 +121,14 @@ def main() -> None:
             "equal_rate": group["preferred"].eq("equal").mean(),
             "both_incorrect_rate": group["preferred"].eq("both_incorrect").mean(),
             "cannot_judge_rate": group["preferred"].eq("cannot_judge").mean(),
+            "baseline_unsafe_rate": (group["baseline_unsafe"].mean()
+                                     if "baseline_unsafe" in group else float("nan")),
+            "feedback_unsafe_rate": (group["feedback_unsafe"].mean()
+                                     if "feedback_unsafe" in group else float("nan")),
+            "baseline_missing_rate": (group["baseline_missing"].mean()
+                                      if "baseline_missing" in group else float("nan")),
+            "feedback_missing_rate": (group["feedback_missing"].mean()
+                                      if "feedback_missing" in group else float("nan")),
         })
     summary = pd.DataFrame(rows)
     summary.to_csv(out_dir / "study_summary.csv", index=False)

@@ -10,7 +10,9 @@ source or data regime produced an item.
   (no retrieval, to avoid anchoring). Block 2 shows the two retrieved historical
   ticket sets. A/B order is randomised independently per block and stays fixed.
 - **Independent correctness first.** Each side is rated
-  `correct / partially correct / incorrect / cannot judge`.
+  `correct / partially correct / incorrect / cannot judge`. Two flags follow each
+  side: a wrong or unsafe step, and a missing required step (for retrieval: a
+  misleading ticket, and a missing ticket needed for the procedure).
 - **Pairwise preference second.** `A better / B better / equal / both incorrect /
   cannot judge`. “Both incorrect” exists so a preference cannot hide two wrong
   answers.

@@ -74,6 +74,11 @@ def create_app() -> Flask:
         );
         """
     )
+    existing_columns = {row["name"] for row in connection.execute("PRAGMA table_info(ratings)")}
+    for name in ("a_unsafe", "b_unsafe", "a_missing", "b_missing"):
+        if name not in existing_columns:
+            connection.execute(f"ALTER TABLE ratings ADD COLUMN {name} INTEGER NOT NULL DEFAULT 0")
+    connection.commit()
     row = connection.execute("SELECT value FROM meta WHERE key='package_id'").fetchone()
     if row is None:
         connection.execute("INSERT INTO meta(key, value) VALUES ('package_id', ?)", (package_id,))
@@ -171,9 +176,16 @@ def create_app() -> Flask:
                     existing=None, error="Please answer every question before submitting.",
                     correctness=CORRECTNESS, preference=PREFERENCE), 400
             connection.execute(
-                "INSERT OR IGNORE INTO ratings VALUES (?,?,?,?,?,?,?,?)",
+                "INSERT OR IGNORE INTO ratings "
+                "(rater, item_id, a_correct, b_correct, preference, comment, created_utc, package_id, "
+                " a_unsafe, b_unsafe, a_missing, b_missing) "
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
                 (rater, item_id, a_correct, b_correct, preference, comment,
-                 datetime.now(timezone.utc).isoformat(), package_id),
+                 datetime.now(timezone.utc).isoformat(), package_id,
+                 1 if request.form.get("a_unsafe") else 0,
+                 1 if request.form.get("b_unsafe") else 0,
+                 1 if request.form.get("a_missing") else 0,
+                 1 if request.form.get("b_missing") else 0),
             )
             connection.commit()
             return redirect(url_for("study"))
@@ -200,7 +212,8 @@ def create_app() -> Flask:
         buffer = io.StringIO()
         writer = csv.writer(buffer)
         writer.writerow(["rater", "item_id", "panel", "ticket_id", "source", "block",
-                         "a_correct", "b_correct", "preference", "comment",
+                         "a_correct", "b_correct", "preference", "a_unsafe", "b_unsafe",
+                         "a_missing", "b_missing", "comment",
                          "created_utc", "package_id", "a_side", "b_side"])
         query = connection.execute("SELECT * FROM ratings ORDER BY rater, created_utc")
         for row in query:
@@ -208,6 +221,7 @@ def create_app() -> Flask:
             writer.writerow([row["rater"], row["item_id"], hidden.get("panel"),
                              hidden.get("ticket_id"), hidden.get("source"), hidden.get("block"),
                              row["a_correct"], row["b_correct"], row["preference"],
+                             row["a_unsafe"], row["b_unsafe"], row["a_missing"], row["b_missing"],
                              row["comment"], row["created_utc"], row["package_id"],
                              hidden.get("A"), hidden.get("B")])
         return Response(buffer.getvalue(), mimetype="text/csv",

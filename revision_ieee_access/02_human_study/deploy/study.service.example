@@ -1,0 +1,16 @@
+# Reference systemd unit; adjust user, paths and environment file.
+[Unit]
+Description=Blinded expert study
+After=network.target
+
+[Service]
+User=study
+WorkingDirectory=/srv/study
+EnvironmentFile=/etc/study.env
+ExecStart=/srv/study/venv/bin/python /srv/study/app/app.py
+Restart=on-failure
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

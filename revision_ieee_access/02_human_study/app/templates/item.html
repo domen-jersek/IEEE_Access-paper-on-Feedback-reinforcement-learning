@@ -21,8 +21,7 @@
     <h2>Already submitted</h2>
     <p>Your rating is recorded and cannot be changed. Thank you.</p>
     <p class="small muted">A: {{ clabels[existing['a_correct']] }} · B: {{ clabels[existing['b_correct']] }}
-      · {{ plabels[existing['preference']] }}</p>
-    <p><a href="{{ url_for('study') }}"><button type="button">Next item</button></a></p>
+      · {{ plabels[existing['preference']] }}</p>    <p><a href="{{ url_for('study') }}"><button type="button">Next item</button></a></p>
   </div>
 {% else %}
   {% if error %}<p class="error">{{ error }}</p>{% endif %}
@@ -47,6 +46,20 @@
             <label><input type="radio" name="{{ side|lower }}_correct" value="{{ value }}" required>
               {{ clabels[value] }}</label>
           {% endfor %}
+        </fieldset>
+        <fieldset>
+          <legend>Specific problems in {{ side }}</legend>
+          {% if entry.block == 'answer' %}
+            <label class="small"><input type="checkbox" name="{{ side|lower }}_unsafe" value="1">
+              Contains a wrong or unsafe step</label>
+            <label class="small"><input type="checkbox" name="{{ side|lower }}_missing" value="1">
+              Omits a required step</label>
+          {% else %}
+            <label class="small"><input type="checkbox" name="{{ side|lower }}_unsafe" value="1">
+              Contains a misleading or irrelevant ticket</label>
+            <label class="small"><input type="checkbox" name="{{ side|lower }}_missing" value="1">
+              Omits the ticket needed for the procedure</label>
+          {% endif %}
         </fieldset>
       </div>
       {% endfor %}

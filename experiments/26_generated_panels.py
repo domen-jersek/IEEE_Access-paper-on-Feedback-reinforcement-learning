@@ -123,6 +123,7 @@ def main() -> None:
             contrasts.append({
                 "panel": panel, "contrast": "conditioned_minus_blind", "n": len(difference),
                 **stats_block, "wilcoxon_p": _p_value(difference),
+                "std": float(difference.std(ddof=1)),
             })
 
     summary = pd.DataFrame(rows)
