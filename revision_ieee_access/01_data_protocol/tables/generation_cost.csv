@@ -1,0 +1,10 @@
+panel,source,queries,requests,cache_hits,cache_misses,duration_seconds,seconds_per_query,seconds_per_request
+legacy_random,conditioned,398,709,32,677,616.6,1.55,0.87
+legacy_random,blind,398,749,414,335,363.0,0.91,0.48
+legacy_random,reply_embed_bge,398,740,421,319,357.2,0.9,0.48
+disjoint_duplicate,conditioned,398,671,19,652,564.0,1.42,0.84
+disjoint_duplicate,blind,398,696,422,274,355.5,0.89,0.51
+disjoint_duplicate,reply_embed_bge,398,686,413,273,355.5,0.89,0.52
+disjoint_prefix,conditioned,427,625,20,605,532.0,1.25,0.85
+disjoint_prefix,blind,427,636,433,203,426.0,1.0,0.67
+disjoint_prefix,reply_embed_bge,427,611,436,175,436.5,1.02,0.71

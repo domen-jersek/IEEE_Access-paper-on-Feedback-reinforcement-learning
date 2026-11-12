@@ -21,6 +21,7 @@ procedure split.
 | Freeze | `experiments/27_freeze_runs.py`: write-once hash manifest of the nine runs |
 | Retriever check | `experiments/28_matched_retrievers.py`: same lift across dense/BM25/hybrid |
 | Power | `experiments/29_power_multiplicity.py`: pre-specified Holm families and 80 % MDE |
+| Decision/cost | `experiments/30_decision_and_cost.py`: abstention headroom and end-to-end cost |
 | Study export | `experiments/24_export_study.py`: blinded A/B, balanced assignment, frozen manifest |
 | Study app | `revision_ieee_access/02_human_study/`: Flask + SQLite, two blocks, opaque IDs |
 | Frozen finalist | `configs/revision/finalists_v1.yaml` |

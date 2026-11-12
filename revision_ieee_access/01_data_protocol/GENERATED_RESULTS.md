@@ -114,6 +114,30 @@ artefact: absolute lift units are cosine units and are meaningless on BM25 score
 With pool-relative scaling the feedback gain is similar across dense, lexical and
 hybrid retrieval. Claims about retriever strength must be withdrawn or restated.
 
+## Decision headroom and cost (R1-9, R2-11, R2-12, R2-15)
+
+Oracle = apply feedback only when the per-ticket delta is positive. It is an upper
+bound for any gate, not a deployable policy.
+
+| Panel | Source | Always-on | Oracle bound | Headroom | Helped / harmed |
+|---|---|---:|---:|---:|---:|
+| random | blind | −0.0444 | +0.0258 | 0.0701 | 37 % / 50 % |
+| random | conditioned | +0.0105 | +0.0358 | 0.0254 | 45 % / 33 % |
+| duplicate | blind | −0.0214 | +0.0250 | 0.0464 | 37 % / 38 % |
+| strict | blind | +0.0008 | +0.0190 | 0.0182 | 23 % / 26 % |
+| strict | conditioned | +0.0093 | +0.0219 | 0.0126 | 24 % / 21 % |
+
+After calibration, blind feedback is already neutral on the strict panel; the
+remaining gate headroom is bounded by +0.018 and requires outcome knowledge. That
+supports the narrower claim: the gate is useful mainly where always-on is harmful,
+and calibration removes most of that need.
+
+Cost of the generated panel, end to end (includes model loading and metric
+computation, so this is an upper bound): 611–749 requests per panel/source,
+356–617 seconds per run, 0.48–0.87 seconds per request. Per ticket the generator
+typically makes two requests (baseline and feedback). Feedback-database
+preparation is a separate one-off cost and is not included.
+
 ## Freeze status
 
 These runs are the frozen source for the human study (`experiments/24_export_study.py`

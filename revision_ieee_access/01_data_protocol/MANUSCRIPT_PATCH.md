@@ -137,6 +137,15 @@ small positive point estimate ($+0.009$, 2 of 5). The retrieval proxy ranks
 configurations correctly but does not certify significance; the generated
 intervals and the independent metric do.
 
+For the decision policy, always-on blind feedback is already neutral on the strict
+panel ($+0.0008$); the oracle bound (apply feedback only when it helps) is
+$+0.0190$, so any gate can add at most about $0.018$ and only with outcome
+knowledge. On the random panel, where always-on is harmful ($-0.0444$), the oracle
+bound is $+0.0258$: the gate matters mainly where the prior is uncalibrated, which
+supports the narrower claim in the revision. End-to-end generation cost is
+0.48–0.87 seconds per request on CPU, with two requests per ticket for baseline and
+feedback; feedback-database preparation is a separate one-off cost.
+
 These are still similarity-based outcomes. Section~\ref{sec:human} reports the
 blinded expert assessment of procedural correctness on the frozen outputs.
 ```
@@ -175,5 +184,7 @@ tickets share a reply opening, while 238 share an identical full reply.
 | Section IV-B | Correct the two-vote symmetry statement (R1-M4); cite the empirical vote distribution for the asymmetry. |
 | Table 2 | Add the zero-inflation note and the share of changed tickets; report median CI as [0, 0] where applicable. |
 | Section V-C / IX | Replace the retriever-strength conclusion with the matched-configuration evidence or soften it. |
+| Gate section | Present the oracle bound and the blind-only table; say the gate matters where always-on is harmful. |
+| Cost section | Two requests per ticket, 0.5–0.9 s per request end-to-end; database preparation separate. |
 | Section IX | Replace the five-step recipe with hypotheses conditioned on structural history overlap. |
 | Contribution | Diagnostic of saturation + evidence that part of the measured gain is procedure overlap + calibrated null, not a new reranking method. |
