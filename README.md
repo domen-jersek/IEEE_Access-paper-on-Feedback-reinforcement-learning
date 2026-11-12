@@ -1,5 +1,11 @@
 # Feedback as a Learnable Retrieval Prior
 
+> **IEEE Access revision:** the opt-in data-contract implementation and local
+> preflight are documented in
+> [revision_ieee_access/01_data_protocol/README.md](revision_ieee_access/01_data_protocol/README.md).
+> Package A validates data boundaries only; the existing experiment runners are
+> not yet connected to this contract. Submitted artifacts remain unchanged.
+
 **A clean, modular research environment for studying LLM-judge feedback-driven retrieval
 re-ranking in retrieval-augmented generation (RAG) for IT support ticket first-reply
 generation.**

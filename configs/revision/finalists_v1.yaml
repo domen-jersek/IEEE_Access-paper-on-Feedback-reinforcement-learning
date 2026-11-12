@@ -1,0 +1,33 @@
+# Frozen finalist for the generated revision panel.
+#
+# Selected by experiments/22_revision_dev_lab.py on DEV ONLY, with matched
+# 25-cell budgets per lift family (max mean proxy_top1; tie-break proxy_mean5).
+# The published legacy configuration (Laplace, m=0.80, cap=0.20) was included in
+# the grid and ranked 23/25 on the strict panel; it is retained as a contrast
+# cell, not as the baseline of the revision.
+#
+# Do not change these values after the human-evaluation freeze. A change requires
+# a new frozen version and a new study sample.
+
+status: frozen
+schema_version: 1
+method: M4_intersection
+lift: laplace_eb
+prior_strength: 2.0
+scale_mode: absolute
+pool_lambda: 1.0
+multiplier: 0.80
+cap: 0.20
+routing: categorical_intersection
+panels:
+  - legacy_random
+  - disjoint_duplicate
+  - disjoint_prefix
+sources:
+  - conditioned
+  - blind
+  - reply_embed_bge
+query_partition: eval
+generator_model: openai/gpt-5.6-luna
+top_k: 5
+search_k: 100

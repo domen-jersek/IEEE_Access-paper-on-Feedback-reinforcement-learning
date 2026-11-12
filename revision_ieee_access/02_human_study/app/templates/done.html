@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Finished — IT ticket study{% endblock %}
+{% block content %}
+<h1>You have finished all items</h1>
+<p>Thank you. Your ratings are stored. Please do not discuss individual tickets with
+the other expert until they have also finished.</p>
+<div class="card" style="max-width:520px">
+  <p><strong>{{ progress.done }} / {{ progress.total }}</strong> items completed.</p>
+  <p class="small muted">If you noticed a mistake, contact the study coordinator; submitted
+  items cannot be edited in the application.</p>
+  <p><a href="{{ url_for('logout') }}"><button type="button" class="secondary">Sign out</button></a></p>
+</div>
+{% endblock %}

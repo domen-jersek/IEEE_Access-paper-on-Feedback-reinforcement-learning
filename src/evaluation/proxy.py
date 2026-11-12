@@ -42,16 +42,29 @@ PROXY_MODELS = {
 
 
 class ReplySimilarity:
-    """Cached reply-to-reply cosine matrix over the canonical dataset."""
+    """Cached reply-to-reply cosine matrix over the canonical dataset.
 
-    def __init__(self, dataset: pd.DataFrame, model_tag: str = "minilm", cache_dir: Optional[Path] = None):
+    ``reply_hash_override`` / ``group_hash_override`` let the revision evaluate
+    equality-based hits under versioned v2 groups instead of the submitted
+    prefix-hash / combined-hash columns. Defaults reproduce legacy behaviour.
+    """
+
+    def __init__(self, dataset: pd.DataFrame, model_tag: str = "minilm", cache_dir: Optional[Path] = None,
+                 reply_hash_override: Optional[dict] = None,
+                 group_hash_override: Optional[dict] = None,
+                 reply_key_label: str = "legacy_prefix300",
+                 group_key_label: str = "legacy_combined"):
         self.model_tag = model_tag
         self.model_name = PROXY_MODELS[model_tag]
         self.ids = dataset["seq_id"].astype(str).tolist()
         self.pos = {s: i for i, s in enumerate(self.ids)}
         self.replies = dataset["first_reply"].fillna("").astype(str).tolist()
-        self.reply_hash = dict(zip(self.ids, dataset["reply_hash"].astype(str)))
-        self.group_hash = dict(zip(self.ids, dataset["combined_group_hash"].astype(str)))
+        self.reply_hash = (dict(reply_hash_override) if reply_hash_override is not None
+                           else dict(zip(self.ids, dataset["reply_hash"].astype(str))))
+        self.group_hash = (dict(group_hash_override) if group_hash_override is not None
+                           else dict(zip(self.ids, dataset["combined_group_hash"].astype(str))))
+        self.reply_key_label = reply_key_label
+        self.group_key_label = group_key_label
         cache_dir = cache_dir or (ProjectPaths().root / "data" / "cache")
         cache_dir.mkdir(parents=True, exist_ok=True)
         self._emb_path = cache_dir / f"reply_emb_{model_tag}.npy"

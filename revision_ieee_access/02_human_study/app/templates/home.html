@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Sign in — IT ticket study{% endblock %}
+{% block content %}
+<h1>Blinded evaluation of IT ticket replies</h1>
+<p class="muted">Study version {{ manifest.study_version }} · {{ manifest.n_items }} items.
+Two independent experts rate the same items. Please do not discuss individual items
+with the other expert until both of you have finished.</p>
+
+<div class="card" style="max-width:520px;margin-top:24px">
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <form method="post" action="{{ url_for('login') }}">
+    <p><label for="rater">Rater ID</label>
+       <input id="rater" name="rater" autocomplete="username" required
+              style="width:100%;padding:10px;border:1px solid var(--line);border-radius:8px"></p>
+    <p><label for="code">Access code</label>
+       <input id="code" name="code" type="password" autocomplete="current-password" required
+              style="width:100%;padding:10px;border:1px solid var(--line);border-radius:8px"></p>
+    <button type="submit">Sign in</button>
+  </form>
+</div>
+
+<p class="small muted" style="margin-top:24px">
+  You will first rate generated first replies (without seeing retrieval), then the
+  retrieved historical tickets that support them. Order A/B is randomised per item
+  and stays fixed for you.
+</p>
+{% endblock %}

@@ -1,5 +1,26 @@
 # REPRODUCE.md — ordered command list (P0–P4)
 
+> **Revision data preflight (no API calls):** see
+> [revision_ieee_access/01_data_protocol/README.md](revision_ieee_access/01_data_protocol/README.md).
+> Its configuration is not yet supported by the experiment commands below. A
+> successful package-A check is not a completed historical/procedure-disjoint run.
+
+## R — revision data layer (no API calls)
+
+```powershell
+python experiments/19_data_protocol.py --data-protocol configs/revision/random_train_only_dev.yaml
+python experiments/20_build_revision_data.py
+python experiments/21_revision_retrieval_panels.py --protocol conditioned
+python experiments/21_revision_retrieval_panels.py --protocol blind
+python -m pytest tests/test_data_protocol.py tests/test_revision_boundaries.py -q
+```
+
+`20_` regenerates versioned groups, 5 group-aware splits per rule, and the overlap
+audit. It is deterministic: rerunning without `--overwrite` must not change a byte.
+`21_` evaluates history-only retrieval panels and writes a private run directory.
+Neither script calls a model or the API. Generated-answer panels are not yet wired
+to the normal evaluator; see `IMPLEMENTATION_PLAN.md` (B2).
+
 All commands run from `paper_ieee_access/`. Every script writes an immutable
 `manifest_<run_id>.json`, updates `manifest_latest.json`, and appends a row to
 `results/registry.csv`. Set `USE_TF=0` once per

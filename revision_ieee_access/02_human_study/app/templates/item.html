@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Item {{ progress.done + 1 }} — IT ticket study{% endblock %}
+{% block content %}
+{% set clabels = {'correct':'Correct', 'partially_correct':'Partially correct',
+                  'incorrect':'Incorrect', 'cannot_judge':'Cannot judge'} %}
+{% set plabels = {'A':'A is better', 'B':'B is better', 'equal':'Equal',
+                  'both_incorrect':'Both are incorrect', 'cannot_judge':'Cannot judge'} %}
+
+<p class="muted small">Rater {{ rater }} · {{ progress.done }} of {{ progress.total }} completed ·
+  {% if entry.block == 'answer' %}<span class="tag">Block 1 · first replies</span>
+  {% else %}<span class="tag">Block 2 · retrieved tickets</span>{% endif %}</p>
+<div class="bar"><div style="width: {{ (100 * progress.done / progress.total) | round(1) }}%"></div></div>
+
+<div class="ticket">
+  <h1>{{ entry.query_title }}</h1>
+  {% if entry.query_description %}<p>{{ entry.query_description }}</p>{% endif %}
+</div>
+
+{% if existing %}
+  <div class="card">
+    <h2>Already submitted</h2>
+    <p>Your rating is recorded and cannot be changed. Thank you.</p>
+    <p class="small muted">A: {{ clabels[existing['a_correct']] }} · B: {{ clabels[existing['b_correct']] }}
+      · {{ plabels[existing['preference']] }}</p>
+    <p><a href="{{ url_for('study') }}"><button type="button">Next item</button></a></p>
+  </div>
+{% else %}
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <form method="post">
+    <div class="grid">
+      {% for side in ['A', 'B'] %}
+      <div class="col card">
+        <h3>Option {{ side }}</h3>
+        {% if entry.block == 'answer' %}
+          <div class="box">{{ entry[side] }}</div>
+        {% else %}
+          <ul class="cands">
+            {% for cand in entry[side] %}
+              <li><div class="cand-title">{{ cand.title }}</div>
+                  <div class="small">{{ cand.reply }}</div></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <fieldset>
+          <legend>Procedural correctness of {{ side }}</legend>
+          {% for value in correctness %}
+            <label><input type="radio" name="{{ side|lower }}_correct" value="{{ value }}" required>
+              {{ clabels[value] }}</label>
+          {% endfor %}
+        </fieldset>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <fieldset>
+        <legend>{% if entry.block == 'answer' %}Which first reply is better?{% else %}Which retrieved set better supports the correct procedure?{% endif %}</legend>
+        {% for value in preference %}
+          <label><input type="radio" name="preference" value="{{ value }}" required>
+            {{ plabels[value] }}</label>
+        {% endfor %}
+      </fieldset>
+      <p class="small muted">If both sides are wrong, choose “Both are incorrect” even if one is less wrong.
+        Use “Cannot judge” only when the ticket does not let you decide.</p>
+      <label for="comment">Optional comment (why, or what would make an answer correct)</label>
+      <textarea id="comment" name="comment" maxlength="2000"></textarea>
+      <p style="margin-top:16px"><button type="submit">Submit and continue</button></p>
+    </div>
+  </form>
+{% endif %}
+{% endblock %}

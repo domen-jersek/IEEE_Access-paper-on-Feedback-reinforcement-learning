@@ -260,16 +260,64 @@ def load_feedback_rows(
     return df
 
 
+def _scope_contributions(rows: pd.DataFrame) -> pd.DataFrame:
+    """Long frame (scope, score) used to estimate priors from exactly these rows."""
+    score = pd.to_numeric(rows["score"], errors="raise").astype(float)
+    query_class = rows.get("query_class", pd.Series("", index=rows.index)).fillna("").astype(str)
+    query_team = rows.get("query_team", pd.Series("", index=rows.index)).fillna("").astype(str)
+    frames = [pd.DataFrame({"scope": "global", "score": score})]
+    has_class = query_class.ne("")
+    frames.append(pd.DataFrame({"scope": "class:" + query_class[has_class], "score": score[has_class]}))
+    has_team = query_team.ne("")
+    frames.append(pd.DataFrame({"scope": "team:" + query_team[has_team], "score": score[has_team]}))
+    both = has_class & has_team
+    frames.append(pd.DataFrame({
+        "scope": "intersection:" + query_class[both] + ":" + query_team[both],
+        "score": score[both],
+    }))
+    return pd.concat(frames, ignore_index=True)
+
+
+class FeedbackBundleView:
+    """Scores and scope priors computed from one allowed evidence set.
+
+    Used for leave-ticket-out evaluation: the target is removed in BOTH roles
+    (as query and as candidate), and priors are recomputed from the remainder.
+    """
+
+    def __init__(self, scores: dict, scope_sums: dict[str, float], scope_counts: dict[str, float]):
+        self.scores = scores
+        self._sums = scope_sums
+        self._counts = scope_counts
+
+    def prior_mean(self, scope_key: str) -> float:
+        total = self._sums.get(scope_key)
+        count = self._counts.get(scope_key, 0.0)
+        if total is None or count <= 0:
+            total = self._sums.get("global", 0.0)
+            count = self._counts.get("global", 0.0)
+        if count <= 0:
+            return 0.5
+        return float(total / count)
+
+    def prior_table(self) -> dict[str, dict[str, float]]:
+        return {
+            scope: {"mean": self.prior_mean(scope), "n": float(self._counts.get(scope, 0.0))}
+            for scope in self._sums
+        }
+
+
 class FeedbackBundle:
     """
     feedback_scores dict + per-scope priors + the raw rows (for per-query LOO).
 
     `scores`  : same structure as load_feedback_as_scores() output.
-    `priors`  : compute_scope_priors() output.
-    `prior_mean(scope_key)` : p_bar for a scope, falling back to the global mean.
-    `minus_query(qid)`      : scores with that query's own contributions removed
-                              (true leave-one-out when evaluating TRAIN queries whose
-                              judgements are in the DB).
+    `priors`  : compute_scope_priors() output (legacy view).
+    `prior_mean(scope_key)` : score mean over exactly the rows supplied here,
+                              falling back to the global mean.
+    `minus_query(qid)`      : scores with that query's own contributions removed.
+    `minus_query_bundle(qid)`: scores AND priors with the target removed in both
+                              roles (true leave-ticket-out for TRAIN queries).
     """
 
     def __init__(self, rows: pd.DataFrame, mode: str = "continuous"):
@@ -277,13 +325,41 @@ class FeedbackBundle:
         self.rows = rows
         self.scores = aggregate_feedback_scores(rows, mode=mode)
         self.priors = compute_scope_priors(rows)
+        self._long = _scope_contributions(rows)
+        grouped = self._long.groupby("scope", sort=False)["score"]
+        self._scope_sums = {str(k): float(v) for k, v in grouped.sum().items()}
+        self._scope_counts = {str(k): float(v) for k, v in grouped.size().items()}
         self._by_query: Optional[dict] = None
 
     def prior_mean(self, scope_key: str) -> float:
-        p = self.priors.get(scope_key)
-        if p is None:
-            p = self.priors.get("global", {"mean": 0.5})
-        return float(p["mean"])
+        total = self._scope_sums.get(scope_key)
+        count = self._scope_counts.get(scope_key, 0.0)
+        if total is None or count <= 0:
+            total = self._scope_sums.get("global", 0.0)
+            count = self._scope_counts.get("global", 0.0)
+        if count <= 0:
+            return 0.5
+        return float(total / count)
+
+    def prior_table(self) -> dict[str, dict[str, float]]:
+        return {
+            scope: {"mean": self.prior_mean(scope), "n": float(self._scope_counts.get(scope, 0.0))}
+            for scope in self._scope_sums
+        }
+
+    def minus_query_bundle(self, query_id: str) -> FeedbackBundleView:
+        """Remove the target in both roles and adjust scores and priors exactly."""
+        scores = self.minus_query(query_id)
+        target = self.rows["query_id"].eq(query_id) | self.rows["candidate_id"].eq(query_id)
+        sums = dict(self._scope_sums)
+        counts = dict(self._scope_counts)
+        if target.any():
+            removed = _scope_contributions(self.rows.loc[target])
+            for scope, values in removed.groupby("scope", sort=False)["score"]:
+                sums[str(scope)] = max(0.0, sums.get(str(scope), 0.0) - float(values.sum()))
+            for scope, values in removed.groupby("scope", sort=False).size().items():
+                counts[str(scope)] = max(0.0, counts.get(str(scope), 0.0) - float(values))
+        return FeedbackBundleView(scores, sums, counts)
 
     def _contrib(self, score: float) -> tuple[float, float]:
         if self.mode == "continuous":

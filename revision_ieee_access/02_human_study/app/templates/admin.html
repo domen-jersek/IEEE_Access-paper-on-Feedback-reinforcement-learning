@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Progress — IT ticket study{% endblock %}
+{% block content %}
+<h1>Study progress</h1>
+<p class="muted small">Version {{ manifest.study_version }} · package {{ manifest.n_items }} items ·
+  seed {{ manifest.assignment_seed }}</p>
+<table class="card" style="width:100%;border-collapse:collapse">
+  <tr><th align="left">Rater</th><th align="right">Done</th><th align="right">Remaining</th></tr>
+  {% for row in rows %}
+  <tr><td>{{ row.rater }}</td><td align="right">{{ row.done }}</td><td align="right">{{ row.remaining }}</td></tr>
+  {% endfor %}
+</table>
+<p class="small muted" style="margin-top:14px">Export:
+  <a href="{{ url_for('admin_export', code=request.args.get('code','')) }}">ratings.csv</a></p>
+{% endblock %}

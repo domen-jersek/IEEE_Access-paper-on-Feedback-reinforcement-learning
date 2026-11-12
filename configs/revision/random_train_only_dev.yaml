@@ -1,0 +1,19 @@
+# Package A data-boundary control. NOT a frozen main experiment or method config.
+# Paths are project-root relative. This intentionally reuses the existing random
+# seed-42 split; the final held-out-group split still requires a separate decision.
+schema_version: 1
+revision_id: ieee_access_2026_r1
+data_regime: historical_train_only
+dataset_path: data/processed/dataset.parquet
+dataset_sha256: 32453a69c847e32f6dd97859c475192171ccffe3f6c97ba06ff0a706df947a83
+split_path: data/processed/splits/split_seed42.json
+split_sha256: a2361b8637c8e807673466f4df02d57a111debca3d8d8ffc8ae6faa86eb4a7e9
+scenario: familiar_procedure_possible
+query_partition: dev
+history_partition: train
+metadata_policy: text_only
+evidence_policy: filtered_existing
+self_pairs: exclude
+train_query_policy: exclude_ticket_both_endpoints
+groups_path: null
+groups_sha256: null

@@ -252,9 +252,10 @@ def build_pool_tensor(pools: pd.DataFrame, queries: pd.DataFrame, bundle: Feedba
         team = str(qmeta.loc[qid, "Team->Name"] or "Unknown")
         qcls.append(cls)
         qteam.append(team)
-        scores_map = bundle.minus_query(qid) if per_query_loo else bundle.scores
+        view = bundle.minus_query_bundle(qid) if per_query_loo else bundle
+        scores_map = view.scores
         for j, s in enumerate(SCOPES):
-            prior[qi, j] = bundle.prior_mean(scope_key(s, cls, team))
+            prior[qi, j] = view.prior_mean(scope_key(s, cls, team))
         for ci, r in enumerate(g.itertuples(index=False)):
             cid = str(r.seq_id)
             cand[qi, ci] = cid

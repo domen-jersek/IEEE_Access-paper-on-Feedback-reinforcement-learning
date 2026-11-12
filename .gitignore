@@ -31,3 +31,10 @@ experiments/experiment_table_idea.md
 # Embedding / generation / judge caches (regenerable)
 data/cache/
 results/retriever_ladder/pools/
+
+# Revision artifacts may contain confidential ticket data and local identifiers.
+# Keep implementation/configuration/docs tracked; publish only explicitly approved exports.
+data/processed/revision/
+results/revision/
+# Revision generated runs contain confidential ticket text and answers.
+results/M4_intersection_eval_*_rev_*/

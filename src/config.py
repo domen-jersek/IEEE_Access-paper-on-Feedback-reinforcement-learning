@@ -13,6 +13,91 @@ from typing import Union
 
 
 @dataclass(frozen=True)
+class DataProtocolConfig:
+    """Explicit, opt-in revision data contract; independent of method settings.
+
+    Paths are relative to the project root, not the shell/config directory.
+    Pinned inputs cannot silently change. This does not alter legacy EvalConfig
+    serialization or hashes. Only implemented policies are accepted.
+    """
+
+    dataset_path: str
+    dataset_sha256: str
+    split_path: str
+    split_sha256: str
+    schema_version: int = 1
+    revision_id: str = "ieee_access_2026_r1"
+    data_regime: str = "historical_train_only"
+    scenario: str = "familiar_procedure_possible"
+    query_partition: str = "dev"
+    history_partition: str = "train"
+    metadata_policy: str = "text_only"
+    evidence_policy: str = "filtered_existing"
+    self_pairs: str = "exclude"
+    train_query_policy: str = "exclude_ticket_both_endpoints"
+    groups_path: str | None = None
+    groups_sha256: str | None = None
+
+    def __post_init__(self) -> None:
+        if type(self.schema_version) is not int or self.schema_version != 1:
+            raise ValueError("Unsupported data protocol schema_version (expected 1)")
+        choices = {
+            "data_regime": {"historical_train_only"},
+            "scenario": {"familiar_procedure_possible", "held_out_groups"},
+            "query_partition": {"train", "dev", "eval"},
+            "history_partition": {"train"},
+            "metadata_policy": {"text_only", "posthoc_diagnostic"},
+            "evidence_policy": {"filtered_existing"},
+            "self_pairs": {"exclude"},
+            "train_query_policy": {"exclude_ticket_both_endpoints"},
+        }
+        for name, allowed in choices.items():
+            value = getattr(self, name)
+            if not isinstance(value, str) or value not in allowed:
+                raise ValueError(f"Unsupported {name}: {value!r}; expected {sorted(allowed)}")
+        for name in ("dataset_path", "split_path", "revision_id"):
+            value = getattr(self, name)
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(f"{name} must be a nonempty string")
+        if (self.groups_path is None) != (self.groups_sha256 is None):
+            raise ValueError("groups_path and groups_sha256 must be supplied together")
+        if self.scenario == "held_out_groups" and self.groups_path is None:
+            raise ValueError("held_out_groups requires a pinned groups artifact")
+        if self.groups_path is not None and (
+            not isinstance(self.groups_path, str) or not self.groups_path.strip()
+        ):
+            raise ValueError("groups_path must be a nonempty string")
+        for name in ("dataset_sha256", "split_sha256", "groups_sha256"):
+            value = getattr(self, name)
+            if value is None and name == "groups_sha256":
+                continue
+            if not isinstance(value, str) or len(value) != 64 or any(
+                c not in "0123456789abcdef" for c in value
+            ):
+                raise ValueError(f"{name} must be a lowercase SHA-256 digest")
+
+    @classmethod
+    def from_dict(cls, values: dict) -> DataProtocolConfig:
+        from dataclasses import fields
+
+        if not isinstance(values, dict):
+            raise ValueError("Data protocol configuration must be a mapping")
+        unknown = set(values) - {f.name for f in fields(cls)}
+        if unknown:
+            raise ValueError(f"Unknown data protocol settings: {sorted(unknown, key=str)}")
+        required = {"dataset_path", "dataset_sha256", "split_path", "split_sha256"}
+        missing = required - set(values)
+        if missing:
+            raise ValueError(f"Missing data protocol settings: {sorted(missing)}")
+        return cls(**values)
+
+    def to_dict(self) -> dict:
+        from dataclasses import asdict
+
+        return asdict(self)
+
+
+@dataclass(frozen=True)
 class ProjectPaths:
     root: Path = field(default_factory=lambda: Path(__file__).resolve().parents[1])
     data_raw: Path = field(default_factory=lambda: Path(__file__).resolve().parents[1] / "data" / "raw")

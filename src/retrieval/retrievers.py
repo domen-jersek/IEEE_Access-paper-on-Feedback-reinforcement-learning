@@ -171,7 +171,12 @@ class CrossEncoderReranker(BaseRetriever):
         self._docs = [doc_text(t, d) for t, d in zip(self.meta["Title_anon"], self.meta["Description_anon"].fillna(""))]
 
     def _key(self, query_text: str, idx: int) -> str:
-        return hashlib.sha256(f"{self.model_name}|{query_text}|{idx}".encode()).hexdigest()
+        # Content-based key: stable under row reordering or history subsetting.
+        seq_id = str(self.meta.iloc[int(idx)]["seq_id"])
+        doc_hash = hashlib.sha256(self._docs[int(idx)].encode("utf-8")).hexdigest()[:16]
+        return hashlib.sha256(
+            f"{self.model_name}|{query_text}|{seq_id}|{doc_hash}".encode()
+        ).hexdigest()
 
     def _scores(self, query_text: str, idxs: np.ndarray) -> np.ndarray:
         out = np.zeros(len(idxs), dtype=np.float32)

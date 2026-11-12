@@ -103,8 +103,13 @@ class EvaluationRunner:
         return self._compute_summary(all_results, query_ids)
 
     def _save_interim(self, results: list[dict]) -> None:
+        # Interim files are diagnostics: a transient filesystem error must never
+        # discard a completed ticket or abort the run.
         path = self.results_dir / "_interim.json"
-        path.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
+        try:
+            path.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
+        except OSError:
+            log.warning("Could not write interim results to %s; continuing", path, exc_info=True)
 
     def _save_final(self, results: list[dict], n_requested: int) -> None:
         ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")

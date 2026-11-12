@@ -46,10 +46,6 @@ class FeedbackBuilder:
         self.db.init()
 
     async def build(self, train_ids: list[str], encoder) -> int:
-        id_to_idx = {}
-        for i, row in self.dataset.iterrows():
-            id_to_idx[row.name] = i
-
         all_rows = []
         for qi, qid in enumerate(train_ids):
             if qid not in self.dataset.index:
@@ -64,7 +60,14 @@ class FeedbackBuilder:
                 query_row.get("Description_anon", "") or "",
             )
 
-            exclude = {id_to_idx[qid]} if qid in id_to_idx else set()
+            # FAISS excludes *integer positions* within its own metadata order.
+            # Passing the string seq_id silently excluded nothing and produced
+            # self-pairs (the submitted databases contain 878 of them).
+            lookup = self.index if hasattr(self.index, "id_to_index") else getattr(self.index, "index", None)
+            if lookup is None:
+                raise RuntimeError("Cannot resolve integer positions for self-exclusion")
+            self_idx = lookup.id_to_index(qid)
+            exclude = {int(self_idx)} if self_idx is not None else set()
             scores, indices = self.index.search(query_emb, self.top_k, exclude)
             meta = self.index.get_metadata(indices[0])
 

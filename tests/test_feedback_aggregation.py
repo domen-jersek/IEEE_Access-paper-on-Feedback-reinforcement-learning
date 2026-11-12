@@ -101,8 +101,10 @@ def _legacy_aggregate(df: pd.DataFrame, mode: str) -> dict:
         if pos == 0.0 and neg == 0.0:
             continue
         cid = str(row["candidate_id"])
-        q_class = str(row.get("query_class", "") or "")
-        q_team = str(row.get("query_team", "") or "")
+        # Missing labels must be excluded, exactly as aggregate_feedback_scores does.
+        # (`np.nan or ""` would yield the *string* "nan", which was the stale helper bug.)
+        q_class = "" if pd.isna(row.get("query_class")) else str(row.get("query_class"))
+        q_team = "" if pd.isna(row.get("query_team")) else str(row.get("query_team"))
         keys = ["global"]
         if q_class:
             keys.append(f"class:{q_class}")
