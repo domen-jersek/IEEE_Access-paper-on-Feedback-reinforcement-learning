@@ -63,61 +63,91 @@ def _balanced_assignment(item_ids: list[str], seed: str) -> dict[str, str]:
     return {item: ("baseline" if index < half else "feedback") for index, item in enumerate(ordered)}
 
 
-def _check_same_baseline(runs: dict[str, dict], label: str) -> None:
-    sources = list(runs)
-    reference = sources[0]
-    for ticket_id, record in runs[reference].items():
-        answer = record["baseline"]["answer"]
+def _baseline_inconsistencies(sources: dict[str, dict], label: str) -> set[str]:
+    """Tickets whose baseline answer differs across sources of one panel.
+
+    Baseline retrieval must be identical; a differing answer is hosted-model
+    nondeterminism on a cache miss. Such tickets are excluded from the study frame
+    because the A/B comparison would otherwise use different baselines across arms.
+    """
+    names = list(sources)
+    reference = names[0]
+    inconsistent = set()
+    for ticket_id, record in sources[reference].items():
         retrieval = [c["seq_id"] for c in record["baseline"]["retrieval"]]
-        for other in sources[1:]:
-            if ticket_id not in runs[other]:
+        for other in names[1:]:
+            if ticket_id not in sources[other]:
                 continue
-            if runs[other][ticket_id]["baseline"]["answer"] != answer:
+            if [c["seq_id"] for c in sources[other][ticket_id]["baseline"]["retrieval"]] != retrieval:
                 raise SystemExit(
-                    f"Baseline answer differs between {reference} and {other} for {ticket_id} "
-                    f"in {label}; the generated runs are not one comparable regime"
+                    f"Baseline retrieval differs between {reference} and {other} for {ticket_id} in {label}"
                 )
-            if [c["seq_id"] for c in runs[other][ticket_id]["baseline"]["retrieval"]] != retrieval:
-                raise SystemExit(
-                    f"Baseline retrieval differs between {reference} and {other} for {ticket_id} "
-                    f"in {label}"
-                )
+            if sources[other][ticket_id]["baseline"]["answer"] != record["baseline"]["answer"]:
+                inconsistent.add(ticket_id)
+    return inconsistent
 
 
-def _sample(records: dict, sources: dict, seed: str, n: int | None, sources_list: list[str],
-            changed_fraction: float = 0.7, stratum: str = "answer"):
-    reference = sorted(records)
-    if not n:
-        return reference, {}, {}
+def _changed(record: dict, stratum: str) -> bool:
+    if stratum == "answer":
+        return record["baseline"]["answer"] != record["feedback"]["answer"]
+    return (record["baseline"]["retrieval"][0]["seq_id"]
+            != record["feedback"]["retrieval"][0]["seq_id"])
 
-    def changed(ticket_id: str) -> bool:
-        for source in sources_list:
-            record = sources[source][ticket_id]
-            if stratum == "answer":
-                if record["baseline"]["answer"] != record["feedback"]["answer"]:
-                    return True
-            elif (record["baseline"]["retrieval"][0]["seq_id"]
-                  != record["feedback"]["retrieval"][0]["seq_id"]):
-                return True
-        return False
 
-    groups = {"changed": [], "unchanged": []}
-    for ticket_id in reference:
-        groups["changed" if changed(ticket_id) else "unchanged"].append(ticket_id)
-    wanted = min(n, len(reference))
-    changed_n = min(len(groups["changed"]), int(round(wanted * changed_fraction)))
-    unchanged_n = min(len(groups["unchanged"]), wanted - changed_n)
-    if changed_n + unchanged_n < wanted:
-        changed_n = min(len(groups["changed"]), wanted - unchanged_n)
-    if changed_n + unchanged_n < wanted:
-        unchanged_n = min(len(groups["unchanged"]), wanted - changed_n)
-    allocation = {"changed": changed_n, "unchanged": unchanged_n}
+def _allocate(groups: dict[str, list[str]], n: int) -> dict[str, int]:
+    """Proportional allocation with largest remainders, capped by group size."""
+    total = sum(len(ids) for ids in groups.values())
+    if n >= total:
+        return {name: len(ids) for name, ids in groups.items()}
+    quotas = {name: n * len(ids) / total for name, ids in groups.items()}
+    allocation = {name: min(len(groups[name]), int(quotas[name])) for name in groups}
+    remaining = n - sum(allocation.values())
+    order = sorted(groups, key=lambda name: (-(quotas[name] - int(quotas[name])), name))
+    while remaining > 0:
+        progressed = False
+        for name in order:
+            if remaining == 0:
+                break
+            if allocation[name] < len(groups[name]):
+                allocation[name] += 1
+                remaining -= 1
+                progressed = True
+        if not progressed:
+            break
+    return allocation
+
+
+def _sample(records: dict, sources: dict, seed: str, n: int | None, stratum: str,
+            changed_only: bool, balance_by: str, exclude: set[str]):
+    """Deterministic sample from the eligible frame; never selects on outcome sign."""
+    frame = sorted(set(records) - set(exclude))
+    eligible = [t for t in frame if (not changed_only) or _changed(records[t], stratum)]
+    changed_count = sum(1 for t in frame if _changed(records[t], stratum))
+    stats = {
+        "frame": len(frame),
+        "excluded_inconsistent": len(exclude),
+        "changed": changed_count,
+        "changed_share": changed_count / len(frame) if frame else None,
+        "eligible": len(eligible),
+    }
+    if n is None or n >= len(eligible):
+        return eligible, stats, {"all": len(eligible)}
+
+    if balance_by == "none":
+        groups = {"all": eligible}
+    else:
+        key = f"expected_{balance_by}"
+        groups = {}
+        for ticket_id in eligible:
+            groups.setdefault(str(records[ticket_id].get(key, "unknown")), []).append(ticket_id)
+    allocation = _allocate(groups, n)
     selected = []
     for name, ids in groups.items():
         ordered = sorted(ids, key=lambda t: hashlib.sha256(
             f"{seed}|sample|{t}".encode()).hexdigest())
         selected.extend(ordered[: allocation[name]])
-    return sorted(selected), {name: len(ids) for name, ids in groups.items()}, allocation
+    stats["strata_sizes"] = {name: len(ids) for name, ids in groups.items()}
+    return sorted(selected), stats, allocation
 
 
 def _parse_arms(args) -> list[dict]:
@@ -147,13 +177,18 @@ def main() -> None:
     parser.add_argument("--seed", default="20261112", help="A/B assignment seed")
     parser.add_argument("--sample", type=int, default=None,
                         help="Per-source sample size (single-panel mode)")
-    parser.add_argument("--changed-fraction", type=float, default=0.7,
-                        help="Share of the sample drawn from tickets whose content changed")
+    parser.add_argument("--changed-only", action=argparse.BooleanOptionalAction, default=True,
+                        help="Sample only tickets whose answer changed (pre-registered default)")
+    parser.add_argument("--balance-by", choices=["team", "class", "none"], default="team",
+                        help="Proportional stratification of the sample")
+    parser.add_argument("--blocks", nargs="+", choices=["answer", "retrieval"], default=["answer"],
+                        help="Which item blocks to generate")
     parser.add_argument("--stratum", choices=["answer", "retrieval"], default="answer",
-                        help="What counts as a changed ticket for stratification")
+                        help="What counts as a changed ticket for eligibility")
     parser.add_argument("--run", action="append", default=[],
                         help="Override a run directory: source=relative/or/absolute/path")
-    parser.add_argument("--out-root", default="revision_ieee_access/02_human_study")
+    parser.add_argument("--out-root", default="data/processed/revision/study",
+                        help="Private output root; do not point this at a tracked directory")
     parser.add_argument("--notes", default="")
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
@@ -192,35 +227,38 @@ def main() -> None:
     by_panel: dict[str, dict[str, dict]] = {}
     for arm in arms:
         by_panel.setdefault(arm["panel"], {})[arm["source"]] = loaded[f"{arm['panel']}/{arm['source']}"]
+    excluded: dict[str, set[str]] = {}
     for panel, sources in by_panel.items():
         sets = {source: set(records) for source, records in sources.items()}
         reference = set(next(iter(sets.values())))
         if any(value != reference for value in sets.values()):
             raise SystemExit(f"Runs of panel {panel} do not cover the same query set")
-        _check_same_baseline(sources, panel)
+        excluded[panel] = _baseline_inconsistencies(sources, panel)
 
     items, key, sample_meta = [], {}, {}
     for arm in arms:
         label = f"{arm['panel']}/{arm['source']}"
         records = loaded[label]
-        selected, strata, allocation = _sample(
-            records, {arm["source"]: records}, args.seed, arm["sample"], [arm["source"]],
-            changed_fraction=args.changed_fraction, stratum=args.stratum)
+        selected, stats, allocation = _sample(
+            records, {arm["source"]: records}, args.seed, arm["sample"],
+            args.stratum, args.changed_only, args.balance_by, excluded[arm["panel"]])
         sample_meta[label] = {"requested": arm["sample"], "n": len(selected),
                               "stratum": args.stratum,
-                              "changed_fraction": args.changed_fraction,
-                              "strata": strata, "allocation": allocation}
+                              "changed_only": args.changed_only,
+                              "balance_by": args.balance_by,
+                              **stats, "allocation": allocation}
         for ticket_id in selected:
             record = records[ticket_id]
             if not str(record["feedback"]["answer"]).strip() or not str(record["baseline"]["answer"]).strip():
                 raise SystemExit(f"Empty answer for {ticket_id}/{arm['source']}")
             stem = _opaque_id(args.seed, label, ticket_id)
-            for block, item_id in (("answer", f"{stem}-A"), ("retrieval", f"{stem}-R")):
+            for block in args.blocks:
+                item_id = f"{stem}-{'A' if block == 'answer' else 'R'}"
                 items.append({"item_id": item_id, "block": block})
                 key[item_id] = {"panel": arm["panel"], "ticket_id": ticket_id,
                                 "source": arm["source"], "block": block, "A": None, "B": None}
 
-    for block in BLOCKS:
+    for block in args.blocks:
         stratum_ids = [item["item_id"] for item in items if item["block"] == block]
         assignment = _balanced_assignment(stratum_ids, f"{args.seed}|{block}")
         for item_id, side in assignment.items():
@@ -279,7 +317,8 @@ def main() -> None:
     sides = {side: sum(1 for v in key.values() if v["A"] == side) for side in ("baseline", "feedback")}
     print(f"items={len(items)} tickets={sum(meta['n'] for meta in sample_meta.values())} A-sides={sides}")
     for label, meta in sample_meta.items():
-        print(f"  {label}: {meta['n']} tickets, strata={meta['strata']}")
+        print(f"  {label}: {meta['n']} tickets, eligible={meta['eligible']}, "
+              f"changed_share={meta['changed_share']:.3f}")
     print(f"package={out_root}")
     print("key.json is private: do not copy it into the application directory.")
 

@@ -26,37 +26,43 @@ source or data regime produced an item.
 
 ```powershell
 python experiments/24_export_study.py `
-  --panel disjoint_prefix `
-  --sources conditioned blind reply_embed_bge `
-  --version v1 `
-  --sample 120
+  --arm legacy_random:blind:35 `
+  --arm disjoint_prefix:blind:35 `
+  --arm disjoint_prefix:conditioned:35 `
+  --version v1
 ```
 
-Output: `revision_ieee_access/02_human_study/<panel>/<version>/` with
-`items.json` (served), `key.json` (private) and `manifest.json` (freeze record).
+Output: `<out-root>/<version>/` (default `data/processed/revision/study/`, git-ignored)
+with `items.json` (served), `key.json` (private) and `manifest.json` (freeze record).
+Never write the package into a tracked directory: it contains ticket text.
 The exporter fails if the sources do not cover identical queries or if their
 baseline answers differ, i.e. if the runs are not one comparable regime.
 
-Sampling is stratified by whether the feedback changed the item content
-(`--stratum answer` by default, or `retrieval` top-1). The default
-`--changed-fraction 0.7` oversamples informative pairs, because many strict-panel
-tickets keep an identical answer; the manifest records the full stratum sizes and
-the allocation. If the sampled changed-share differs from the natural prevalence,
-report it and either weight the estimate or state that the study measures the
-effect conditional on a changed pair. Use `--changed-fraction` equal to the natural
-share for a prevalence-preserving sample.
+Sampling is **pre-registered** in `STUDY_DESIGN.md`: only tickets whose feedback
+answer differs from the baseline are eligible; the sample is stratified by
+resolving team with proportional allocation and a deterministic hash order. It is
+never selected by the sign or size of the automatic delta. Tickets whose baseline
+answer differs across sources of the same panel (hosted-model nondeterminism) are
+excluded; the manifest records the count and each arm's changed share.
 
-## Proposed main study
+## Main study
 
-Two arms, 50 tickets each (100 tickets, 200 items per rater, about 7 hours each):
+Three arms, 35 tickets each (105 tickets, one block per ticket, about 2.5–3 hours
+per expert):
 
-| Arm | Panel | Source | What it tests |
-|---|---|---|---|
-| A | `legacy_random` | `blind` | whether the measured blind harm (−0.044 cosine) corresponds to worse procedures |
-| B | `disjoint_prefix` | `conditioned` | whether the remaining conditioned effect (+0.009) corresponds to better procedures |
+| Arm | Panel | Source | Automatic Δ | What it tests |
+|---|---|---|---:|---|
+| A | `legacy_random` | `blind` | −0.044 | harm under procedure overlap |
+| B | `disjoint_prefix` | `blind` | +0.001 | neutral control |
+| C | `disjoint_prefix` | `conditioned` | +0.009 | small benefit |
 
-Arm A is the strongest signal for the harm claim; arm B is the strictest test of
-any benefit. Both experts rate the same package independently.
+Two numbers are reported: the effect among changed pairs (what the experts see) and
+the population effect, obtained by multiplying it by the arm's changed share. This
+is stated in the design before any rating; it avoids overstating the deployment
+effect by oversampling informative pairs.
+
+A one-hour pilot uses 20 tickets from arm A and is reported as a pilot, not as the
+main study.
 
 ## Run locally
 
@@ -97,7 +103,7 @@ Open `http://127.0.0.1:8050`. Admin pages:
 ## Analysis
 
 ```powershell
-python experiments/25_analyze_study.py --ratings path/to/ratings.csv
+python experiments/25_analyze_study.py --ratings path/to/ratings.csv --manifest path/to/manifest.json
 ```
 
 Writes `study_summary.csv` (per panel × source × block: strict correctness rates,

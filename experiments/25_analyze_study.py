@@ -95,6 +95,8 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ratings", type=Path, required=True)
+    parser.add_argument("--manifest", type=Path, default=None,
+                        help="Study manifest; enables population extrapolation by changed share")
     parser.add_argument("--out-dir", type=Path, default=None)
     args = parser.parse_args()
     paths = ProjectPaths()
@@ -102,18 +104,29 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     df = _orient(pd.read_csv(args.ratings))
+    sample_meta = {}
+    if args.manifest:
+        manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
+        sample_meta = manifest.get("sample", {})
     rows = []
     for keys, group in df.groupby(["panel", "source", "block"]):
         panel, source, block = keys
         delta_strict = group["feedback_strict"].to_numpy() - group["baseline_strict"].to_numpy()
         delta_score = group["feedback_score"].to_numpy() - group["baseline_score"].to_numpy()
+        strict = _bootstrap_mean(delta_strict)
+        meta = sample_meta.get(f"{panel}/{source}", {})
+        share = meta.get("changed_share")
         rows.append({
             "panel": panel, "source": source, "block": block, "n": len(group),
             "baseline_strict_rate": group["baseline_strict"].mean(),
             "feedback_strict_rate": group["feedback_strict"].mean(),
-            "strict_delta": delta_strict.mean(),
-            "strict_delta_ci_lower": _bootstrap_mean(delta_strict)["ci_lower"],
-            "strict_delta_ci_upper": _bootstrap_mean(delta_strict)["ci_upper"],
+            "strict_delta": strict["mean"],
+            "strict_delta_ci_lower": strict["ci_lower"],
+            "strict_delta_ci_upper": strict["ci_upper"],
+            "changed_share": share,
+            "population_delta": strict["mean"] * share if share is not None else None,
+            "population_ci_lower": strict["ci_lower"] * share if share is not None else None,
+            "population_ci_upper": strict["ci_upper"] * share if share is not None else None,
             "score_delta": delta_score.mean(),
             "feedback_better_rate": group["feedback_better"].mean(),
             "baseline_better_rate": group["baseline_better"].mean(),
