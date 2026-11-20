@@ -11,7 +11,7 @@
     "finalist": "configs/revision/finalists_v1.yaml",
     "sha256": "24dbc25286fce4de55c20932ec033dd48d9e9b743b78a4b29135e955f8bf672d"
   },
-  "created_utc": "2026-11-20T14:42:00.745230+00:00",
+  "created_utc": "2026-11-20T14:44:36.702273+00:00",
   "dataset": {
     "sha256": "32453a69c847e32f6dd97859c475192171ccffe3f6c97ba06ff0a706df947a83"
   },
@@ -19,7 +19,7 @@
   "git": {
     "branch": "main",
     "dirty": true,
-    "sha": "757d29b3579ec3311b861ca2c463839c52fdab2f"
+    "sha": "619b27cb8f2920b2e5aa633e92a279a169e39773"
   },
   "n_answer_items": 20,
   "n_items": 20,
@@ -67,13 +67,14 @@
         "(LF) IT Office Access Italy": 1
       },
       "balance_by": "team",
-      "changed": 293,
+      "changed": 349,
       "changed_only": true,
-      "changed_share": 0.8592375366568915,
+      "changed_share": 0.8768844221105527,
       "eligible": 293,
-      "excluded_inconsistent": 105,
-      "frame": 341,
+      "excluded_inconsistent": 0,
+      "excluded_used": 57,
       "n": 20,
+      "population": 398,
       "requested": 20,
       "strata_sizes": {
         "(BF) Information Security Office": 3,

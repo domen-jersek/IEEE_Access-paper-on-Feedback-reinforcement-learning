@@ -118,16 +118,24 @@ def _allocate(groups: dict[str, list[str]], n: int) -> dict[str, int]:
 
 
 def _sample(records: dict, sources: dict, seed: str, n: int | None, stratum: str,
-            changed_only: bool, balance_by: str, exclude: set[str]):
-    """Deterministic sample from the eligible frame; never selects on outcome sign."""
-    frame = sorted(set(records) - set(exclude))
+            changed_only: bool, balance_by: str, exclude_baseline: set[str],
+            exclude_used: set[str]):
+    """Deterministic sample from the eligible frame; never selects on outcome sign.
+
+    ``changed_share`` is computed on the population after baseline exclusion, not on
+    the remaining pool after other arms have taken their tickets. It is the
+    extrapolation factor and must not depend on sampling order.
+    """
+    population = sorted(set(records) - set(exclude_baseline))
+    frame = [t for t in population if t not in exclude_used]
     eligible = [t for t in frame if (not changed_only) or _changed(records[t], stratum)]
-    changed_count = sum(1 for t in frame if _changed(records[t], stratum))
+    changed_count = sum(1 for t in population if _changed(records[t], stratum))
     stats = {
-        "frame": len(frame),
-        "excluded_inconsistent": len(exclude),
+        "population": len(population),
+        "excluded_inconsistent": len(exclude_baseline),
+        "excluded_used": len(set(exclude_used) & set(population)),
         "changed": changed_count,
-        "changed_share": changed_count / len(frame) if frame else None,
+        "changed_share": changed_count / len(population) if population else None,
         "eligible": len(eligible),
     }
     if n is None or n >= len(eligible):
@@ -248,7 +256,7 @@ def main() -> None:
         selected, stats, allocation = _sample(
             records, {arm["source"]: records}, args.seed, arm["sample"],
             args.stratum, args.changed_only, args.balance_by,
-            set(excluded[arm["panel"]]) | used)
+            excluded[arm["panel"]], used)
         used.update(selected)
         sample_meta[label] = {"requested": arm["sample"], "n": len(selected),
                               "stratum": args.stratum,
