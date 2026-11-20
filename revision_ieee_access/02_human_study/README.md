@@ -35,6 +35,15 @@ python experiments/24_export_study.py `
 Output: `<out-root>/<version>/` (default `data/processed/revision/study/`, git-ignored)
 with `items.json` (served), `key.json` (private) and `manifest.json` (freeze record).
 Never write the package into a tracked directory: it contains ticket text.
+
+The committed, sanitized provenance records are in
+`revision_ieee_access/02_human_study/packages/` (`v1.json`, `pilot-v1.json`).
+
+Two practice items are generated separately:
+
+```powershell
+python experiments/31_build_practice.py --package data/processed/revision/study/v1
+```
 The exporter fails if the sources do not cover identical queries or if their
 baseline answers differ, i.e. if the runs are not one comparable regime.
 

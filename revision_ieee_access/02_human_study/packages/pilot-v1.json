@@ -1,0 +1,111 @@
+{
+  "arms": [
+    {
+      "panel": "legacy_random",
+      "sample": 20,
+      "source": "blind"
+    }
+  ],
+  "assignment_seed": "20261112",
+  "configs": {
+    "finalist": "configs/revision/finalists_v1.yaml",
+    "sha256": "24dbc25286fce4de55c20932ec033dd48d9e9b743b78a4b29135e955f8bf672d"
+  },
+  "created_utc": "2026-11-20T14:42:00.745230+00:00",
+  "dataset": {
+    "sha256": "32453a69c847e32f6dd97859c475192171ccffe3f6c97ba06ff0a706df947a83"
+  },
+  "freeze_rule": "This package is immutable. Any change to retrieval, answers, assignment or sample requires a new study version and a new expert evaluation.",
+  "git": {
+    "branch": "main",
+    "dirty": true,
+    "sha": "757d29b3579ec3311b861ca2c463839c52fdab2f"
+  },
+  "n_answer_items": 20,
+  "n_items": 20,
+  "n_retrieval_items": 0,
+  "note": "Sanitized provenance record. The package itself contains confidential ticket text and is not distributed with the repository.",
+  "notes": "",
+  "runs": {
+    "legacy_random/blind": {
+      "config_hash": "9d2411d21e3c",
+      "details": "M4_intersection_eval_blind_rev_legacy_random_20261112_160413_details.json",
+      "details_sha256": "9419737975d8de0fc5825d9caf1c87b8e4227ddc071fe6c1f4c46b73f943002d",
+      "generation_regime_id": "51fd9f4b37e900bb",
+      "n_records": 398,
+      "run_dir": "M4_intersection_eval_blind_rev_legacy_random"
+    }
+  },
+  "sample": {
+    "legacy_random/blind": {
+      "allocation": {
+        "(BF) Information Security Office": 0,
+        "(GI-CF) Robot Process Automation": 2,
+        "(GI-CyberSec) Security Operation Center": 0,
+        "(GI-IaaS) Admin - License & Asset Management": 0,
+        "(GI-IaaS) Admin - Local IT purchase": 0,
+        "(GI-IaaS) Backend Application Srv. & Project Support": 1,
+        "(GI-IaaS) Backend M365 (2nd level)": 0,
+        "(GI-IaaS) Backend System Management (2nd level)": 0,
+        "(GI-IaaS) Development Platform": 2,
+        "(GI-IaaS) Network Cloud (Azure, Remote Access)": 1,
+        "(GI-IaaS) Network On-Prem (LAN,WLAN,WAN 2nd level)": 1,
+        "(GI-SM) Service Desk": 0,
+        "(GI-SaaS) Marketing, Communications & Web": 0,
+        "(GI-SaaS) SAP & Synertrade": 0,
+        "(GI-SaaS) Salesforce": 1,
+        "(GI-UX) Account Management": 1,
+        "(GI-UX) Application": 0,
+        "(GI-UX) File & Print": 3,
+        "(GI-UX) Group": 5,
+        "(GI-UX) Mobile Device Management": 0,
+        "(GI-UX) Network Access": 2,
+        "(GI-UX) Office365 & MS-Teams": 0,
+        "(GI-UX) Unified Communication": 0,
+        "(GI-UX) Windows": 0,
+        "(LF) Facilities Iberia": 0,
+        "(LF) IT Office Access Italy": 1
+      },
+      "balance_by": "team",
+      "changed": 293,
+      "changed_only": true,
+      "changed_share": 0.8592375366568915,
+      "eligible": 293,
+      "excluded_inconsistent": 105,
+      "frame": 341,
+      "n": 20,
+      "requested": 20,
+      "strata_sizes": {
+        "(BF) Information Security Office": 3,
+        "(GI-CF) Robot Process Automation": 34,
+        "(GI-CyberSec) Security Operation Center": 3,
+        "(GI-IaaS) Admin - License & Asset Management": 4,
+        "(GI-IaaS) Admin - Local IT purchase": 4,
+        "(GI-IaaS) Backend Application Srv. & Project Support": 12,
+        "(GI-IaaS) Backend M365 (2nd level)": 4,
+        "(GI-IaaS) Backend System Management (2nd level)": 1,
+        "(GI-IaaS) Development Platform": 26,
+        "(GI-IaaS) Network Cloud (Azure, Remote Access)": 6,
+        "(GI-IaaS) Network On-Prem (LAN,WLAN,WAN 2nd level)": 8,
+        "(GI-SM) Service Desk": 1,
+        "(GI-SaaS) Marketing, Communications & Web": 3,
+        "(GI-SaaS) SAP & Synertrade": 2,
+        "(GI-SaaS) Salesforce": 14,
+        "(GI-UX) Account Management": 13,
+        "(GI-UX) Application": 3,
+        "(GI-UX) File & Print": 40,
+        "(GI-UX) Group": 66,
+        "(GI-UX) Mobile Device Management": 1,
+        "(GI-UX) Network Access": 21,
+        "(GI-UX) Office365 & MS-Teams": 2,
+        "(GI-UX) Unified Communication": 4,
+        "(GI-UX) Windows": 6,
+        "(LF) Facilities Iberia": 1,
+        "(LF) IT Office Access Italy": 11
+      },
+      "stratum": "answer"
+    }
+  },
+  "schema_version": 2,
+  "study_version": "pilot-v1"
+}

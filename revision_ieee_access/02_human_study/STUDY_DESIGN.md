@@ -45,10 +45,17 @@ compares baseline against the feedback system with the frozen finalist
 - **Stratified by resolving team**, proportional allocation with a deterministic
   hash order within stratum. If a team has fewer eligible tickets than its quota,
   the remainder is redistributed.
+- **Sampled without replacement across arms.** No ticket appears in two arms of
+  the main package, and the pilot package is disjoint from the main package.
 - Target: **35 tickets per arm, 105 total**. Two independent experts rate the same
   items.
-- If only a one-hour session is possible, the pilot uses **20 tickets from arm A**
-  (largest expected signal) and is reported as a pilot, not as the main study.
+- **A/B is balanced within each arm**, not only globally.
+- If only a one-hour session is possible, a separate **20-ticket pilot package**
+  is drawn from arm A only and is disjoint from the main sample. Pilot ratings are
+  analysed as a separate session and are reported as a pilot, not as the main
+  study.
+- Two private practice items (`practice.md` in the package) are used in the
+  introductory call to agree the rubric. They are not study data.
 
 ## Estimands
 
@@ -108,6 +115,10 @@ before the first rating. The manifest records run directories, details hashes,
 finalist hash, dataset hash and the assignment seed. The application refuses to
 start if the package content changes. Any later change creates a new study version
 and discards previous ratings.
+
+The private package lives under `data/processed/revision/study/` (git-ignored).
+A sanitized provenance record without ticket IDs or paths is committed under
+`revision_ieee_access/02_human_study/packages/`.
 
 ## Limitations stated in advance
 

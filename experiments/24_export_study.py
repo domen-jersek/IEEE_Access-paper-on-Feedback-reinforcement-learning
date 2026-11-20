@@ -187,6 +187,8 @@ def main() -> None:
                         help="What counts as a changed ticket for eligibility")
     parser.add_argument("--run", action="append", default=[],
                         help="Override a run directory: source=relative/or/absolute/path")
+    parser.add_argument("--exclude-package", action="append", default=[],
+                        help="Exclude tickets already used in another study package")
     parser.add_argument("--out-root", default="data/processed/revision/study",
                         help="Private output root; do not point this at a tracked directory")
     parser.add_argument("--notes", default="")
@@ -236,12 +238,18 @@ def main() -> None:
         excluded[panel] = _baseline_inconsistencies(sources, panel)
 
     items, key, sample_meta = [], {}, {}
+    used: set[str] = set()
+    for package in args.exclude_package:
+        previous = json.loads((Path(package) / "key.json").read_text(encoding="utf-8"))
+        used.update(entry["ticket_id"] for entry in previous.values())
     for arm in arms:
         label = f"{arm['panel']}/{arm['source']}"
         records = loaded[label]
         selected, stats, allocation = _sample(
             records, {arm["source"]: records}, args.seed, arm["sample"],
-            args.stratum, args.changed_only, args.balance_by, excluded[arm["panel"]])
+            args.stratum, args.changed_only, args.balance_by,
+            set(excluded[arm["panel"]]) | used)
+        used.update(selected)
         sample_meta[label] = {"requested": arm["sample"], "n": len(selected),
                               "stratum": args.stratum,
                               "changed_only": args.changed_only,
@@ -259,11 +267,15 @@ def main() -> None:
                                 "source": arm["source"], "block": block, "A": None, "B": None}
 
     for block in args.blocks:
-        stratum_ids = [item["item_id"] for item in items if item["block"] == block]
-        assignment = _balanced_assignment(stratum_ids, f"{args.seed}|{block}")
-        for item_id, side in assignment.items():
-            key[item_id]["A"] = side
-            key[item_id]["B"] = "feedback" if side == "baseline" else "baseline"
+        for arm in arms:
+            label = f"{arm['panel']}/{arm['source']}"
+            stratum_ids = [item["item_id"] for item in items
+                           if item["block"] == block
+                           and f"{key[item['item_id']]['panel']}/{key[item['item_id']]['source']}" == label]
+            assignment = _balanced_assignment(stratum_ids, f"{args.seed}|{block}|{label}")
+            for item_id, side in assignment.items():
+                key[item_id]["A"] = side
+                key[item_id]["B"] = "feedback" if side == "baseline" else "baseline"
 
     # Attach content; method identity stays in key.json only.
     content = {}
