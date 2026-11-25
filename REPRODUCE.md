@@ -1,11 +1,18 @@
-# REPRODUCE.md — ordered command list (P0–P4)
+# REPRODUCE.md — revision and submitted-study commands
 
-> **Revision data preflight (no API calls):** see
-> [revision_ieee_access/01_data_protocol/README.md](revision_ieee_access/01_data_protocol/README.md).
-> Its configuration is not yet supported by the experiment commands below. A
-> successful package-A check is not a completed historical/procedure-disjoint run.
+The current paper is the IEEE Access revision. Its commands are in **Revision**
+below. The P0–P6 sections document the submitted study and are kept for
+provenance; they are not the revision pipeline.
 
-## R — revision data layer (no API calls)
+All commands run from `paper_ieee_access/`. Every script writes an immutable
+`manifest_<run_id>.json`, updates `manifest_latest.json`, and appends a row to
+`results/registry.csv`. Set `USE_TF=0` once per shell to keep `transformers` from
+importing TensorFlow (PowerShell: `$env:USE_TF='0'`). Install the dependencies
+once with `python -m pip install -e ".[dev]"`.
+
+## Revision — IEEE Access resubmission
+
+### 1. Data layer (no API calls)
 
 ```powershell
 python experiments/19_data_protocol.py --data-protocol configs/revision/random_train_only_dev.yaml
@@ -15,18 +22,118 @@ python experiments/21_revision_retrieval_panels.py --protocol blind
 python -m pytest tests/test_data_protocol.py tests/test_revision_boundaries.py -q
 ```
 
-`20_` regenerates versioned groups, 5 group-aware splits per rule, and the overlap
-audit. It is deterministic: rerunning without `--overwrite` must not change a byte.
-`21_` evaluates history-only retrieval panels and writes a private run directory.
-Neither script calls a model or the API. Generated-answer panels are not yet wired
-to the normal evaluator; see `IMPLEMENTATION_PLAN.md` (B2).
+`20_` regenerates the versioned structural groups (duplicate and prefix rules),
+five group-aware splits per rule, and the train/eval overlap audit. It is
+deterministic: rerunning without `--overwrite` must not change a byte. `21_`
+evaluates history-only retrieval panels and writes a private run directory.
+Neither script calls a model or the API.
 
-All commands run from `paper_ieee_access/`. Every script writes an immutable
-`manifest_<run_id>.json`, updates `manifest_latest.json`, and appends a row to
-`results/registry.csv`. Set `USE_TF=0` once per
-shell to keep `transformers` from importing TensorFlow (PowerShell: `$env:USE_TF='0'`).
+### 2. Dev selection and ablation (no API calls)
 
-Install the notebook and test dependencies once with `python -m pip install -e ".[dev]"`.
+```powershell
+python experiments/22_revision_dev_lab.py
+python experiments/22_revision_dev_lab.py --validate-eval
+```
+
+This writes the tuned-Laplace sweep, the one-factor ablation (legacy, tuned,
+pool scaling, empirical Bayes, scope, backoff), and the finalist selection. The
+published legacy cell (`m=0.80`, cap `0.20`) is one cell in the sweep, not a
+special default.
+
+### 3. Generated panels (API cost on cache misses)
+
+The frozen finalist is `M4_intersection` with `laplace_eb`, `kappa=2`, absolute
+scaling, `top_k=5`, `search_k=100`. Nine runs: three panels × three sources.
+
+```powershell
+foreach ($panel in 'legacy_random','disjoint_duplicate','disjoint_prefix') {
+  foreach ($source in 'conditioned','blind','reply_embed_bge') {
+    python experiments/23_revision_evaluate.py --panel $panel --source $source
+  }
+}
+python experiments/26_generated_panels.py
+```
+
+The generation cache is keyed by the prompt and the pinned regime
+(`51fd9f4b37e900bb`, `openai/gpt-5.6-luna`, temperature 0, system prompt hash
+`524098066b407de3`). A warm cache reproduces the stored answers; a cold cache
+requires `OPENROUTER_API_KEY`. The submitted study used a different judge
+(`gpt-4o-mini`); do not pool the two regimes.
+
+The optional generated ablation for R1-M2 (EB + pool at Team and intersection,
+Laplace at Backoff, both protocols, strict dev) is specified in
+`revision_ieee_access/03_manuscript/GENERATED_ABLATION_PLAN.md`. It has not been
+run and needs approval for paid calls.
+
+### 4. Freeze before the human study
+
+```powershell
+python experiments/27_freeze_runs.py --label v1
+```
+
+The freeze writes `results/revision/frozen/frozen_runs_v1.json` with the run
+directories, details hashes, config hashes and generation regime. The sanitized
+public record is `revision_ieee_access/01_data_protocol/frozen_runs_v1.json`.
+Any later change to retrieval, answers, sample or A/B assignment requires a new
+study version.
+
+### 5. Aggregates, diagnostics and figures (no API calls)
+
+```powershell
+python experiments/28_matched_retrievers.py
+python experiments/29_power_multiplicity.py
+python experiments/30_decision_and_cost.py
+python experiments/34_lift_diagnostics.py --panel disjoint_prefix
+python experiments/36_revision_figures.py
+```
+
+`28_` runs one feedback configuration across dense, BM25 and hybrid retrieval.
+`29_` writes the pre-specified families, Holm correction and MDE. `30_` writes
+the abstention headroom and generation cost. `34_` writes the score distribution,
+vote saturation and scope priors. `36_` writes the main figures from the
+committed aggregate tables.
+
+### 6. Human evaluation
+
+```powershell
+python experiments/33_human_eval.py --package data/processed/revision/study/v1 `
+  --ratings revision_ieee_access/02_human_study/evaluation_alberto/ratings.csv --label alberto
+```
+
+With the second rater, pass both files (the script matches the common items and
+reports partial overlap):
+
+```powershell
+python experiments/33_human_eval.py --package data/processed/revision/study/v1 `
+  --ratings revision_ieee_access/02_human_study/evaluation_alberto/ratings.csv `
+  --ratings <path>/timothy_ratings.csv --label combined
+```
+
+The raw ratings, package and ticket text are confidential and git-ignored. Only
+aggregates are committed under
+`revision_ieee_access/02_human_study/results/`.
+
+### 7. Tests
+
+```powershell
+python -m pytest -q
+```
+
+The suite covers the data protocol, revision boundaries, the lift formulas, the
+human-eval analysis (including partial overlap) and the frozen configuration.
+The human-eval tests are `tests/test_human_eval.py`; the data-boundary tests are
+`tests/test_data_protocol.py` and `tests/test_revision_boundaries.py`.
+
+### 8. What is reproducible without the confidential corpus
+
+- All aggregate tables and figures from the committed CSVs.
+- The human-evaluation analysis from aggregate or raw ratings on premises.
+- The unit tests and the synthetic data-protocol validation.
+- The full pipeline and generated panels only on premises with the corpus; new
+  API calls may hit hosted-model drift, so the regime and hashes are pinned
+  rather than claiming bit-level reproducibility.
+
+## Submitted study (historical, P0–P6)
 
 Already completed before this programme (SIKDD replication, luna generator, dev split, seed 42):
 `baseline`, `M1_global` (conditioned/blind/binary), `M2_team`, `M3_class`, `M4_intersection`

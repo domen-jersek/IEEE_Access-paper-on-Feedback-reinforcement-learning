@@ -56,6 +56,15 @@ def main() -> None:
     parser.add_argument("--no-cache", action="store_true")
     parser.add_argument("--notes", default="")
     parser.add_argument("--verbose", action="store_true")
+    # Optional config overrides for the controlled ablation. Defaults reproduce
+    # the frozen finalist exactly; use --tag to keep ablation runs separate.
+    parser.add_argument("--lift", choices=["eb", "laplace"], default="eb")
+    parser.add_argument("--kappa", type=float, default=2.0)
+    parser.add_argument("--scale-mode", choices=["absolute", "pool_std"], default="absolute")
+    parser.add_argument("--pool-lambda", type=float, default=1.0)
+    parser.add_argument("--scope", choices=["intersection", "team", "backoff"],
+                        default="intersection")
+    parser.add_argument("--tag", default="")
     args = parser.parse_args()
     setup_logging(20 if args.verbose else 30)
     set_seeds(42)
@@ -92,9 +101,22 @@ def main() -> None:
         lift = LiftConfig(name="none", multiplier=0.0, cap=0.0)
         routing = RoutingConfig(name="none")
     else:
-        lift = LiftConfig.laplace_eb(prior_strength=2.0)
-        routing = RoutingConfig.intersection()
+        if args.lift == "eb":
+            lift = LiftConfig.laplace_eb(
+                prior_strength=args.kappa,
+                scale_mode=args.scale_mode,
+                pool_lambda=args.pool_lambda,
+            )
+        else:
+            lift = LiftConfig.laplace()
+        routing = {
+            "intersection": RoutingConfig.intersection(),
+            "team": RoutingConfig.team_only(),
+            "backoff": RoutingConfig.backoff(),
+        }[args.scope]
     folder = f"{args.method}_{args.split}_{args.source}_rev_{args.panel}"
+    if args.tag:
+        folder = f"{folder}_abl_{args.tag}"
     config = EvalConfig(
         experiment_id=folder, lift=lift, routing=routing, gating=GatingConfig.none(),
         generator_model=base.generator_model, judge_model=base.judge_model,

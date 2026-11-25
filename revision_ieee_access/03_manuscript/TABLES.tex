@@ -1,0 +1,219 @@
+% Main tables for the revision. Numbers are generated from
+% revision_ieee_access/01_data_protocol/tables/*.csv.
+% Requires booktabs, threeparttable, tabularx, rotating.
+% Table numbers follow the planned structure; update \label references after the rewrite.
+
+% ---------------------------------------------------------------------------
+% Table 1 — structural overlap between train and evaluation
+% ---------------------------------------------------------------------------
+\begin{table*}[t]
+\centering
+\begin{threeparttable}
+\caption{Evaluation tickets whose training partition contains a ticket with the
+same structural signature. ``Duplicate union'' is the connected-component rule
+over identical full reply or identical title+subcategory. Counts are tickets;
+percentages are of the split size.}
+\label{tab:overlap}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Split & Full reply & Reply opening & Title+subcat & Duplicate union \\
+\midrule
+Submitted random (398)   & 59 (14.8\,\%) & 232 (58.3\,\%) & 61 (15.3\,\%) & 116 (29.1\,\%) \\
+Submitted ``disjoint'' (390) & 50 (12.8\,\%) & 208 (53.3\,\%) & 38 (9.7\,\%) & 88 (22.6\,\%) \\
+Duplicate panel (398)    & 0 & 193 (48.5\,\%) & 0 & 0 \\
+Prefix panel (427)       & 0 & 0 & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\footnotesize
+\item The prefix panel is the strict control: no evaluation ticket shares a full
+reply, a 300-character reply opening, or a title+subcategory signature with
+training.
+\end{tablenotes}
+\end{threeparttable}
+\end{table*}
+
+% ---------------------------------------------------------------------------
+% Table 2 — generated-answer effects by data regime and evidence source
+% ---------------------------------------------------------------------------
+\begin{table*}[t]
+\centering
+\begin{threeparttable}
+\caption{Generated-answer cosine difference against the no-feedback baseline
+(paired, per ticket) under three data regimes and three evidence sources.
+Brackets are 95\,\% ticket-level paired bootstrap intervals. The finalist is
+empirical Bayes with $\kappa=2$, Team$\cap$Class scope and absolute scaling.
+The contrast is conditioned minus blind on the same tickets.}
+\label{tab:generated}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Regime & $n$ & Conditioned & Blind & Reply similarity & Contrast \\
+\midrule
+Random    & 398 & $+0.0105$ $[+0.0005, +0.0212]$ & $-0.0444$ $[-0.0606, -0.0285]$ & $+0.0143$ $[+0.0047, +0.0242]$ & $+0.0549$ $[+0.0389, +0.0710]$ \\
+Duplicate & 398 & $+0.0149$ $[+0.0059, +0.0246]$ & $-0.0214$ $[-0.0367, -0.0073]$ & $+0.0081$ $[+0.0016, +0.0152]$ & $+0.0363$ $[+0.0217, +0.0517]$ \\
+Prefix    & 427 & $+0.0093$ $[+0.0026, +0.0169]$ & $+0.0008$ $[-0.0063, +0.0084]$ & $+0.0026$ $[-0.0039, +0.0097]$ & $+0.0085$ $[+0.0016, +0.0158]$ \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\footnotesize
+\item Wilcoxon $p$ for conditioned/blind: random .029/.00015, duplicate
+.002/.655, prefix .066/.856. Holm-adjusted $p$ within the primary family:
+random .117/.001, duplicate .011/1.000, prefix .197/1.000. The prefix
+conditioned effect is below its 80\,\% minimum detectable effect (0.0103).
+\end{tablenotes}
+\end{threeparttable}
+\end{table*}
+
+% ---------------------------------------------------------------------------
+% Table 3A — controlled dev ablation, retrieval-level top-1 proxy
+% ---------------------------------------------------------------------------
+\begin{table*}[t]
+\centering
+\begin{threeparttable}
+\caption{Controlled one-factor-at-a-time ablation on dev (retrieval-level top-1
+proxy, 319 duplicate-panel and 312 prefix-panel queries). Every cell uses the
+same history-only candidate pools, allowed feedback rows and selection metric.
+``Ratio'' is $\mathrm{SD}(\text{lift})/\mathrm{SD}(\text{retrieval score})$
+within the pool.}
+\label{tab:ablation}
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Configuration & Scope & $\Delta$ top-1 [95\,\% CI] & $p$ & Cap (\%) & Zero (\%) & Ratio \\
+\midrule
+\multicolumn{7}{@{}l}{\emph{Duplicate panel (398 tickets; 319 dev queries)}} \\
+Legacy Laplace            & Team$\cap$Class & $+0.0370$ $[+0.0180, +0.0567]$ & .013 & 42.5 & 17.5 & 2.30 \\
+Tuned Laplace             & Team$\cap$Class & $+0.0423$ $[+0.0248, +0.0614]$ & .001 & 42.5 & 17.5 & 1.72 \\
+Laplace + pool scaling    & Team$\cap$Class & $+0.0273$ $[+0.0146, +0.0420]$ & .001 & 42.5 & 17.5 & 0.50 \\
+EB $\kappa=2$, absolute   & Team$\cap$Class & $+0.0497$ $[+0.0319, +0.0688]$ & <.001 & 17.4 & 16.3 & 1.97 \\
+EB $\kappa=2$ + pool       & Team$\cap$Class & $+0.0238$ $[+0.0126, +0.0368]$ & .004 & 17.4 & 16.3 & 0.45 \\
+EB $\kappa=2$ + pool       & Team            & $+0.0132$ $[+0.0009, +0.0271]$ & .236 & 11.3 & 7.3 & 0.48 \\
+EB $\kappa=2$ + pool       & Backoff         & $+0.0217$ $[+0.0076, +0.0370]$ & .010 & 18.9 & 0.0 & 0.54 \\
+\midrule
+\multicolumn{7}{@{}l}{\emph{Prefix panel (427 tickets; 312 dev queries)}} \\
+Legacy Laplace            & Team$\cap$Class & $-0.0083$ $[-0.0182, +0.0004]$ & .112 & 18.1 & 68.4 & 0.95 \\
+Tuned Laplace             & Team$\cap$Class & $-0.0023$ $[-0.0110, +0.0054]$ & .954 & 30.8 & 68.4 & 0.27 \\
+Laplace + pool scaling    & Team$\cap$Class & $-0.0042$ $[-0.0112, +0.0013]$ & .085 & 18.1 & 68.4 & 0.21 \\
+EB $\kappa=2$, absolute   & Team$\cap$Class & $-0.0008$ $[-0.0078, +0.0054]$ & .816 & 7.9 & 68.0 & 0.75 \\
+EB $\kappa=2$ + pool       & Team$\cap$Class & $-0.0002$ $[-0.0033, +0.0033]$ & .358 & 7.9 & 68.0 & 0.17 \\
+EB $\kappa=2$ + pool       & Team            & $-0.0002$ $[-0.0078, +0.0066]$ & .968 & 6.7 & 19.2 & 0.26 \\
+EB $\kappa=2$ + pool       & Backoff         & $-0.0052$ $[-0.0131, +0.0020]$ & .845 & 30.5 & 0.1 & 0.61 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\footnotesize
+\item Tuned Laplace uses $m=0.60$, cap $=0.15$ on the duplicate panel and
+$m=1.00$, cap $=0.05$ on the prefix panel, selected on dev. The published legacy
+cell ($m=0.80$, cap $=0.20$) ranks 9/25 on duplicate and 23/25 on prefix.
+\end{tablenotes}
+\end{threeparttable}
+\end{table*}
+
+% ---------------------------------------------------------------------------
+% Table 3B — matched retriever comparison
+% ---------------------------------------------------------------------------
+\begin{table}[t]
+\centering
+\caption{Feedback gain under one configuration (EB $\kappa=2$, pool-relative
+scaling $\lambda=1$, Team$\cap$Class) across retrieval families. Brackets are
+95\,\% bootstrap intervals. Absolute scaling is omitted because lift units are
+not comparable across retrievers.}
+\label{tab:matched}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Retriever & Random $\Delta$ & $p$ & Prefix $\Delta$ & $p$ \\
+\midrule
+Dense MiniLM & $+0.0334$ $[+0.0202, +0.0475]$ & $<.001$ & $+0.0078$ $[+0.0030, +0.0137]$ & .131 \\
+BM25         & $+0.0641$ $[+0.0466, +0.0821]$ & $<.001$ & $+0.0088$ $[+0.0021, +0.0167]$ & .054 \\
+Hybrid RRF   & $+0.0595$ $[+0.0426, +0.0771]$ & $<.001$ & $+0.0063$ $[+0.0006, +0.0121]$ & .293 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ---------------------------------------------------------------------------
+% Table 4 — expert evaluation
+% ---------------------------------------------------------------------------
+\begin{table}[t]
+\centering
+\begin{threeparttable}
+\caption{Blinded expert assessment of procedural correctness (E1; 105 items,
+35 per arm). Strict correctness counts only ``correct''. Intervals are paired
+bootstrap intervals over tickets; $p$ is the exact McNemar test on discordant
+pairs. Four items were cannot-judge and are excluded from the paired analysis.}
+\label{tab:human}
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Arm & $n$ & Baseline & Feedback & $\Delta$ [95\,\% CI] & $p$ \\
+\midrule
+Random, blind       & 34 & 0.647 & 0.794 & $+0.147$ $[0.000, +0.294]$ & .25 \\
+Prefix, blind       & 33 & 0.545 & 0.515 & $-0.030$ $[-0.121, +0.061]$ & 1.00 \\
+Prefix, conditioned & 34 & 0.559 & 0.559 & $0.000$ $[-0.088, +0.088]$ & 1.00 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\footnotesize
+\item Discordant pairs: 7, 3 and 2. Across all 105 items: 42 equal, 32 both
+incorrect, 2 cannot judge. On the random arm the feedback replies are 173
+characters longer; the expert preference tracks length (Spearman $+0.63$) and is
+zero among length-matched pairs. The second expert is pending; agreement is not
+yet reported.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+% ---------------------------------------------------------------------------
+% Table 5 — prior work comparison
+% ---------------------------------------------------------------------------
+\begin{table*}[t]
+\centering
+\caption{Relationship to the authors' prior conference papers and to the
+submitted manuscript. The revision shares the corpus and the base pipeline;
+the data-regime control, split audit, controlled repair, reply baseline, matched
+retrievers, statistical sensitivity analysis and expert evaluation are new.}
+\label{tab:prior}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}p{0.16\textwidth}XXXX@{}}
+\toprule
+ & SIKDD 2025 & SIKDD 2026 & Submitted IEEE Access & Revised IEEE Access \\
+\midrule
+Role & Retrieval + generation pipeline & Exploratory feedback-aware retrieval & Protocol as experimental variable & Data regime and measurement validity \\
+Corpus & Enterprise IT tickets & 1,596 tickets, 37 teams & 1,595 tickets, 37 teams, 17 classes & Same 1,595; canonical IDs unchanged \\
+Evaluation queries & --- & 250 leave-one-out & 878/319/398 + 5 seeds; 390 ``disjoint'' eval & Same legacy splits; history-only 398/398/427 \\
+Judge & --- & gpt-4o-mini, conditioned only & gpt-5.6-luna, conditioned and blind & Same two protocols, restricted to history \\
+Feedback pairs & --- & 102,722 conditioned & 175,600 per protocol & 94,913 / 52,321 / 58,826 admissible \\
+Lift & --- & Laplace, $m=0.80$, cap $0.20$ & Legacy Laplace as object of study & Tuned Laplace, EB, scaling, scope, backoff \\
+Procedure-disjoint & No & No & Claimed, 390 eval; not actually disjoint & Versioned groups; duplicate and prefix panels; 5 seeds \\
+History-only evidence & No & No & No & Yes: index, BM25, feedback rows, priors \\
+Reply-similarity baseline & No & No & No & Exact and BGE reply similarity \\
+Matched retrievers & No & No & Confounded lift settings & One configuration; dense, BM25, hybrid \\
+Human evaluation & No & No & No & 105 blinded items; E1 complete, E2 pending \\
+Statistics & --- & Bootstrap CIs; no always-on significance & Dev-frozen thresholds; 39 runs; no multiplicity correction & Pre-specified families, Holm, MDE, exact McNemar \\
+Main finding & Pipeline works & Conditioned feedback helps weak baselines; gates fail & Same reranking helps conditioned, harms blind & Harm is overlap-driven; calibrated gain small and metric-dependent; expert and cosine diverge \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+% ---------------------------------------------------------------------------
+% Table 6 — cost and latency (appendix)
+% ---------------------------------------------------------------------------
+\begin{table}[t]
+\centering
+\caption{End-to-end generation cost from the frozen runs (CPU, model loading and
+metric computation included). Each ticket uses two requests, baseline and
+feedback. Feedback-database preparation is a separate one-off cost.}
+\label{tab:cost}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Regime / source & Queries & Requests & Seconds & s/request \\
+\midrule
+Random / conditioned    & 398 & 709 & 616.6 & 0.87 \\
+Random / blind          & 398 & 749 & 363.0 & 0.48 \\
+Random / reply sim.     & 398 & 740 & 357.2 & 0.48 \\
+Duplicate / conditioned & 398 & 671 & 564.0 & 0.84 \\
+Duplicate / blind       & 398 & 696 & 355.5 & 0.51 \\
+Duplicate / reply sim.  & 398 & 686 & 355.5 & 0.52 \\
+Prefix / conditioned    & 427 & 625 & 532.0 & 0.85 \\
+Prefix / blind          & 427 & 636 & 426.0 & 0.67 \\
+Prefix / reply sim.     & 427 & 611 & 436.5 & 0.71 \\
+\bottomrule
+\end{tabular}
+\end{table}
