@@ -1,5 +1,10 @@
 # Human evaluation — blinded two-expert study
 
+**Start here:** [`HUMAN_EVAL_TLDR.md`](HUMAN_EVAL_TLDR.md) for a self-contained
+summary, then [`../../notebooks/09_human_evaluation.ipynb`](../../notebooks/09_human_evaluation.ipynb)
+for the executed analysis and figures. Full tables are in
+[`HUMAN_EVAL_RESULTS.md`](HUMAN_EVAL_RESULTS.md).
+
 Two GFT support experts rate the same frozen items independently. The application
 never reveals which side is baseline and which is feedback, nor which evidence
 source or data regime produced an item.

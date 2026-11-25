@@ -1,59 +1,110 @@
-# Human evaluation — TL;DR
+# Human evaluation — what we did and what we found
 
-**Scope.** 105 tickets, three arms of 35, one GFT expert (Alberto Marchinelli),
-blinded A/B, answer block only, changed pairs only (the feedback answer differs
-from the baseline). **Status:** first rater complete; second rater pending.
+*Written to be read without prior knowledge of the paper or the dataset.*
 
-## Headline
+## The short version
 
-On **new procedures** the expert sees neither benefit nor harm. On **familiar
-procedures** the expert preferred the feedback replies, but the preference is
-explained by answer length, not by procedure. The automatic cosine metric and the
-expert disagree in that arm.
+A support system suggests a first reply to an IT ticket. We asked a GFT support
+expert to compare two versions of that suggestion, blind, on 105 real tickets. On
+tickets whose procedure the system had already seen, the expert preferred the
+version that uses feedback from earlier tickets — but that version simply wrote
+longer replies, and when replies are the same length the preference disappears. On
+tickets with a procedure the system had **not** seen, the expert found no difference
+at all. The automatic similarity score used in the paper disagrees with the expert
+on the first group: it penalises the longer replies that the expert prefers.
 
-## Numbers
+## What was compared
 
-| Arm | Baseline | Feedback | Δ [95 % CI] |
-|---|---:|---:|---|
-| random / blind | 0.647 | 0.794 | +0.147 [0.000, +0.294] |
-| strict / blind | 0.545 | 0.515 | −0.030 [−0.121, +0.061] |
-| strict / conditioned | 0.559 | 0.559 | 0.000 [−0.088, +0.088] |
+An IT ticket arrives. The system retrieves five similar historical tickets and a
+language model writes a first reply from them. Two retrieval versions were compared:
 
-Strict correctness = `correct` only. Intervals are paired bootstrap over tickets.
+- **Baseline:** rank historical tickets by semantic similarity to the new ticket.
+- **Feedback:** additionally boost tickets that received good scores in earlier
+  ticket–candidate comparisons.
 
-- **Length.** Feedback replies on the random arm are 173 characters longer; the
-  expert delta tracks that difference (Spearman +0.63). Among pairs whose lengths
-  differ by at most 100 characters the effect is **exactly zero**.
-- **Metric divergence.** On the random arm the automatic cosine delta is −0.088
-  while the expert delta is +0.147; Spearman −0.48, AUC 0.22. The metric penalises
-  the longer replies that the expert prefers.
-- **Preferences.** 42 of 105 items were equal, 32 both incorrect, 2 cannot judge.
-  A raw A/B preference would have hidden a third of the sample as “both wrong”.
+The feedback scores come in two kinds:
 
-## What it means
+- **Blind:** the score is based on the ticket text only, as a real user could
+  provide it.
+- **Conditioned:** the score is based on the ticket text *and* the recorded
+  resolution of the historical ticket. This is an upper bound: a user cannot supply
+  the resolution of the ticket they are currently asking about.
 
-1. The automatic “harm” is **not confirmed** by the expert.
-2. The apparent benefit on familiar procedures is **length-driven**, not a
-   demonstrated procedural improvement.
-3. Neither cosine nor expert preference is a clean measure of procedural
-   correctness.
-4. With one rater and 2–7 discordant pairs per arm, this is a **descriptive
-   validity check**, not a confirmatory test. A second rater is needed for
-   agreement.
+Two data situations were compared:
 
-## One-line version for slides or email
+- **Familiar procedures:** the historical base contains tickets very close to the
+  evaluated one, so the system can reuse a procedure it has already seen.
+- **New procedures:** such near-duplicates are removed from the historical base, so
+  the system has to generalise.
 
-> The expert confirms neither harm nor benefit on new procedures; on familiar
-> procedures the apparent preference is explained by answer length; automatic
-> similarity and expert judgement diverge.
+The three groups below combine these two dimensions.
 
-## Where the details are
+## What the expert did
 
-- `HUMAN_EVAL_RESULTS.md` — full analysis, reviewer mapping, limitations.
+One GFT support engineer rated 105 tickets, 35 per group. For each ticket the
+application showed two candidate replies, A and B, in random order, without saying
+which system produced which. For each reply the expert chose **correct**,
+**partially correct**, **incorrect** or **cannot judge**, marked whether it
+contained a wrong or unsafe step or missed a required step, and then chose the better
+reply, with *equal*, *both incorrect* and *cannot judge* available.
+
+**Strict correctness** means the share of replies rated exactly *correct*. It is the
+main number below; the lenient version also counts *partially correct*.
+
+## The results
+
+| Group | Tickets | Baseline correct | Feedback correct | Difference |
+|---|---:|---:|---:|---|
+| Familiar procedures / blind feedback | 34 | 64.7 % | 79.4 % | +14.7 points (interval 0.0 to +29.4) |
+| New procedures / blind feedback | 33 | 54.5 % | 51.5 % | −3.0 points (interval −12.1 to +6.1) |
+| New procedures / conditioned feedback | 34 | 55.9 % | 55.9 % | 0.0 points (interval −8.8 to +8.8) |
+
+1. **On new procedures there is no difference.** Both intervals include zero. The
+   expert does not confirm that feedback helps, and does not confirm that it harms.
+2. **The familiar-procedure gain is a length effect.** The feedback replies in that
+   group were 173 characters longer on average, and the expert's preference tracked
+   length (correlation +0.63). Among pairs whose lengths differ by at most 100
+   characters, the difference is **exactly zero**. The expert was not instructed to
+   reward length; this is a property of the task, and it matters.
+3. **The automatic metric and the expert disagree.** On familiar procedures the
+   automatic cosine score says the feedback replies are worse (−0.088), while the
+   expert says they are better (+0.147). The metric rewards closeness to one recorded
+   reply; the expert rewards a reply that looks more complete. Neither is a clean
+   measure of procedural correctness.
+4. **“Both wrong” was common.** Of 105 tickets, 42 were rated equal and 32 were rated
+   both incorrect. A simple A/B preference would have hidden a third of the sample as
+   “both wrong”. That is why each reply was rated separately.
+
+## What this means
+
+- The paper's claim that blind feedback **harms** replies is **not supported** by the
+  expert.
+- The paper cannot claim that feedback **helps** either: on new procedures the
+  difference is zero, and on familiar procedures it is explained by reply length.
+- Similarity to one recorded reply and expert judgement measure different things.
+  The paper must say this explicitly and must not treat either as ground truth.
+
+## Limits
+
+- **One expert.** A second GFT expert is being arranged. Until then we cannot report
+  how well two experts agree, and the result is one person's assessment.
+- **105 tickets, 35 per group.** The study can detect only large differences; the
+  intervals above are the honest statement, not the p-values.
+- **Changed pairs only.** The sample contains tickets where feedback changed the
+  reply; unchanged pairs would show the same reply twice.
+- **Procedural correctness, not resolution.** The expert judges whether the reply
+  describes the right procedure, not whether the user's problem was ultimately
+  solved.
+
+## Status
+
+First expert complete. Second expert pending; when the ratings arrive, the same
+analysis adds inter-rater agreement and a combined estimate. The manuscript section
+will state the one-expert limitation if the second does not arrive in time.
+
+## Where to read more
+
+- `HUMAN_EVAL_RESULTS.md` — full tables, sensitivity analyses, reviewer mapping.
+- `../../notebooks/09_human_evaluation.ipynb` — executed notebook with all figures.
 - `results/alberto/` — aggregate tables and figures (no ticket text).
-- `STUDY_DESIGN.md` — pre-registered design.
-- `../../01_data_protocol/LIFT_DIAGNOSTICS.md` — vote distribution and saturation.
-- `../../01_data_protocol/MANUSCRIPT_PATCH.md` (B2, C2) — manuscript text and
-  response to reviewers.
-
-Raw ratings are private and not committed.
+- `STUDY_DESIGN.md` — the design, fixed before the first rating.

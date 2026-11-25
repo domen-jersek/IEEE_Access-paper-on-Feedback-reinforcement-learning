@@ -1,0 +1,4 @@
+arm,requested,n,population,changed,changed_share,eligible,excluded_inconsistent
+legacy_random/blind,35,35,398,349,0.8768844221105527,349,0
+disjoint_prefix/blind,35,35,422,207,0.490521327014218,202,5
+disjoint_prefix/conditioned,35,35,422,192,0.4549763033175355,156,5

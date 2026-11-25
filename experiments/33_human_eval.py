@@ -17,7 +17,6 @@ import hashlib
 import json
 import sys
 from pathlib import Path
-
 import numpy as np
 import pandas as pd
 
@@ -106,11 +105,31 @@ def main() -> None:
     out_dir = args.out_root / run_id
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    overview = pd.DataFrame([
+        {"arm": arm, "requested": meta.get("requested"), "n": meta.get("n"),
+         "population": meta.get("population"), "changed": meta.get("changed"),
+         "changed_share": meta.get("changed_share"), "eligible": meta.get("eligible"),
+         "excluded_inconsistent": meta.get("excluded_inconsistent")}
+        for arm, meta in study.manifest.get("sample", {}).items()
+    ])
+    overview.to_csv(out_dir / "study_overview.csv", index=False)
+
     per_rater = {}
     for rater, df in zip(rater_ids, oriented):
         tables = rater_tables(df, study)
         for name, table in tables.items():
             table.to_csv(out_dir / f"rater_{rater}_{name}.csv", index=False)
+        item_level = pd.DataFrame({
+            "arm": df["arm"],
+            "item_hash": [hashlib.sha256(str(i).encode()).hexdigest()[:12] for i in df["item_id"]],
+            "auto_delta": df["auto_delta"],
+            "human_delta": df["feedback_strict"] - df["baseline_strict"],
+            "len_diff": df["len_diff"],
+            "preferred": df["preferred"],
+            "baseline_strict": df["baseline_strict"],
+            "feedback_strict": df["feedback_strict"],
+        })
+        item_level.to_csv(out_dir / f"rater_{rater}_item_level.csv", index=False)
         if not args.no_figures:
             _figures(rater, df, out_dir / "figures")
         per_rater[rater] = {
