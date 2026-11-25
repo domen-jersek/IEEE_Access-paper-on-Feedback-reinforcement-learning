@@ -41,7 +41,7 @@ procedure split.
 .\.venv\Scripts\python.exe experiments/28_matched_retrievers.py --source conditioned
 .\.venv\Scripts\python.exe experiments/29_power_multiplicity.py
 .\.venv\Scripts\python.exe experiments/34_lift_diagnostics.py --panel disjoint_prefix
-.\.venv\Scripts\python.exe -m pytest tests/test_data_protocol.py tests/test_revision_boundaries.py tests/test_reply_similarity.py -q
+.\.venv\Scripts\python.exe -m pytest tests/test_data_protocol.py tests/test_revision_boundaries.py tests/test_reply_similarity.py tests/test_human_eval.py -q
 ```
 
 `23_revision_evaluate.py` is the generated-answer entry point (needs

@@ -161,7 +161,7 @@ those guarantees are still required in package B.
   of downstream priors/retrieval. No torch/transformers/sentence-transformers or
   OpenAI client module was imported during this local check.
 - Final full test run with TensorFlow disabled and Hugging Face offline:
-  **134 passed, 0 failed** (`pytest -q`).
+  **145 passed, 0 failed** (`pytest -q`).
 - The two failures were a stale reference helper in
   `test_vectorized_aggregation_matches_legacy`: `np.nan or ""` evaluates to the
   float NaN, so the helper built `intersection:a:nan` scope keys that the
