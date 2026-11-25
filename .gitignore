@@ -38,3 +38,6 @@ data/processed/revision/
 results/revision/
 # Revision generated runs contain confidential ticket text and answers.
 results/M4_intersection_eval_*_rev_*/
+# Raw human-study ratings stay local; aggregate results are committed.
+revision_ieee_access/02_human_study/evaluation_*/
+study_bundle.zip

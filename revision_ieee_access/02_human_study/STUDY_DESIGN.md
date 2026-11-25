@@ -1,6 +1,10 @@
 # Human evaluation design (pre-registered)
 
 **Status:** design fixed before sample selection and before any expert rating.
+**First rater completed 105 items; second rater pending.** Results:
+[`HUMAN_EVAL_RESULTS.md`](HUMAN_EVAL_RESULTS.md). The analysis plan below is fixed;
+the second rater will be analysed with the same pipeline and then merged into
+agreement and combined estimates.
 **Version:** v1 (2026-11-20). Any change after the first rating requires a new
 study version and a new expert evaluation.
 

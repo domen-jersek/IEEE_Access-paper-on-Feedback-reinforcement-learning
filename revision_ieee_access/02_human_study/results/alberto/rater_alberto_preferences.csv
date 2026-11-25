@@ -1,0 +1,4 @@
+panel,source,n,feedback_better,baseline_better,equal,both_incorrect,cannot_judge,net_feedback_minus_baseline,net_ci_lower,net_ci_upper
+disjoint_prefix,blind,35,2,4,15,13,1,-2,-0.2,0.08571428571428572
+disjoint_prefix,conditioned,35,7,3,11,13,1,4,-0.05714285714285714,0.2857142857142857
+legacy_random,blind,35,8,5,16,6,0,3,-0.11428571428571428,0.2857142857142857

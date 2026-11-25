@@ -76,7 +76,7 @@ main study.
 ## Run locally
 
 ```powershell
-pip install -r revision_ieee_access/02_human_study/requirements.txt
+pip install -r revision_ieee_access/02_human_study/app/requirements.txt
 $env:STUDY_PACKAGE="revision_ieee_access/02_human_study/<panel>/<version>"
 $env:STUDY_RATERS="expert1,expert2"
 $env:STUDY_ACCESS_CODE="..."      # give to the two experts
@@ -114,6 +114,12 @@ Open `http://127.0.0.1:8050`. Admin pages:
 ```powershell
 python experiments/25_analyze_study.py --ratings path/to/ratings.csv --manifest path/to/manifest.json
 ```
+
+Legacy summary script; the revision pipeline is `experiments/33_human_eval.py`
+(per-rater effects, length control, metric alignment, and two-rater agreement).
+First-rater results are in [`HUMAN_EVAL_RESULTS.md`](HUMAN_EVAL_RESULTS.md);
+aggregates are in `results/alberto/`. Raw ratings stay in the private
+`evaluation_*/` folder (git-ignored).
 
 Writes `study_summary.csv` (per panel × source × block: strict correctness rates,
 paired strict delta with bootstrap CI, preference shares, net feedback-better),

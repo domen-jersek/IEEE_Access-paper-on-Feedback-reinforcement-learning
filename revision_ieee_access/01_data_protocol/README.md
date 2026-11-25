@@ -24,6 +24,7 @@ procedure split.
 | Decision/cost | `experiments/30_decision_and_cost.py`: abstention headroom and end-to-end cost |
 | Study export | `experiments/24_export_study.py`: blinded A/B, balanced assignment, frozen manifest |
 | Study app | `revision_ieee_access/02_human_study/`: Flask + SQLite, two blocks, opaque IDs |
+| Human analysis | `experiments/33_human_eval.py`, `src/evaluation/human_eval.py`; first-rater results in `HUMAN_EVAL_RESULTS.md` |
 | Frozen finalist | `configs/revision/finalists_v1.yaml` |
 | Evidence | `R1M7_RESPONSE.md`, `DEV_LAB.md`, `MANUSCRIPT_PATCH.md`, `tables/*.csv` |
 
