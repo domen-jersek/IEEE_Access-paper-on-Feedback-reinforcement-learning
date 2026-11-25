@@ -117,9 +117,10 @@ python experiments/25_analyze_study.py --ratings path/to/ratings.csv --manifest 
 
 Legacy summary script; the revision pipeline is `experiments/33_human_eval.py`
 (per-rater effects, length control, metric alignment, and two-rater agreement).
-First-rater results are in [`HUMAN_EVAL_RESULTS.md`](HUMAN_EVAL_RESULTS.md);
-aggregates are in `results/alberto/`. Raw ratings stay in the private
-`evaluation_*/` folder (git-ignored).
+Start with [`HUMAN_EVAL_TLDR.md`](HUMAN_EVAL_TLDR.md); full results are in
+[`HUMAN_EVAL_RESULTS.md`](HUMAN_EVAL_RESULTS.md); aggregates are in
+`results/alberto/`. Raw ratings stay in the private `evaluation_*/` folder
+(git-ignored).
 
 Writes `study_summary.csv` (per panel × source × block: strict correctness rates,
 paired strict delta with bootstrap CI, preference shares, net feedback-better),
