@@ -150,6 +150,87 @@ These are still similarity-based outcomes. Section~\ref{sec:human} reports the
 blinded expert assessment of procedural correctness on the frozen outputs.
 ```
 
+## B2. Human evaluation
+
+```latex
+\subsection{Expert assessment of procedural correctness}
+\label{sec:human}
+
+Two GFT support engineers were invited to rate the same blinded sample. At the time
+of writing one expert (E1) has completed all 105 items; the second is pending. We
+report E1 descriptively and will add inter-rater agreement when E2 completes.
+
+The sample contains three arms of 35 tickets, changed pairs only (the feedback
+answer differs from the baseline), stratified by resolving team, with A/B order
+randomised and balanced within each arm. For every reply the expert marked correct,
+partially correct, incorrect or cannot judge, flagged a wrong or unsafe step and a
+missing step, and then chose the better reply, with equal, both incorrect and cannot
+judge as explicit options. Strict correctness counts only \emph{correct}; lenient
+correctness also counts \emph{partially correct}. Intervals are paired bootstrap
+intervals over tickets; p-values are exact McNemar tests on discordant pairs.
+
+\begin{table}[t]
+\centering
+\caption{Expert assessment (E1, 105 items, 35 per arm). Strict = correct only.}
+\label{tab:human}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Arm & Baseline & Feedback & $\Delta$ [95\,\% CI] & McNemar $p$ \\
+\midrule
+Random, blind        & 0.647 & 0.794 & $+0.147$ $[0.000, +0.294]$ & .25 \\
+Strict, blind        & 0.545 & 0.515 & $-0.030$ $[-0.121, +0.061]$ & 1.00 \\
+Strict, conditioned  & 0.559 & 0.559 & $0.000$ $[-0.088, +0.088]$ & 1.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three results matter. First, on the strict panels the expert sees no benefit and no
+harm: both intervals include zero and the point estimates are within $\pm0.03$,
+matching the small automatic effects there. Second, the random arm shows a raw
+$+0.147$, but the feedback replies are 173 characters longer and the expert
+preference tracks that difference (Spearman $+0.63$); among pairs whose lengths
+differ by at most 100 characters the effect is exactly zero. The apparent benefit on
+familiar procedures is a preference for longer, more detailed replies, not a
+demonstrated procedural improvement. Third, the expert and the cosine metric point
+in opposite directions on that arm (expert $+0.147$, automatic $-0.088$; Spearman
+$-0.48$, AUC $0.22$). Neither measure is a clean criterion: cosine rewards
+similarity to one recorded reply, the expert is sensitive to length.
+
+Preferences were equally informative: 42 of 105 items were rated equal and 32 both
+incorrect. A raw A/B preference alone would have hidden a third of the sample as
+“both wrong”. With 2–7 discordant pairs per arm the study is a validity check, not
+a confirmatory test; we report intervals and do not treat a non-significant result
+as evidence of absence.
+```
+
+When E2 completes, add the agreement table (percent agreement, Cohen's kappa with
+bootstrap interval, weighted kappa, PABAK/AC1) and a combined per-item estimate.
+The same pipeline is `experiments/33_human_eval.py`; no reprocessing of items is
+needed.
+
+## C2. Response — human evaluation (R1-M8, R2-1, R2-16)
+
+```text
+We added an independent expert assessment of procedural correctness on a blinded
+sample of 105 tickets, split into three arms: familiar procedures with blind
+feedback, new procedures with blind feedback, and new procedures with
+conditioned feedback. Each reply was rated for correctness, flagged for wrong or
+unsafe steps and missing steps, and compared pairwise, with ties, both-incorrect and
+cannot-judge kept explicit. One expert has completed the sample; the second is
+pending, so we report the first descriptively and will add inter-rater agreement
+when it is available.
+
+The expert does not confirm the automatic harm: on the random arm the expert
+prefers the feedback replies, while the cosine metric penalises them. The
+preference is explained by answer length: the feedback replies are 173 characters
+longer, the length-preference correlation is +0.63, and among length-matched pairs
+the effect is zero. On the strict panels the expert sees neither benefit nor harm,
+consistent with the small automatic effects. We therefore report that similarity to
+one recorded reply and expert procedural correctness diverge, and that the expert
+judgement is itself sensitive to answer length; neither is treated as a clean
+criterion.
+```
+
 ## C. Response-to-reviewer paragraph (R1-M7)
 
 ```text
