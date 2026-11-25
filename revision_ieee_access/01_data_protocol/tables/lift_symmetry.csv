@@ -1,0 +1,9 @@
+pos,neg,laplace,empirical_note
+0,1,-0.06666666666666668,symmetric by construction
+1,0,0.06666666666666665,symmetric by construction
+0,2,-0.2,symmetric by construction
+2,0,0.2,symmetric by construction
+0,5,-0.2,symmetric by construction
+5,0,0.2,symmetric by construction
+1,1,0.0,symmetric by construction
+2,2,0.0,symmetric by construction

@@ -22,6 +22,7 @@ procedure split.
 | Retriever check | `experiments/28_matched_retrievers.py`: same lift across dense/BM25/hybrid |
 | Power | `experiments/29_power_multiplicity.py`: pre-specified Holm families and 80 % MDE |
 | Decision/cost | `experiments/30_decision_and_cost.py`: abstention headroom and end-to-end cost |
+| Lift diagnostics | `experiments/34_lift_diagnostics.py`: score distribution, cap frequencies, π_s; `LIFT_DIAGNOSTICS.md` |
 | Study export | `experiments/24_export_study.py`: blinded A/B, balanced assignment, frozen manifest |
 | Study app | `revision_ieee_access/02_human_study/`: Flask + SQLite, two blocks, opaque IDs |
 | Human analysis | `experiments/33_human_eval.py`, `src/evaluation/human_eval.py`; first-rater results in `HUMAN_EVAL_RESULTS.md` |
@@ -39,6 +40,7 @@ procedure split.
 .\.venv\Scripts\python.exe experiments/27_freeze_runs.py --verify results/revision/frozen/frozen_runs_v1.json
 .\.venv\Scripts\python.exe experiments/28_matched_retrievers.py --source conditioned
 .\.venv\Scripts\python.exe experiments/29_power_multiplicity.py
+.\.venv\Scripts\python.exe experiments/34_lift_diagnostics.py --panel disjoint_prefix
 .\.venv\Scripts\python.exe -m pytest tests/test_data_protocol.py tests/test_revision_boundaries.py tests/test_reply_similarity.py -q
 ```
 
