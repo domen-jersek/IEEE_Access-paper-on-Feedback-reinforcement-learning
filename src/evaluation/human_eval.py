@@ -385,9 +385,12 @@ def rater_tables(df: pd.DataFrame, study: Study) -> dict[str, pd.DataFrame]:
 
 
 def agreement_tables(first: pd.DataFrame, second: pd.DataFrame) -> dict[str, pd.DataFrame]:
-    merged = first.merge(second, on="item_id", suffixes=("_1", "_2"))
-    if len(merged) != len(first) or len(merged) != len(second):
-        raise ValueError("Raters do not cover the same items")
+    common = set(first["item_id"]) & set(second["item_id"])
+    if not common:
+        raise ValueError("Raters have no items in common")
+    n_first, n_second = len(first), len(second)
+    merged = (first[first["item_id"].isin(common)]
+              .merge(second[second["item_id"].isin(common)], on="item_id", suffixes=("_1", "_2")))
     rows, correctness, consensus = [], [], []
     for arm, group in merged.groupby("arm_1", sort=True):
         panel, source = arm.split("/")
@@ -411,6 +414,7 @@ def agreement_tables(first: pd.DataFrame, second: pd.DataFrame) -> dict[str, pd.
                 group["baseline_correct_2"], group["feedback_correct_2"])]))
         rows.append({
             "panel": panel, "source": source, "n_items": len(group),
+            "n_common": len(common), "n_rater_1": n_first, "n_rater_2": n_second,
             "preference_agreement": preference_agreement,
             "preference_kappa": kappa["kappa"],
             "preference_kappa_ci_lower": kappa["ci_lower"],
@@ -440,7 +444,12 @@ def agreement_tables(first: pd.DataFrame, second: pd.DataFrame) -> dict[str, pd.
 
 
 def combined_effect(first: pd.DataFrame, second: pd.DataFrame) -> pd.DataFrame:
-    merged = first.merge(second, on="item_id", suffixes=("_1", "_2"))
+    common = set(first["item_id"]) & set(second["item_id"])
+    if not common:
+        raise ValueError("Raters have no items in common")
+    n_first, n_second = len(first), len(second)
+    merged = (first[first["item_id"].isin(common)]
+              .merge(second[second["item_id"].isin(common)], on="item_id", suffixes=("_1", "_2")))
     rows = []
     for arm, group in merged.groupby("arm_1", sort=True):
         panel, source = arm.split("/")
@@ -449,6 +458,7 @@ def combined_effect(first: pd.DataFrame, second: pd.DataFrame) -> pd.DataFrame:
         combined = (delta_1 + delta_2) / 2
         ci = bootstrap_mean(combined)
         rows.append({"panel": panel, "source": source, "n_items": len(group),
+                     "n_common": len(common), "n_rater_1": n_first, "n_rater_2": n_second,
                      "rater_1_delta": float(delta_1.mean()),
                      "rater_2_delta": float(delta_2.mean()),
                      "combined_delta": ci["mean"], "ci_lower": ci["ci_lower"],

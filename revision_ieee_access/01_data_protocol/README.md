@@ -3,6 +3,10 @@
 **Status: data layer, retrieval panels, dev selection and the generated panel are
 complete. The human study is the next step; the generated runs are frozen.**
 
+**Manuscript preparation:** `revision_ieee_access/03_manuscript/` contains the paper
+spine, the prior-work comparison, draft sections, the provenance table and the
+review-response map. `access.tex` is not modified until the rewrite is approved.
+
 This revision extends the existing `src/` and `experiments/` pipeline. It does not
 create a second evaluator, modify submitted results, or certify a semantic
 procedure split.

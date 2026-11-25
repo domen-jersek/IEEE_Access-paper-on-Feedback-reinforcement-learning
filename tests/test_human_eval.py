@@ -89,10 +89,23 @@ def test_agreement_and_combined_effect():
     tables = agreement_tables(first, second)
     row = tables["agreement"].iloc[0]
     assert row["n_items"] == 4
+    assert row["n_common"] == 4 and row["n_rater_1"] == 4 and row["n_rater_2"] == 4
     assert row["preference_agreement"] == pytest.approx(0.75)
     assert 0 <= row["preference_kappa"] < 1
     combined = combined_effect(first, second).iloc[0]
     assert combined["combined_delta"] == pytest.approx(0.0)
+
+
+def test_agreement_supports_partial_overlap():
+    study = _study()
+    first = orient(_ratings("r1"), study)
+    second = orient(_ratings("r2", second=True), study).iloc[:-1]
+    tables = agreement_tables(first, second)
+    row = tables["agreement"].iloc[0]
+    assert row["n_common"] == 3
+    assert row["n_rater_1"] == 4 and row["n_rater_2"] == 3
+    combined = combined_effect(first, second).iloc[0]
+    assert combined["n_common"] == 3 and combined["n_items"] == 3
 
 
 def test_perfect_agreement_kappa_is_one():
