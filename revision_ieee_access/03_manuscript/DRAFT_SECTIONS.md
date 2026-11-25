@@ -181,6 +181,87 @@ labels; we return to this in the limitations.
 
 Table 1 (overlap) from `MANUSCRIPT_PATCH.md` can be reused verbatim.
 
+## 4 Method
+
+```latex
+\section{Method}
+\label{sec:method}
+
+\subsection{Retrieval}
+For each query the retriever returns a pool of $K=100$ tickets from the allowed
+history $H$, and the generator receives the top $k=5$. The primary retriever is the
+frozen dense MiniLM index; BM25 and hybrid reciprocal-rank fusion are used in the
+matched comparison of Section~\ref{sec:repair}. We do not compare retriever
+strength under different lift configurations, because absolute lift units are not
+comparable across score geometries.
+
+\subsection{Lift}
+Let $\mathrm{pos}$ and $\mathrm{neg}$ be the number of positive and negative judge
+scores for candidate $c$ in scope $s$, and $n=\mathrm{pos}+\mathrm{neg}$. The
+legacy lift is
+\begin{equation}
+p=\frac{\mathrm{pos}+\alpha}{n+\alpha+\beta},\qquad
+\ell_{\mathrm{L}}=\operatorname{clamp}_{[-c,c]}\!\left(
+(p-\tfrac12)\,\min\!\left(1,\tfrac{n}{2}\right)m\right),
+\label{eq:legacy}
+\end{equation}
+with $\alpha=\beta=1$, $m=0.80$ and $c=0.20$. The empirical-Bayes lift is
+\begin{equation}
+\bar p_s=\pi_s,\quad a=\kappa\pi_s,\quad
+p_{\mathrm{post}}=\frac{\mathrm{pos}+a}{n+\kappa},\qquad
+\ell_{\mathrm{EB}}=\operatorname{clamp}_{[-c,c]}\!\left(
+(p_{\mathrm{post}}-\pi_s)\,m\right),
+\label{eq:eb}
+\end{equation}
+where $\pi_s$ is the mean judge score of scope $s$ over the admissible training
+rows, with a global fallback when a scope has no rows. The finalist uses
+$\kappa=2$. Two differences from Eq.~\ref{eq:legacy} matter: the neutral point is
+the scope base rate rather than $0.5$, and the $n/2$ ramp is absent because the
+centring term already attenuates sparse evidence. The legacy ramp is one of the
+factors varied in the ablation, not an incidental implementation detail.
+
+Pool-relative scaling expresses the bounded lift in retrieval-score units:
+\begin{equation}
+\ell'=\ell\cdot\frac{\lambda\,\sigma_{\mathrm{pool}}}{c},
+\label{eq:pool}
+\end{equation}
+where $\sigma_{\mathrm{pool}}$ is the standard deviation of the retrieval scores in
+the pool and $\lambda=1$ in the finalist. A candidate with no evidence receives
+$\ell=0$; the clamp is applied before scaling. The parameters $\kappa$ and
+$\lambda$ were selected on dev over $\{2,5,10,20,50\}$ and $\{0.25,0.5,1,2,4\}$,
+respectively; the per-cell values are in the provenance table.
+
+\subsection{Scopes}
+The candidate lift is routed by the recorded resolving team and the reply-derived
+intent class. We evaluate Global, Team, Class, Team$\cap$Class and Backoff, with
+Team$\cap$Class as the finalist. The labels are held fixed across panels so that
+the manipulated factor is the data boundary. They are recorded outcomes, not
+predictions from the incoming ticket; results are therefore conditional on them,
+and Section~\ref{sec:discussion} states this limitation.
+
+\subsection{Control}
+The gate is a logistic model over pool-shape and evidence features, trained with
+grouped cross-validation by ticket and frozen on dev. The revision reports it as
+risk control, not as a source of gain. The oracle bound applies feedback only when
+it helps on the observed outcome and therefore uses information no deployable
+policy has; it bounds the headroom, not the performance of a feasible gate. The
+expected-value analysis is exploratory and is confined to the appendix because its
+rows are two per ticket and are not independent.
+
+\subsection{Evaluation}
+The primary outcome is the per-ticket change in cosine between the generated first
+reply and the recorded reference reply, averaged over the evaluation tickets.
+ROUGE-L is reported as a secondary lexical metric. The expert assessment of
+Section~\ref{sec:human} is the independent check of procedural correctness. Because
+the study sample contains changed pairs only, we report the conditional effect and
+the population effect, the latter as the changed share times the conditional
+effect; unchanged pairs have a difference of zero by construction. BGE and
+BERTScore are not recomputed for every revision panel: the offline encoder is slow
+on CPU, and the independent check in this revision is the expert assessment. The
+submitted study's BGE and BERTScore results are retained for the legacy
+comparison, and the appendix states the difference in coverage.
+```
+
 ## 5 The submitted result and its scope
 
 ```latex
@@ -269,6 +350,48 @@ second-rater placeholder. Key numbers: strict correctness 0.545/0.515 (new/blind
 0.559/0.559 (new/conditioned), 0.647/0.794 (familiar/blind); length +173 characters
 and Spearman +0.63; expert +0.147 versus automatic $-0.088$ on the familiar panel;
 42 equal and 32 both incorrect.
+
+## 9 Validation
+
+```latex
+\section{Validation}
+\label{sec:validation}
+
+\subsection{Secondary metric and seeds}
+ROUGE-L agrees in sign with cosine on the familiar and duplicate panels but not on
+the strict conditioned panel, where its interval includes zero; we report it as a
+secondary metric, not as confirmation. Five group-aware splits were generated for
+each structural rule. On the strict panel the legacy Laplace conditioned proxy is
+significant in 0 of 5 splits, while the calibrated lift has a small positive point
+estimate in 2 of 5; the seed range is reported in the appendix. The generated
+panels use seed 42; the other seeds test the retrieval-level conclusion and are not
+a second set of generated answers.
+
+\subsection{Power and multiplicity}
+The minimum detectable effect at 80\,\% power is 0.0103 for the strict conditioned
+cosine effect and 0.0101 for the strict protocol contrast. The observed values are
+0.0093 and 0.0085, so the design is not powered to estimate effects of that size
+precisely. We describe them as small and imprecise, not as evidence of absence. An
+equivalence claim would require a pre-specified margin and a corresponding test;
+we do not make one. Three families were fixed before adjustment (conditioned and
+blind across panels; reply similarity; protocol contrast) and Holm-corrected within
+family. The strict conditioned effect does not survive (p=.1965); the strict
+protocol contrast does (p=.0322) but lies below its MDE.
+
+\subsection{Cost}
+End-to-end generation takes 0.48--0.87 seconds per request on CPU, with two
+requests per ticket for baseline and feedback; a panel of 398--427 tickets takes
+356--617 seconds. Feedback-database preparation is a separate one-off cost and is
+not included. The calibrated lift adds no model call at inference; its cost is the
+offline feedback construction.
+
+\subsection{What is not validated}
+The revision does not have an external corpus, a second organisation, real user
+feedback, or a completed second expert. BGE and BERTScore are not recomputed for
+every revision panel; the independent check is the expert assessment, and it is
+one rater at the time of writing. These are limits on generalisation, not
+implementation details, and Section~\ref{sec:discussion} states them as such.
+```
 
 ## 10 Discussion and limitations
 
