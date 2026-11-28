@@ -48,7 +48,7 @@ At inference on a new ticket, however, no resolution exists yet, so only blind
 votes can be generated for that ticket. We therefore report both protocols side by side, state exactly
 what each judge and metric sees, and add an expert assessment of the generated
 answers (Section~\ref{sec:expert}). Judge agreement is usually reported in
-aggregate; the earlier evaluation found low per-ticket agreement between its
+aggregate; the random-split analysis found low per-ticket agreement between its
 independent judge and the automatic metric, which we treat as a limitation of the
 measurement rather than as evidence against the aggregate signal.
 
@@ -68,7 +68,7 @@ gain once procedure overlap is controlled.
 
 \subsection{Relationship to prior work}
 \label{sec:prior}
-Two earlier papers by the authors are the direct starting point. \cite{b31}
+Two prior papers by the authors are the direct starting point. \cite{b31}
 introduced the retrieval and generation pipeline for first-reply generation;
 \cite{b32} added LLM-judge feedback as a retrieval modifier and reported an
 exploratory, conditioned-only analysis on 250 leave-one-out queries with a
@@ -76,7 +76,7 @@ different judge, in which no always-on method was significant and retrieval-scor
 gates were indistinguishable from always-on. The present article re-uses the
 pipeline and the legacy lift formula as fixed components. Its contribution is
 different: it treats the data regime as the experimental variable, audits the
-earlier split, restricts retrieval, feedback and priors to an allowed history,
+combined-hash split, restricts retrieval, feedback and priors to an allowed history,
 isolates the components of the calibration repair, adds a reply-similarity
 baseline that uses no LLM judge and a matched-retriever comparison, and reports a blinded expert
 assessment of procedural correctness. Table~\ref{tab:prior} compares the studies
@@ -85,25 +85,25 @@ cited background, and the connection is disclosed here as required for expanded
 conference versions.
 
 \Table[!btp](width=\textwidth){Relationship to the authors' prior conference
-papers and to the earlier evaluation of the same pipeline. This article shares the
+papers and to the random-split baseline. This article shares the
 corpus and the base pipeline; the data-regime control, split audit, controlled
 repair, reply baseline, matched retrievers, statistical sensitivity analysis and
 expert evaluation are new.\label{tab:prior}}{
 \scriptsize
 \begin{tabularx}{\textwidth}{@{}p{0.15\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
 \toprule
- & SIKDD 2025 & SIKDD 2026 & Earlier evaluation & This article \\
+ & SIKDD 2025 & SIKDD 2026 & Random-split baseline & This article \\
 \midrule
-Role & Retrieval + generation pipeline & Exploratory feedback-aware retrieval & Protocol as experimental variable & Data regime and measurement validity \\
+Role & Retrieval + generation pipeline & Exploratory feedback-aware retrieval & Protocol contrast on a random split & Data regime and measurement validity \\
 Corpus & Enterprise IT tickets & 1,596 tickets, 37 teams & 1,595 tickets, 37 teams, 17 classes & Same 1,595; canonical IDs unchanged \\
-Evaluation queries & --- & 250 leave-one-out & 878/319/398 + 5 seeds; 390 ``disjoint'' eval & Same legacy splits; history-only 398/398/427 \\
+Evaluation queries & --- & 250 leave-one-out & Random 878/319/398; 390 combined-hash eval & History-only 398/398/427 \\
 Judge & --- & gpt-4o-mini, conditioned only & gpt-5.6-luna, conditioned and blind & Same two protocols, restricted to history \\
 Feedback pairs & --- & 102,722 conditioned & 175,600 per protocol & 94,913 / 52,321 / 58,826 admissible \\
-Lift & --- & Laplace, $m=0.80$, cap $0.20$ & Legacy Laplace as object of study & Tuned Laplace, EB, scaling, scope, backoff \\
-Procedure-disjoint & No & No & Claimed, 390 eval; not actually disjoint & Versioned groups; duplicate and prefix panels; 5 seeds \\
+Lift & --- & Laplace, $m=0.80$, cap $0.20$ & Legacy Laplace as the baseline & Tuned Laplace, EB, scaling, scope, backoff \\
+Procedure-disjoint & No & No & Combined hash, 390 eval; not disjoint & Versioned groups; duplicate and prefix panels; 5 seeds \\
 History-only evidence & No & No & No & Yes: index, BM25, feedback rows, priors \\
 Reply-similarity baseline & No & No & No & Exact and BGE reply similarity \\
-Matched retrievers & No & No & Confounded lift settings & One configuration; dense, BM25, hybrid \\
+Matched retrievers & No & No & Different lift settings & One configuration; dense, BM25, hybrid \\
 Human evaluation & No & No & No & 105 blinded items; E1 complete, E2 pending \\
 Statistics & --- & Bootstrap CIs; no always-on significance & Dev-frozen thresholds; 39 runs; no multiplicity correction & Pre-specified families, Holm, MDE, exact McNemar \\
 Main finding & Pipeline works & Conditioned feedback helps weak baselines; gates fail & Same reranking helps conditioned, harms blind & Harm is overlap-driven; calibrated gain small and metric-dependent; expert and cosine diverge \\

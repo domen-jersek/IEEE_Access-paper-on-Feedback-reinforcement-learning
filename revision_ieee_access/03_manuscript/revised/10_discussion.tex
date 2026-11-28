@@ -8,7 +8,7 @@ split should be re-measured after removing near-duplicate procedures and reply
 templates; otherwise the number describes the data regime as much as the method.
 The familiar-panel blind effect is $-0.0444$; on strict history it is $+0.0008$.
 A team that budgets on the first number will overstate both the risk and the
-opportunity. Second, tuning the legacy baseline matters. The published Laplace cell
+opportunity. Second, tuning the legacy baseline matters. The inherited Laplace cell
 ranks 23rd of 25 on the strict panel; an untuned lift is not a fair comparator, and
 a tuned one still does not produce a confirmed gain on strict history. Third,
 similarity to a single recorded reply is not procedural correctness. The expert and
@@ -16,7 +16,7 @@ the cosine metric diverge on the familiar arm, and the expert's preference is
 itself sensitive to answer length. Evaluation protocols should state the evidence
 set, keep the prior aligned with it, and add an expert check with length control.
 
-The result also changes the interpretation of the earlier sign reversal. The
+The result also changes the interpretation of the random-split sign reversal. The
 reversal is real for the legacy Laplace lift on the familiar split: the same
 reranking helps under a resolution-informed judge and harms under a ticket-only
 judge. But the blind harm is not robust to the data boundary, and the conditioned
@@ -68,7 +68,7 @@ not the usefulness of a reply to a new user.
 regime, which strengthens within-study contrasts but limits causal isolation. The
 strict panel changes the data boundary and the candidate pool together; the
 ablation isolates the lift factors, not every possible confound. The split audit
-shows that the earlier ``disjoint'' split was not disjoint, but it does not prove
+shows that the combined-hash split was not disjoint, but it does not prove
 that every remaining difference between panels is due to overlap. The matched
 retriever comparison holds the feedback configuration fixed, but it still uses one
 generator and one corpus.
@@ -84,7 +84,7 @@ the study could reliably detect; it is not an equivalence boundary. The strict
 conditioned effect and the strict protocol contrast are below their MDEs, so we
 describe them as small and imprecise. The familiar blind harm is above its MDE and
 survives Holm correction; the strict conditioned effect does not survive Holm. The
-two-blind-run agreement at four decimals in the earlier evaluation is a coincidence
+two-blind-run agreement at four decimals on the familiar split is a coincidence
 of aggregation: the runs differ per ticket (mean absolute difference 0.0671,
 median 0.0337, 11.8\,\% identical deltas, $r=.799$), and both inherit the saturated
 prior.

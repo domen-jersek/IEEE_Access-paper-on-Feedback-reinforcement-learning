@@ -17,10 +17,9 @@ procedure matches the one that resolved the ticket. We therefore simulate the
 missing feedback with large language model (LLM) judges and treat the judge's
 information as an experimental variable.
 
-An earlier evaluation of this pipeline on a random split found a striking
-pattern. The same fine-scope reranking improved generated first replies when the
-judge saw the historical resolution, and harmed them when the judge saw only the
-ticket. That contrast is real, but it is not yet an answer to the question a
+A random-split evaluation of this pipeline reveals a striking pattern. The same
+fine-scope reranking improves generated first replies when the judge sees the
+historical resolution, and harms them when the judge sees only the ticket. That contrast is real, but it is not yet an answer to the question a
 deployment team faces. A random split lets evaluation tickets share a
 procedure, a reply template, or a near-duplicate with the historical base. A gain
 measured there may describe the data regime as much as the feedback method.
@@ -36,9 +35,9 @@ identical title and subcategory are kept out of the evaluation side. In the
 kept apart. Every regime uses a training-only candidate index, training-only BM25
 statistics, feedback rows with both endpoints in training, and priors estimated
 from exactly those rows. The strict panel is the primary control; the familiar
-panel reproduces the setting in which the earlier gain was observed.
+panel reproduces the random-split setting.
 
-The answer changes the reading of the earlier result. Under strict disjointness,
+The answer changes the reading of the random-split result. Under strict disjointness,
 blind feedback no longer harms: the familiar-panel effect of $-0.0444$ becomes
 $+0.0008$ (p=.86). The conditioned effect remains small ($+0.0093$), its cosine
 interval excludes zero but the rank test is marginal (p=.066), ROUGE-L is not
@@ -69,15 +68,15 @@ The paper makes four contributions.
 structural groups over identical full replies or identical title and subcategory,
 and a conservative prefix variant; assign whole groups to train, dev and eval; and
 restrict retrieval, BM25 statistics, feedback rows and scope priors to the same
-allowed history. The earlier ``procedure-disjoint'' split is shown not to be
-procedure-disjoint: 12.8\,\% of its evaluation tickets share an identical full
-reply and 53.3\,\% share a 300-character reply opening with training. Five
+allowed history. A combined-hash split is shown not to be procedure-disjoint:
+12.8\,\% of its evaluation tickets share an identical full reply and 53.3\,\%
+share a 300-character reply opening with training. Five
 group-aware splits are generated for each rule.
 \item \textbf{The repair is decomposed.} A one-factor-at-a-time dev ablation varies
 the tuned Laplace baseline, empirical-Bayes centering, pool-relative scaling, scope
-and backoff under a matched selection budget. The published legacy cell ranks 23rd
+and backoff under a matched selection budget. The inherited legacy cell ranks 23rd
 of 25 Laplace configurations on the strict panel. With one feedback configuration,
-the gain is similar across dense, BM25 and hybrid retrieval; the earlier claim that
+the gain is similar across dense, BM25 and hybrid retrieval; the claim that
 stronger retrieval reduces the benefit is a scaling artefact.
 \item \textbf{The calibrated outcome is a harm removal, not a confirmed gain.} On
 strict history, the blind harm disappears, the conditioned effect is small and
@@ -92,13 +91,13 @@ the human judgement capture different things, and that neither is a clean
 criterion.
 \end{enumerate}
 
-This article re-uses the retrieval and generation pipeline of our earlier
+This article re-uses the retrieval and generation pipeline of our prior
 conference work \cite{b31,b32} as a fixed component; the data-regime control, the
 split audit, the controlled repair, the reply-similarity baseline, the
 matched-retriever comparison, the statistical sensitivity analysis and the expert
 evaluation are new. No text, tables or figures from the conference papers are
 reused. Section~\ref{sec:related} positions the work and details the relationship;
 Section~\ref{sec:data} defines the data regimes; Section~\ref{sec:method} the
-method; Sections~\ref{sec:legacy}--\ref{sec:validation} the results; and
+method; Sections~\ref{sec:baseline}--\ref{sec:validation} the results; and
 Sections~\ref{sec:discussion} and~\ref{sec:conclusion} the discussion and
 conclusion.

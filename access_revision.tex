@@ -75,7 +75,7 @@ frameworks, analyses, and interpretations remain the sole responsibility of the 
 \corresp{Corresponding author: Domen Jer\v{s}ek (e-mail: domenjersek@gmail.com).}
 
 \begin{abstract}
-Feedback from earlier ticket--candidate pairs is widely used to rerank retrieval
+Feedback from historical ticket--candidate pairs is widely used to rerank retrieval
 candidates in retrieval-augmented generation for IT support. We show that the
 measured benefit depends less on the judge than on whether evaluation tickets share
 procedures with the historical base. Using 1,595 enterprise tickets, we rebuild the
@@ -122,10 +122,9 @@ procedure matches the one that resolved the ticket. We therefore simulate the
 missing feedback with large language model (LLM) judges and treat the judge's
 information as an experimental variable.
 
-An earlier evaluation of this pipeline on a random split found a striking
-pattern. The same fine-scope reranking improved generated first replies when the
-judge saw the historical resolution, and harmed them when the judge saw only the
-ticket. That contrast is real, but it is not yet an answer to the question a
+A random-split evaluation of this pipeline reveals a striking pattern. The same
+fine-scope reranking improves generated first replies when the judge sees the
+historical resolution, and harms them when the judge sees only the ticket. That contrast is real, but it is not yet an answer to the question a
 deployment team faces. A random split lets evaluation tickets share a
 procedure, a reply template, or a near-duplicate with the historical base. A gain
 measured there may describe the data regime as much as the feedback method.
@@ -141,9 +140,9 @@ identical title and subcategory are kept out of the evaluation side. In the
 kept apart. Every regime uses a training-only candidate index, training-only BM25
 statistics, feedback rows with both endpoints in training, and priors estimated
 from exactly those rows. The strict panel is the primary control; the familiar
-panel reproduces the setting in which the earlier gain was observed.
+panel reproduces the random-split setting.
 
-The answer changes the reading of the earlier result. Under strict disjointness,
+The answer changes the reading of the random-split result. Under strict disjointness,
 blind feedback no longer harms: the familiar-panel effect of $-0.0444$ becomes
 $+0.0008$ (p=.86). The conditioned effect remains small ($+0.0093$), its cosine
 interval excludes zero but the rank test is marginal (p=.066), ROUGE-L is not
@@ -174,15 +173,15 @@ The paper makes four contributions.
 structural groups over identical full replies or identical title and subcategory,
 and a conservative prefix variant; assign whole groups to train, dev and eval; and
 restrict retrieval, BM25 statistics, feedback rows and scope priors to the same
-allowed history. The earlier ``procedure-disjoint'' split is shown not to be
-procedure-disjoint: 12.8\,\% of its evaluation tickets share an identical full
-reply and 53.3\,\% share a 300-character reply opening with training. Five
+allowed history. A combined-hash split is shown not to be procedure-disjoint:
+12.8\,\% of its evaluation tickets share an identical full reply and 53.3\,\%
+share a 300-character reply opening with training. Five
 group-aware splits are generated for each rule.
 \item \textbf{The repair is decomposed.} A one-factor-at-a-time dev ablation varies
 the tuned Laplace baseline, empirical-Bayes centering, pool-relative scaling, scope
-and backoff under a matched selection budget. The published legacy cell ranks 23rd
+and backoff under a matched selection budget. The inherited legacy cell ranks 23rd
 of 25 Laplace configurations on the strict panel. With one feedback configuration,
-the gain is similar across dense, BM25 and hybrid retrieval; the earlier claim that
+the gain is similar across dense, BM25 and hybrid retrieval; the claim that
 stronger retrieval reduces the benefit is a scaling artefact.
 \item \textbf{The calibrated outcome is a harm removal, not a confirmed gain.} On
 strict history, the blind harm disappears, the conditioned effect is small and
@@ -197,14 +196,14 @@ the human judgement capture different things, and that neither is a clean
 criterion.
 \end{enumerate}
 
-This article re-uses the retrieval and generation pipeline of our earlier
+This article re-uses the retrieval and generation pipeline of our prior
 conference work \cite{b31,b32} as a fixed component; the data-regime control, the
 split audit, the controlled repair, the reply-similarity baseline, the
 matched-retriever comparison, the statistical sensitivity analysis and the expert
 evaluation are new. No text, tables or figures from the conference papers are
 reused. Section~\ref{sec:related} positions the work and details the relationship;
 Section~\ref{sec:data} defines the data regimes; Section~\ref{sec:method} the
-method; Sections~\ref{sec:legacy}--\ref{sec:validation} the results; and
+method; Sections~\ref{sec:baseline}--\ref{sec:validation} the results; and
 Sections~\ref{sec:discussion} and~\ref{sec:conclusion} the discussion and
 conclusion.
 
@@ -259,7 +258,7 @@ At inference on a new ticket, however, no resolution exists yet, so only blind
 votes can be generated for that ticket. We therefore report both protocols side by side, state exactly
 what each judge and metric sees, and add an expert assessment of the generated
 answers (Section~\ref{sec:expert}). Judge agreement is usually reported in
-aggregate; the earlier evaluation found low per-ticket agreement between its
+aggregate; the random-split analysis found low per-ticket agreement between its
 independent judge and the automatic metric, which we treat as a limitation of the
 measurement rather than as evidence against the aggregate signal.
 
@@ -279,7 +278,7 @@ gain once procedure overlap is controlled.
 
 \subsection{Relationship to prior work}
 \label{sec:prior}
-Two earlier papers by the authors are the direct starting point. \cite{b31}
+Two prior papers by the authors are the direct starting point. \cite{b31}
 introduced the retrieval and generation pipeline for first-reply generation;
 \cite{b32} added LLM-judge feedback as a retrieval modifier and reported an
 exploratory, conditioned-only analysis on 250 leave-one-out queries with a
@@ -287,7 +286,7 @@ different judge, in which no always-on method was significant and retrieval-scor
 gates were indistinguishable from always-on. The present article re-uses the
 pipeline and the legacy lift formula as fixed components. Its contribution is
 different: it treats the data regime as the experimental variable, audits the
-earlier split, restricts retrieval, feedback and priors to an allowed history,
+combined-hash split, restricts retrieval, feedback and priors to an allowed history,
 isolates the components of the calibration repair, adds a reply-similarity
 baseline that uses no LLM judge and a matched-retriever comparison, and reports a blinded expert
 assessment of procedural correctness. Table~\ref{tab:prior} compares the studies
@@ -296,25 +295,25 @@ cited background, and the connection is disclosed here as required for expanded
 conference versions.
 
 \Table[!btp](width=\textwidth){Relationship to the authors' prior conference
-papers and to the earlier evaluation of the same pipeline. This article shares the
+papers and to the random-split baseline. This article shares the
 corpus and the base pipeline; the data-regime control, split audit, controlled
 repair, reply baseline, matched retrievers, statistical sensitivity analysis and
 expert evaluation are new.\label{tab:prior}}{
 \scriptsize
 \begin{tabularx}{\textwidth}{@{}p{0.15\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
 \toprule
- & SIKDD 2025 & SIKDD 2026 & Earlier evaluation & This article \\
+ & SIKDD 2025 & SIKDD 2026 & Random-split baseline & This article \\
 \midrule
-Role & Retrieval + generation pipeline & Exploratory feedback-aware retrieval & Protocol as experimental variable & Data regime and measurement validity \\
+Role & Retrieval + generation pipeline & Exploratory feedback-aware retrieval & Protocol contrast on a random split & Data regime and measurement validity \\
 Corpus & Enterprise IT tickets & 1,596 tickets, 37 teams & 1,595 tickets, 37 teams, 17 classes & Same 1,595; canonical IDs unchanged \\
-Evaluation queries & --- & 250 leave-one-out & 878/319/398 + 5 seeds; 390 ``disjoint'' eval & Same legacy splits; history-only 398/398/427 \\
+Evaluation queries & --- & 250 leave-one-out & Random 878/319/398; 390 combined-hash eval & History-only 398/398/427 \\
 Judge & --- & gpt-4o-mini, conditioned only & gpt-5.6-luna, conditioned and blind & Same two protocols, restricted to history \\
 Feedback pairs & --- & 102,722 conditioned & 175,600 per protocol & 94,913 / 52,321 / 58,826 admissible \\
-Lift & --- & Laplace, $m=0.80$, cap $0.20$ & Legacy Laplace as object of study & Tuned Laplace, EB, scaling, scope, backoff \\
-Procedure-disjoint & No & No & Claimed, 390 eval; not actually disjoint & Versioned groups; duplicate and prefix panels; 5 seeds \\
+Lift & --- & Laplace, $m=0.80$, cap $0.20$ & Legacy Laplace as the baseline & Tuned Laplace, EB, scaling, scope, backoff \\
+Procedure-disjoint & No & No & Combined hash, 390 eval; not disjoint & Versioned groups; duplicate and prefix panels; 5 seeds \\
 History-only evidence & No & No & No & Yes: index, BM25, feedback rows, priors \\
 Reply-similarity baseline & No & No & No & Exact and BGE reply similarity \\
-Matched retrievers & No & No & Confounded lift settings & One configuration; dense, BM25, hybrid \\
+Matched retrievers & No & No & Different lift settings & One configuration; dense, BM25, hybrid \\
 Human evaluation & No & No & No & 105 blinded items; E1 complete, E2 pending \\
 Statistics & --- & Bootstrap CIs; no always-on significance & Dev-frozen thresholds; 39 runs; no multiplicity correction & Pre-specified families, Holm, MDE, exact McNemar \\
 Main finding & Pipeline works & Conditioned feedback helps weak baselines; gates fail & Same reranking helps conditioned, harms blind & Harm is overlap-driven; calibrated gain small and metric-dependent; expert and cosine diverge \\
@@ -356,14 +355,12 @@ organization, each with a title, a description, the recorded resolving team
 (37 teams), a reply-derived intent class (17 classes), and the historical first
 reply that serves as the reference resolution. The source export contained 1,597
 rows; two duplicate ticket references were removed. Every artifact in this paper
-uses the same 1,595 canonical identifiers, so counts are comparable across the
-earlier and revised analyses.
+uses the same 1,595 canonical identifiers, so counts are comparable across all
+analyses in this article.
 
-Repetition is substantial, and its form matters. The earlier cleaning pass
-described 88 identical-reply groups covering 922 tickets. That statement conflated
-two different relations. On the canonical corpus, 922 tickets share the first 300
-characters of the normalized reply, while 238 share an identical normalized full
-reply. The prefix relation is the conservative one: two tickets can open with the
+Repetition is substantial, and its form matters. On the canonical corpus, 922
+tickets share the first 300 characters of the normalized reply, while 238 share an
+identical normalized full reply. The prefix relation is the conservative one: two tickets can open with the
 same form or greeting and still describe different procedures. We therefore treat
 the full-reply and prefix relations separately and never describe the 922 tickets
 as identical replies.
@@ -373,7 +370,7 @@ We define two versioned rules over normalized signatures. The \emph{duplicate}
 rule links two tickets when they have an identical normalized full reply or an
 identical normalized title and subcategory. The \emph{prefix} rule additionally
 links tickets whose replies share the first 300 normalized characters, using both
-the earlier raw-cut definition and a normalized-cut definition. Groups are the
+the raw-cut definition and a normalized-cut definition. Groups are the
 connected components of the resulting graph; an empty signature never links
 tickets. The duplicate rule yields 1,218 components (largest 83); the prefix rule
 yields 676 components (largest 299).
@@ -397,8 +394,7 @@ robustness. No outcome enters the assignment.
 The strict panel is the primary control because it removes both full-reply and
 300-character-prefix overlap with training. The duplicate panel is the intermediate
 control: it removes full-reply and title+subcategory duplicates but still allows a
-shared reply opening. The familiar panel is the random split used in the earlier
-evaluation. Table~\ref{tab:overlap} reports what each split actually guaranteed.
+shared reply opening. The familiar panel is a random split of the same corpus. Table~\ref{tab:overlap} reports what each split actually guaranteed.
 
 \Table[!btp](width=\textwidth){Evaluation tickets whose training partition contains
 a ticket with the same structural signature. ``Duplicate union'' is the
@@ -410,21 +406,21 @@ opening, or a title+subcategory signature with training.\label{tab:overlap}}{
 \toprule
 Split & Full reply & Reply opening & Title+subcat & Duplicate union \\
 \midrule
-Earlier random (398)   & 59 (14.8\,\%) & 232 (58.3\,\%) & 61 (15.3\,\%) & 116 (29.1\,\%) \\
-Earlier ``disjoint'' (390) & 50 (12.8\,\%) & 208 (53.3\,\%) & 38 (9.7\,\%) & 88 (22.6\,\%) \\
+Random split (398)   & 59 (14.8\,\%) & 232 (58.3\,\%) & 61 (15.3\,\%) & 116 (29.1\,\%) \\
+Combined-hash split (390) & 50 (12.8\,\%) & 208 (53.3\,\%) & 38 (9.7\,\%) & 88 (22.6\,\%) \\
 Duplicate panel (398)    & 0 & 193 (48.5\,\%) & 0 & 0 \\
 Prefix panel (427)       & 0 & 0 & 0 & 0 \\
 \bottomrule
 \end{tabular}}
 
-The earlier ``procedure-disjoint'' split combined reply prefix, title and
-subcategory into a single hash. Simultaneous equality is a much weaker condition
-than group disjointness: 12.8\,\% of its 390 evaluation tickets still shared an
-identical full reply, 53.3\,\% shared a reply opening, and 22.6\,\% were in the
-same duplicate-union component as training. The random split was similar (14.8\,\%,
-58.3\,\%, 29.1\,\%). The sign reversal in the earlier evaluation was therefore
-observed in a regime where the evaluation ticket often had a near-duplicate in the
-historical base. This article keeps those numbers as the familiar-panel result and
+A combined-hash split that hashes reply prefix, title and subcategory into a
+single key is not procedure-disjoint under any component-wise definition.
+Simultaneous equality is a much weaker condition than group disjointness: 12.8\,\%
+of the 390 evaluation tickets in such a split share an identical full reply,
+53.3\,\% share a reply opening, and 22.6\,\% are in the same duplicate-union
+component as training. The random split is similar (14.8\,\%, 58.3\,\%, 29.1\,\%).
+The sign reversal in the random-split baseline was therefore observed in a regime
+where the evaluation ticket often had a near-duplicate in the historical base. This article keeps those numbers as the familiar-panel result and
 asks what remains when the overlap is removed.
 
 \subsection{Allowed history, candidates and evidence}
@@ -481,9 +477,9 @@ All primary runs share one generation regime: the \texttt{gpt-5.6-luna} model at
 temperature 0. The system prompt hash is \texttt{524098066b407de3}; the regime
 identifier is \texttt{51fd9f4b37e900bb}; and the response cache is warm. The
 history-only panels were generated on 12 November 2026. Baseline answers are identical across sources of the
-same panel; the freeze record in the repository verifies this ticket by ticket. The
-cross-generator experiment in the earlier evaluation used a different model and is
-not pooled with this study; the claims are within one regime. Because
+same panel; the freeze record in the repository verifies this ticket by ticket. A
+cross-generator experiment with a different model is not pooled with this study;
+the claims are within one regime. Because
 hosted models can drift, all comparisons are within-regime and the artifacts record
 the exact model, prompt and dates.
 
@@ -503,8 +499,8 @@ correction is applied within each family. Exploratory analyses (scope grid, form
 ordering, expected-value selection, negative results) are labelled as such and are
 not used for confirmation. The minimum detectable effect (MDE) at 80\,\% power is
 reported for each primary cell; it is a sensitivity floor, not an equivalence
-boundary. An earlier version of this evaluation used the eval split, so the
-the analyses in this article are not prospectively preregistered. We state this explicitly
+boundary. The eval split had already been used in the exploratory phase, so the
+analyses in this article are not prospectively preregistered. We state this explicitly
 rather than claiming a registration that does not exist. The analysis protocol and
 the frozen artifact hashes are dated and archived.
 
@@ -537,7 +533,7 @@ because absolute lift units are not comparable across score geometries.
 \subsection{Lift}
 Let $\mathrm{pos}$ and $\mathrm{neg}$ be the number of positive and negative judge
 scores for candidate $c$ in scope $s$, and $n=\mathrm{pos}+\mathrm{neg}$. The
-legacy Laplace lift is
+legacy Laplace lift (the formula inherited from the original pipeline) is
 \begin{equation}
 \begin{aligned}
 p &= \frac{\mathrm{pos}+\alpha}{n+\alpha+\beta},\\
@@ -574,7 +570,7 @@ the pool and $\lambda=1$ in the pool-scaled cells. The finalist uses absolute
 scaling, so Eq.~\ref{eq:pool} is applied only in the ablation. The clamp is applied
 before scaling. The parameters $\kappa$ and $\lambda$ were selected on dev over
 $\{2,5,10,20,50\}$ and $\{0.25,0.5,1,2,4\}$, respectively; the per-cell values are
-in the provenance table. The published legacy cell ($m=0.80$, $c=0.20$) is one
+in the provenance table. The inherited legacy cell ($m=0.80$, $c=0.20$) is one
 cell in the same sweep, not a special default.
 
 \subsection{Scopes}
@@ -598,7 +594,7 @@ cross-validation by ticket and frozen on dev. We report it as risk
 control, not as a source of gain. The hindsight bound applies feedback only when it
 helps on the observed outcome and therefore uses information no deployable policy
 has; it bounds the headroom, not the performance of a feasible gate. The gate
-numbers reported below are from the earlier evaluation on the familiar split; the
+numbers reported below are from the familiar-split analysis; the
 strict panel supplies the always-on and hindsight-bound values, not a separately
 trained gate. The expected-value analysis is exploratory and is confined to the
 Appendix because its rows are two per ticket and are not independent.
@@ -622,52 +618,48 @@ conditional effect; unchanged pairs have a difference of zero by construction.
 The automatic metric compares a generated reply with one recorded reply. It
 rewards similarity, not resolution success, and a ticket may admit several valid
 replies. BGE cosine \cite{b25} and BERTScore \cite{b26} were computed for the
-earlier evaluation; they are not recomputed for every history-only panel because the
+familiar-split evaluation; they are not recomputed for every history-only panel because the
 offline encoder is slow on CPU and the independent check in this article is the
 expert assessment. The Appendix states the difference in coverage. This is a
 limitation of the measurement, not a claim that cosine is a complete criterion.
 
 
 % ============================================================================
-\section{The Earlier Result and Its Scope}
-\label{sec:legacy}
+\section{The Random-Split Baseline and Its Scope}
+\label{sec:baseline}
 
-The earlier evaluation of this pipeline compared conditioned and blind feedback on
-a random split. Under conditioned feedback, the fine-scope reranking improved
-generated first replies on eval by $+0.014$ (cosine $p=.012$); under blind feedback
-the same reranking harmed them by $-0.038$ ($p=.017$). The reversal was confined to
-the legacy Laplace lift at Team and Team$\cap$Class scope. With the prior repaired,
-the blind effect was $+0.002$ ($p=.86$), and the conditioned effect was also null:
-Backoff+EB gave $+0.005$ on dev ($p=.90$) and $-0.002$ on eval ($p=.29$). No cell
-in that evaluation produced a confirmed calibrated gain under either protocol.
+The random-split baseline compares conditioned and blind feedback on the same
+pipeline and candidate pools as the strict panels. Under conditioned feedback, the fine-scope reranking improves generated
+first replies on eval by $+0.014$ (cosine $p=.012$); under blind feedback the same
+reranking harms them by $-0.038$ ($p=.017$). The reversal is confined to the legacy
+Laplace lift at Team and Team$\cap$Class scope. With the prior repaired, the blind
+effect is $+0.002$ ($p=.86$), and the conditioned effect is also null: Backoff+EB
+gives $+0.005$ on dev ($p=.90$) and $-0.002$ on eval ($p=.29$). No cell in this
+baseline produces a confirmed calibrated gain under either protocol.
 
 That pattern admits two readings. The first is that the judge's information decides
-the sign of the effect. The second is that the evaluation allowed the feedback to
-profit from procedures and reply templates that the evaluation ticket shared with
+the sign of the effect. The second is that the evaluation allows the feedback to
+profit from procedures and reply templates that the evaluation ticket shares with
 the historical base, and that the apparent benefit is partly a property of the
-split. The earlier paper treated the first reading as primary and the second as a
-robustness check. This article reverses the emphasis. Table~\ref{tab:overlap} shows
-why: the earlier ``procedure-disjoint'' split was not procedure-disjoint under any
-component-wise definition. It combined reply prefix, title and subcategory into a
-single hash, so a ticket could share an identical full reply or a 300-character
-reply opening with training and still pass the filter. In the canonical corpus,
-12.8\,\% of its 390 evaluation tickets shared an identical full reply, 53.3\,\%
-shared a reply opening, and 22.6\,\% were in the same duplicate-union component as
-training. The random split was similar (14.8\,\%, 58.3\,\%, 29.1\,\%).
+split. The random-split baseline is consistent with both. A natural control is to
+remove evaluation tickets that share a procedure or reply template with training.
+The combined-hash split is one attempt at a procedure-disjoint control: it hashes
+reply prefix, title and subcategory into one key. Table~\ref{tab:overlap} shows that it is not
+procedure-disjoint under any component-wise definition. A ticket can share an identical full reply or a
+300-character reply opening with training and still pass the filter. In the
+canonical corpus, 12.8\,\% of the 390 evaluation tickets in such a split share an
+identical full reply, 53.3\,\% share a reply opening, and 22.6\,\% are in the same
+duplicate-union component as training. The random split is similar (14.8\,\%,
+58.3\,\%, 29.1\,\%).
 
-The correction also changes a descriptive claim: the 922-ticket figure is a
-prefix count, not a full-reply count (Section~\ref{sec:data}). Using it as
-evidence of identical procedures would overstate the duplication.
-
-This article therefore keeps the earlier numbers as a documented result on the
-familiar regime and asks what survives when the overlap is removed. It does not
-claim that the earlier sign reversal was an artefact of the judge. It claims
-something narrower and more useful: the reversal is confined to the legacy lift,
-and a substantial part of the measured benefit depends on evaluation tickets that
-share procedures or reply templates with history. On strict history, the blind harm
-disappears and the conditioned effect is small. Section~\ref{sec:regime} reports
-that result; Section~\ref{sec:repair} isolates the repair; Section~\ref{sec:expert}
-adds the expert check.
+This article therefore reports the random-split numbers as a baseline and asks what
+survives when the overlap is removed. It does not claim that the random-split sign
+reversal is an artefact of the judge. It claims something narrower and more useful:
+the reversal is confined to the legacy lift, and a substantial part of the measured
+benefit depends on evaluation tickets that share procedures or reply templates with
+history. On strict history, the blind harm disappears and the conditioned effect is
+small. Section~\ref{sec:regime} reports that result; Section~\ref{sec:repair}
+isolates the repair; Section~\ref{sec:expert} adds the expert check.
 
 
 % ============================================================================
@@ -747,7 +739,7 @@ not evidence that the judge recovers procedural knowledge in general; it is
 evidence that a resolution-informed judge can exploit procedures and templates that
 the evaluation ticket shares with history. The strict-panel conditioned interval
 excludes zero, but the effect is small, metric-dependent and below the design's
-MDE. The blind harm, which was the earlier paper's most striking result, is not
+MDE. The blind harm, which is the most striking result on the random split, is not
 robust to the data boundary. A deployment that expects new procedures should not
 budget on the familiar-panel number.
 
@@ -757,10 +749,10 @@ budget on the familiar-panel number.
 \label{sec:repair}
 
 \subsection{One-factor ablation}
-The earlier comparison changed scope, prior, scaling and the backoff fallback at
-once. We replaced it with a one-factor-at-a-time ablation on dev, using the same
-history-only candidate pools, allowed feedback rows and selection metric for every
-cell. Table~\ref{tab:ablation} reports the retrieval-level top-1 proxy; the
+A comparison that changes scope, prior, scaling and the backoff fallback at once
+cannot isolate the cause. We use a one-factor-at-a-time ablation on dev, with the
+same history-only candidate pools, allowed feedback rows and selection metric for
+every cell. Table~\ref{tab:ablation} reports the retrieval-level top-1 proxy; the
 generated panels confirm the selected finalist, not every cell.
 
 \Table[!btp](width=\textwidth){Controlled one-factor-at-a-time ablation on dev
@@ -768,7 +760,7 @@ generated panels confirm the selected finalist, not every cell.
 Every cell uses the same history-only candidate pools, allowed feedback rows and
 selection metric. ``Ratio'' is $\mathrm{SD}(\text{lift})/\mathrm{SD}(\text{retrieval
 score})$ within the pool. Tuned Laplace uses $m=0.60$, cap $=0.15$ on the duplicate
-panel and $m=1.00$, cap $=0.05$ on the prefix panel, selected on dev. The published
+panel and $m=1.00$, cap $=0.05$ on the prefix panel, selected on dev. The inherited
 legacy cell ($m=0.80$, cap $=0.20$) ranks 9/25 on duplicate and 23/25 on
 prefix.\label{tab:ablation}}{
 \begin{tabular}{@{}llrrrrr@{}}
@@ -795,12 +787,12 @@ EB $\kappa=2$ + pool       & Backoff         & $-0.0052$ $[-0.0131, +0.0020]$ & 
 \bottomrule
 \end{tabular}}
 
-The published legacy cell is not the best Laplace configuration. It ranks 9th of
+The inherited legacy cell is not the best Laplace configuration. It ranks 9th of
 25 on the duplicate panel and 23rd of 25 on the strict panel. Tuning moves the
 duplicate proxy from $+0.0370$ to $+0.0423$ and the strict proxy from $-0.0083$ to
 $-0.0023$. Pool-relative scaling alone reduces the lift/score standard-deviation
 ratio from 2.30 to 0.50 on duplicate and from 0.95 to 0.21 on strict. Scale is
-therefore a major cause of the earlier behaviour, and the prior alone is not. On
+therefore a major cause of the baseline behaviour, and the prior alone is not. On
 the duplicate panel the empirical-Bayes absolute cell reaches $+0.0497$, but the
 scope change to Team costs about half of that ($+0.0238$ to $+0.0132$) and the
 backoff does not recover it ($+0.0217$). On the strict panel every cell is at or
@@ -808,9 +800,9 @@ below zero. This is why we describe the repair as harm removal, not as
 a gain mechanism.
 
 \subsection{Matched retrievers}
-The earlier retriever comparison used different lift configurations, so retriever
-strength and calibration were confounded. We repeated the comparison with one
-feedback configuration (empirical Bayes, $\kappa=2$, pool-relative scaling
+Comparing retrievers under different lift configurations confounds retriever
+strength with calibration. We repeat the comparison with one feedback
+configuration (empirical Bayes, $\kappa=2$, pool-relative scaling
 $\lambda=1$, Team$\cap$Class) across dense MiniLM, BM25 and hybrid RRF.
 Table~\ref{tab:matched} and Figure~\ref{fig:matched} report the result.
 
@@ -833,18 +825,18 @@ Hybrid RRF   & $+0.0595$ $[+0.0426, +0.0771]$ & $<.001$ & $+0.0063$ $[+0.0006, +
 \includegraphics[width=\textwidth]{revision_ieee_access/03_manuscript/figures/fig5_matched_retrievers.pdf}
 \caption{Feedback gain under one configuration (EB $\kappa=2$, pool-relative
 scaling $\lambda=1$) for dense MiniLM, BM25 and hybrid RRF. Bars are 95\,\%
-bootstrap intervals. The earlier claim that stronger retrieval reduces the benefit
-is not supported once the lift configuration is held fixed.}
+bootstrap intervals. The claim that stronger retrieval reduces the benefit is not
+supported once the lift configuration is held fixed.}
 \label{fig:matched}
 \end{figure*}
 
 The feedback gain is similar across retrieval families: on the familiar panel
 $+0.0334$, $+0.0641$ and $+0.0595$; on the strict panel $+0.0078$, $+0.0088$ and
-$+0.0063$. The earlier conclusion that stronger retrieval reduces the benefit is a
-scaling artefact: absolute lift units are cosine units and are not meaningful on
-BM25 scores. We withdraw that conclusion. This article does not claim that
-retriever choice is irrelevant; it claims that the earlier comparison could not
-separate retriever strength from lift scale.
+$+0.0063$. The conclusion that stronger retrieval reduces the benefit is a scaling artefact:
+absolute lift units are cosine units and are not meaningful on BM25 scores. We
+withdraw that conclusion. This article does not claim that retriever choice is
+irrelevant; it claims that the confounded comparison could not separate retriever
+strength from lift scale.
 
 \subsection{Mechanism}
 The blind failure is arithmetic before it is statistical. The judge is
@@ -885,7 +877,7 @@ panel, always-on is $+0.0008$ and the hindsight upper bound is $+0.0190$, so the
 maximum headroom is 0.0182. On the familiar blind panel, always-on is $-0.0444$ and
 the hindsight bound is $+0.0258$, headroom 0.0701. A feasible gate can capture only a
 fraction of that headroom, and we do not claim that it recovers the ceiling. In the
-earlier evaluation, the gate was trained once across signals and protocols with
+familiar-split analysis, the gate was trained once across signals and protocols with
 grouped cross-validation by ticket; its dev out-of-fold AUC was 0.699
 $[0.676,0.721]$, and eval AUC ranged from 0.56 to 0.74. The feature-family
 ablation showed that intervention shape carried the signal (AUC 0.681), while
@@ -893,7 +885,7 @@ baseline quality (0.553), semantic cosine (0.548) and scope evidence (0.548) add
 little. This is consistent with the mechanism: the gate
 predicts pool reshaping, not similarity.
 
-The expected-value analysis in the earlier evaluation pooled conditioned and blind
+The exploratory expected-value analysis pooled conditioned and blind
 rows, which are two per ticket and not independent. We do not use that analysis for
 a main claim. It is reported in the Appendix as exploratory, with the
 non-independence caveat, and it is not used to compare a protocol a deployed system
@@ -1071,7 +1063,7 @@ split should be re-measured after removing near-duplicate procedures and reply
 templates; otherwise the number describes the data regime as much as the method.
 The familiar-panel blind effect is $-0.0444$; on strict history it is $+0.0008$.
 A team that budgets on the first number will overstate both the risk and the
-opportunity. Second, tuning the legacy baseline matters. The published Laplace cell
+opportunity. Second, tuning the legacy baseline matters. The inherited Laplace cell
 ranks 23rd of 25 on the strict panel; an untuned lift is not a fair comparator, and
 a tuned one still does not produce a confirmed gain on strict history. Third,
 similarity to a single recorded reply is not procedural correctness. The expert and
@@ -1079,7 +1071,7 @@ the cosine metric diverge on the familiar arm, and the expert's preference is
 itself sensitive to answer length. Evaluation protocols should state the evidence
 set, keep the prior aligned with it, and add an expert check with length control.
 
-The result also changes the interpretation of the earlier sign reversal. The
+The result also changes the interpretation of the random-split sign reversal. The
 reversal is real for the legacy Laplace lift on the familiar split: the same
 reranking helps under a resolution-informed judge and harms under a ticket-only
 judge. But the blind harm is not robust to the data boundary, and the conditioned
@@ -1131,7 +1123,7 @@ not the usefulness of a reply to a new user.
 regime, which strengthens within-study contrasts but limits causal isolation. The
 strict panel changes the data boundary and the candidate pool together; the
 ablation isolates the lift factors, not every possible confound. The split audit
-shows that the earlier ``disjoint'' split was not disjoint, but it does not prove
+shows that the combined-hash split was not disjoint, but it does not prove
 that every remaining difference between panels is due to overlap. The matched
 retriever comparison holds the feedback configuration fixed, but it still uses one
 generator and one corpus.
@@ -1147,7 +1139,7 @@ the study could reliably detect; it is not an equivalence boundary. The strict
 conditioned effect and the strict protocol contrast are below their MDEs, so we
 describe them as small and imprecise. The familiar blind harm is above its MDE and
 survives Holm correction; the strict conditioned effect does not survive Holm. The
-two-blind-run agreement at four decimals in the earlier evaluation is a coincidence
+two-blind-run agreement at four decimals on the familiar split is a coincidence
 of aggregation: the runs differ per ticket (mean absolute difference 0.0671,
 median 0.0337, 11.8\,\% identical deltas, $r=.799$), and both inherit the saturated
 prior.

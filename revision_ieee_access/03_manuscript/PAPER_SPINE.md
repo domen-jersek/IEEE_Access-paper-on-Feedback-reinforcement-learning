@@ -78,7 +78,7 @@ legacy uncalibrated lift and is largely explained by procedure overlap.
 | 2 Related work | positioning, prior-work table | SIKDD 2025/2026 comparison |
 | 3 Data regimes | groups, splits, history-only, priors | Table 1 |
 | 4 Method | lift, scopes, calibration, evaluation | equations, π_s |
-| 5 The submitted result | legacy sign flip, documented | legacy Table 2 |
+| 5 The random-split baseline | random-split sign flip, documented | Table 2 |
 | 6 Where the gain comes from | main data-regime result | Table 2, Figure 2 |
 | 7 Controlled repair | ablation, tuned Laplace, matched retrievers | Table 3 |
 | 8 Expert evaluation | correctness, length, metric divergence | Table 4, Figure 3 |

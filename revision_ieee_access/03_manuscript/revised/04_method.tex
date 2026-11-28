@@ -15,7 +15,7 @@ because absolute lift units are not comparable across score geometries.
 \subsection{Lift}
 Let $\mathrm{pos}$ and $\mathrm{neg}$ be the number of positive and negative judge
 scores for candidate $c$ in scope $s$, and $n=\mathrm{pos}+\mathrm{neg}$. The
-legacy Laplace lift is
+legacy Laplace lift (the formula inherited from the original pipeline) is
 \begin{equation}
 \begin{aligned}
 p &= \frac{\mathrm{pos}+\alpha}{n+\alpha+\beta},\\
@@ -52,7 +52,7 @@ the pool and $\lambda=1$ in the pool-scaled cells. The finalist uses absolute
 scaling, so Eq.~\ref{eq:pool} is applied only in the ablation. The clamp is applied
 before scaling. The parameters $\kappa$ and $\lambda$ were selected on dev over
 $\{2,5,10,20,50\}$ and $\{0.25,0.5,1,2,4\}$, respectively; the per-cell values are
-in the provenance table. The published legacy cell ($m=0.80$, $c=0.20$) is one
+in the provenance table. The inherited legacy cell ($m=0.80$, $c=0.20$) is one
 cell in the same sweep, not a special default.
 
 \subsection{Scopes}
@@ -76,7 +76,7 @@ cross-validation by ticket and frozen on dev. We report it as risk
 control, not as a source of gain. The hindsight bound applies feedback only when it
 helps on the observed outcome and therefore uses information no deployable policy
 has; it bounds the headroom, not the performance of a feasible gate. The gate
-numbers reported below are from the earlier evaluation on the familiar split; the
+numbers reported below are from the familiar-split analysis; the
 strict panel supplies the always-on and hindsight-bound values, not a separately
 trained gate. The expected-value analysis is exploratory and is confined to the
 Appendix because its rows are two per ticket and are not independent.
@@ -100,7 +100,7 @@ conditional effect; unchanged pairs have a difference of zero by construction.
 The automatic metric compares a generated reply with one recorded reply. It
 rewards similarity, not resolution success, and a ticket may admit several valid
 replies. BGE cosine \cite{b25} and BERTScore \cite{b26} were computed for the
-earlier evaluation; they are not recomputed for every history-only panel because the
+familiar-split evaluation; they are not recomputed for every history-only panel because the
 offline encoder is slow on CPU and the independent check in this article is the
 expert assessment. The Appendix states the difference in coverage. This is a
 limitation of the measurement, not a claim that cosine is a complete criterion.

@@ -1,40 +1,36 @@
 % ============================================================================
-\section{The Earlier Result and Its Scope}
-\label{sec:legacy}
+\section{The Random-Split Baseline and Its Scope}
+\label{sec:baseline}
 
-The earlier evaluation of this pipeline compared conditioned and blind feedback on
-a random split. Under conditioned feedback, the fine-scope reranking improved
-generated first replies on eval by $+0.014$ (cosine $p=.012$); under blind feedback
-the same reranking harmed them by $-0.038$ ($p=.017$). The reversal was confined to
-the legacy Laplace lift at Team and Team$\cap$Class scope. With the prior repaired,
-the blind effect was $+0.002$ ($p=.86$), and the conditioned effect was also null:
-Backoff+EB gave $+0.005$ on dev ($p=.90$) and $-0.002$ on eval ($p=.29$). No cell
-in that evaluation produced a confirmed calibrated gain under either protocol.
+The random-split baseline compares conditioned and blind feedback on the same
+pipeline and candidate pools as the strict panels. Under conditioned feedback, the fine-scope reranking improves generated
+first replies on eval by $+0.014$ (cosine $p=.012$); under blind feedback the same
+reranking harms them by $-0.038$ ($p=.017$). The reversal is confined to the legacy
+Laplace lift at Team and Team$\cap$Class scope. With the prior repaired, the blind
+effect is $+0.002$ ($p=.86$), and the conditioned effect is also null: Backoff+EB
+gives $+0.005$ on dev ($p=.90$) and $-0.002$ on eval ($p=.29$). No cell in this
+baseline produces a confirmed calibrated gain under either protocol.
 
 That pattern admits two readings. The first is that the judge's information decides
-the sign of the effect. The second is that the evaluation allowed the feedback to
-profit from procedures and reply templates that the evaluation ticket shared with
+the sign of the effect. The second is that the evaluation allows the feedback to
+profit from procedures and reply templates that the evaluation ticket shares with
 the historical base, and that the apparent benefit is partly a property of the
-split. The earlier paper treated the first reading as primary and the second as a
-robustness check. This article reverses the emphasis. Table~\ref{tab:overlap} shows
-why: the earlier ``procedure-disjoint'' split was not procedure-disjoint under any
-component-wise definition. It combined reply prefix, title and subcategory into a
-single hash, so a ticket could share an identical full reply or a 300-character
-reply opening with training and still pass the filter. In the canonical corpus,
-12.8\,\% of its 390 evaluation tickets shared an identical full reply, 53.3\,\%
-shared a reply opening, and 22.6\,\% were in the same duplicate-union component as
-training. The random split was similar (14.8\,\%, 58.3\,\%, 29.1\,\%).
+split. The random-split baseline is consistent with both. A natural control is to
+remove evaluation tickets that share a procedure or reply template with training.
+The combined-hash split is one attempt at a procedure-disjoint control: it hashes
+reply prefix, title and subcategory into one key. Table~\ref{tab:overlap} shows that it is not
+procedure-disjoint under any component-wise definition. A ticket can share an identical full reply or a
+300-character reply opening with training and still pass the filter. In the
+canonical corpus, 12.8\,\% of the 390 evaluation tickets in such a split share an
+identical full reply, 53.3\,\% share a reply opening, and 22.6\,\% are in the same
+duplicate-union component as training. The random split is similar (14.8\,\%,
+58.3\,\%, 29.1\,\%).
 
-The correction also changes a descriptive claim: the 922-ticket figure is a
-prefix count, not a full-reply count (Section~\ref{sec:data}). Using it as
-evidence of identical procedures would overstate the duplication.
-
-This article therefore keeps the earlier numbers as a documented result on the
-familiar regime and asks what survives when the overlap is removed. It does not
-claim that the earlier sign reversal was an artefact of the judge. It claims
-something narrower and more useful: the reversal is confined to the legacy lift,
-and a substantial part of the measured benefit depends on evaluation tickets that
-share procedures or reply templates with history. On strict history, the blind harm
-disappears and the conditioned effect is small. Section~\ref{sec:regime} reports
-that result; Section~\ref{sec:repair} isolates the repair; Section~\ref{sec:expert}
-adds the expert check.
+This article therefore reports the random-split numbers as a baseline and asks what
+survives when the overlap is removed. It does not claim that the random-split sign
+reversal is an artefact of the judge. It claims something narrower and more useful:
+the reversal is confined to the legacy lift, and a substantial part of the measured
+benefit depends on evaluation tickets that share procedures or reply templates with
+history. On strict history, the blind harm disappears and the conditioned effect is
+small. Section~\ref{sec:regime} reports that result; Section~\ref{sec:repair}
+isolates the repair; Section~\ref{sec:expert} adds the expert check.
