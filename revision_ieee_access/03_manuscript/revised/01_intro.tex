@@ -1,0 +1,104 @@
+% ============================================================================
+\section{Introduction}
+\label{sec:introduction}
+\PARstart{S}{upport} organizations answer thousands of tickets, and many of them
+restate problems that have been solved before. Retrieval-augmented generation
+(RAG) makes reuse natural: retrieve the most similar historical tickets and let a
+language model write the first reply from their resolutions
+\cite{b1,b31}. The implicit assumption is that textual similarity tracks
+procedural similarity. It often does not.
+
+Enterprise ticket streams make this failure common and its measurement hard.
+Procedures are long-tailed and organized by team and intent, so many tickets have
+few close historical neighbours, while the closest neighbours may belong to a
+different procedure that shares vocabulary. Unlike search or recommendation, the
+domain has no click stream: the only observable signal of usefulness is whether a
+procedure matches the one that resolved the ticket. We therefore simulate the
+missing feedback with large language model (LLM) judges and treat the judge's
+information as an experimental variable.
+
+An earlier evaluation of this pipeline on a random split found a striking
+pattern. The same fine-scope reranking improved generated first replies when the
+judge saw the historical resolution, and harmed them when the judge saw only the
+ticket. That contrast is real, but it is not yet an answer to the question a
+deployment team faces. A random split lets evaluation tickets share a
+procedure, a reply template, or a near-duplicate with the historical base. A gain
+measured there may describe the data regime as much as the feedback method.
+
+This paper asks the prior question: \emph{does any of the gain survive when the
+evaluation ticket does not share a procedure or a reply template with the
+historical base?} To answer it, we rebuild the evaluation around three data
+regimes. In the \emph{familiar} regime the historical base may contain a ticket
+with the same procedure or reply template, as in a random split. In the
+\emph{duplicate} regime tickets with an identical normalized full reply or an
+identical title and subcategory are kept out of the evaluation side. In the
+\emph{strict} regime tickets that even share the first 300 reply characters are
+kept apart. Every regime uses a training-only candidate index, training-only BM25
+statistics, feedback rows with both endpoints in training, and priors estimated
+from exactly those rows. The strict panel is the primary control; the familiar
+panel reproduces the setting in which the earlier gain was observed.
+
+The answer changes the reading of the earlier result. Under strict disjointness,
+blind feedback no longer harms: the familiar-panel effect of $-0.0444$ becomes
+$+0.0008$ (p=.86). The conditioned effect remains small ($+0.0093$), its cosine
+interval excludes zero but the rank test is marginal (p=.066), ROUGE-L is not
+significant, and the effect lies below the study's 80\,\% minimum detectable
+effect (0.0103). A reply-similarity baseline that uses no LLM judge matches
+the conditioned judge on the familiar panel ($+0.0143$ versus $+0.0105$) but not
+on the strict panel ($+0.0026$ versus $+0.0093$). The pattern is consistent with a
+simple explanation: part of the measured benefit on overlapping data is borrowed
+from procedures and reply templates that the evaluation ticket shares with
+history.
+
+A blinded expert assessment of 105 changed pairs completes the picture. On new
+procedures the expert sees no difference between baseline and feedback (strict
+blind $-0.030$ $[-0.121,+0.061]$; strict conditioned $0.000$
+$[-0.088,+0.088]$). On familiar procedures the expert prefers feedback by $+0.147$
+$[0.000,+0.294]$, but the feedback replies are 173 characters longer, the
+preference tracks length (Spearman $+0.63$), and among length-matched pairs the
+effect is exactly zero. On that arm the expert and the cosine metric point in
+opposite directions (expert $+0.147$, automatic $-0.088$), which is direct
+evidence that similarity to one recorded reply is not procedural correctness. The
+study is a validity check, not a confirmatory trial: one expert has completed the
+sample, the second is in progress, and the arms contain only 2--7 discordant pairs.
+
+The paper makes four contributions.
+
+\begin{enumerate}
+\item \textbf{The data regime is the experimental variable.} We define versioned
+structural groups over identical full replies or identical title and subcategory,
+and a conservative prefix variant; assign whole groups to train, dev and eval; and
+restrict retrieval, BM25 statistics, feedback rows and scope priors to the same
+allowed history. The earlier ``procedure-disjoint'' split is shown not to be
+procedure-disjoint: 12.8\,\% of its evaluation tickets share an identical full
+reply and 53.3\,\% share a 300-character reply opening with training. Five
+group-aware splits are generated for each rule.
+\item \textbf{The repair is decomposed.} A one-factor-at-a-time dev ablation varies
+the tuned Laplace baseline, empirical-Bayes centering, pool-relative scaling, scope
+and backoff under a matched selection budget. The published legacy cell ranks 23rd
+of 25 Laplace configurations on the strict panel. With one feedback configuration,
+the gain is similar across dense, BM25 and hybrid retrieval; the earlier claim that
+stronger retrieval reduces the benefit is a scaling artefact.
+\item \textbf{The calibrated outcome is a harm removal, not a confirmed gain.} On
+strict history, the blind harm disappears, the conditioned effect is small and
+metric-dependent, and no cell survives multiplicity correction with a magnitude
+above the design's detection threshold. A free reply-similarity prior is
+competitive only where procedure overlap remains.
+\item \textbf{An expert validity check separates procedure from similarity.} The
+blinded assessment finds no difference on new procedures; on familiar procedures
+the apparent preference for feedback is explained by answer length, and expert and
+cosine judgements diverge. This is direct evidence that the automatic metric and
+the human judgement capture different things, and that neither is a clean
+criterion.
+\end{enumerate}
+
+This article re-uses the retrieval and generation pipeline of our earlier
+conference work \cite{b31,b32} as a fixed component; the data-regime control, the
+split audit, the controlled repair, the reply-similarity baseline, the
+matched-retriever comparison, the statistical sensitivity analysis and the expert
+evaluation are new. No text, tables or figures from the conference papers are
+reused. Section~\ref{sec:related} positions the work and details the relationship;
+Section~\ref{sec:data} defines the data regimes; Section~\ref{sec:method} the
+method; Sections~\ref{sec:legacy}--\ref{sec:validation} the results; and
+Sections~\ref{sec:discussion} and~\ref{sec:conclusion} the discussion and
+conclusion.

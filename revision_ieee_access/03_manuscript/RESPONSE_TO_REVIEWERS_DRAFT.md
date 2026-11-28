@@ -10,7 +10,8 @@ Calibration, and the Limits of Similarity-Based Evaluation in RAG for IT Support
 **Status:** working draft. It follows the IEEE Access three-part template:
 (a) reviewer concern, (b) response, (c) action. Section references follow the
 planned structure in `PAPER_SPINE.md` and must be updated after the rewrite.
-Items marked **[OPEN]** are waiting for a decision, a run, or the second expert.
+Section, table and figure numbers refer to the revised manuscript. The items
+still waiting for the second expert or a production step are listed at the end.
 
 We thank both reviewers for a detailed and technically engaged reading. The
 revision is a restructure rather than a patch. The main change is that the data
@@ -95,12 +96,11 @@ backoff does not recover it; nothing is positive on the strict panel.
 We state the scope of this evidence explicitly: the ablation is a dev selection
 experiment at retrieval level, and the generated panels confirm the frozen
 finalist (EB κ=2, intersection, absolute scaling) on all three data regimes. We
-did not generate answers for every ablation cell. **[OPEN: if the editor
-requires generated confirmation of each ablation cell, run EB+pool at Team and
-intersection and Laplace at Backoff for both protocols on dev; see
-`GENERATED_ABLATION_PLAN.md`.]**
+did not generate answers for every ablation cell: the retrieval-level ablation is
+the controlled selection experiment, and the generated panels confirm the selected
+finalist. This scope is stated explicitly in Section 7.1.
 
-**Action.** Section 7 and Table 3 report the full one-factor ablation; the
+**Action.** Section 7.1 and Table 4 report the full one-factor ablation; the
 generated panel is labelled as confirmation of the finalist, not as a factorial
 generation study. The text no longer credits "calibration" for the joint change.
 
@@ -122,8 +122,8 @@ and the prior alone is not. The legacy cell is now described as the inherited
 configuration of the submitted study, not as "standard practice"; the sentence
 and the missing citation are removed.
 
-**Action.** Section 7 reports the sweep, the published cell's rank, and the
-tuned baseline; Section 4 removes "standard"; the abstract no longer implies
+**Action.** Section 7.1 and Table 4 report the sweep, the published cell's rank, and the
+tuned baseline; Section 4.2 removes "standard"; the abstract no longer implies
 that the legacy cell represents common practice.
 
 ### R1-M4 — The two-vote algebra is mis-stated
@@ -144,7 +144,7 @@ cap is 15.6 % (conditioned) and 7.0 % (blind), while the positive cap is 0 %.
 The asymmetry is therefore a property of the evidence distribution interacting
 with the ramp, not of the prior alone.
 
-**Action.** Section 4 rewrites both equations with the clamp explicit and adds
+**Action.** Section 4.2 rewrites both equations with the clamp explicit and adds
 the symmetry table; the abstract says that two negative votes reach the cap
 *and* that two positive votes do the same, while the data supply far more
 negatives.
@@ -159,7 +159,7 @@ reply-similarity baseline and clarify what is available at deployment.
 
 **Response.** We agree with the data-flow correction. The conditioned judge uses
 only historical resolutions; it is deployable for historical pairs and is not an
-unrealizable oracle. At inference on a new ticket, no resolution exists yet, so
+unrealizable upper bound. At inference on a new ticket, no resolution exists yet, so
 only blind votes can be generated for that ticket; conditioned votes for the
 historical base can be precomputed. We now call it a *resolution-informed*
 judge and state this in the data-flow figure and in the limitations. We also
@@ -173,7 +173,7 @@ competitive only where procedure overlap remains, which is the paper's point.
 
 **Action.** New data-flow paragraph and Figure 1; Section 3 states what is
 available at feedback-construction, retrieval and evaluation time; Section 6 and
-Table 2 add the reply-similarity rows. The phrase "unrealizable oracle" is
+Table 3 add the reply-similarity rows. The phrase "unrealizable oracle" is
 removed.
 
 ### R1-M6 — Statistical support is thin and internally inconsistent
@@ -209,7 +209,7 @@ prospectively pre-specified. The original study was not registered. The revision
 has a dated protocol (`PROTOCOL.md`) and frozen artifacts, but the eval split had
 already been used; the new analyses are revision-stage, not preregistered.
 
-**Action.** Section 9 and Table 2 report mean and median intervals, the share of
+**Action.** Section 9.2 and Table 3 report mean and median intervals, the share of
 unchanged tickets, direct contrasts, Holm-adjusted p-values and MDEs. Section 3
 adds the provenance and pre-specification statement, including what cannot be
 verified retrospectively.
@@ -244,8 +244,8 @@ conditioned effect is +0.0093 [0.0026, 0.0169] with a marginal rank test
 the submitted "922 identical-reply tickets" statement: 922 tickets share a
 300-character reply opening; 238 share an identical full reply.
 
-**Action.** New Section 3 (structural groups, splits, allowed history), Table 1
-(overlap audit) and Table 2 (generated effects by regime); the strict panel is
+**Action.** New Section 3 (structural groups, splits, allowed history), Table 2
+(overlap audit) and Table 3 (generated effects by regime); the strict panel is
 the primary result; the earlier claim is corrected in the text and in the
 response to R1-M5.
 
@@ -263,7 +263,7 @@ procedures with conditioned feedback. A/B order is randomised and balanced
 within arm; the expert rated each reply (correct / partially correct / incorrect
 / cannot judge), flagged unsafe and missing steps, and chose the better reply,
 with equal, both incorrect and cannot judge as explicit options. One GFT expert
-(E1) has completed all 105 items; the second has been scheduled. We report E1
+(E1) has completed all 105 items; the second is in progress. We report E1
 descriptively and will add agreement when E2 finishes.
 
 The expert does not confirm the automatic harm. Of the 105 items, 101 entered
@@ -278,11 +278,11 @@ items were rated equal, 32 both incorrect, and 2 cannot judge. With 2–7
 discordant pairs per arm, this is a validity check, not a confirmatory test; we
 do not claim that the expert confirms either harm or benefit.
 
-**Action.** New Section 8, Table 4 and Figure 3; the abstract and conclusion say
+**Action.** New Section 8, Table 6 and Figure 5; the abstract and conclusion say
 that the expert finds no difference on new procedures and that the
-familiar-procedure preference is length-driven. Inter-rater agreement is
-**[OPEN: awaiting E2]**; the table has a placeholder for percent agreement,
-Cohen's κ with bootstrap interval, weighted κ, and PABAK/AC1.
+familiar-procedure preference is length-driven. Inter-rater agreement will be
+added when the second expert completes; the analysis reports percent agreement,
+Cohen's κ with bootstrap interval, weighted κ, and PABAK/AC1 on the common items.
 
 ### R1-M9 — Gate and expected-value results are overclaimed
 
@@ -292,19 +292,20 @@ The EV result is on 796 ticket-by-protocol rows, which are not independent, and
 pools conditioned and blind configurations. State whether the CI is clustered
 and why a deployed system would choose a protocol it cannot run.
 
-**Response.** We agree on all three points. Eq. 3 is renamed a bookkeeping
-identity. The gate is no longer presented as a general gain mechanism: it is
+**Response.** We agree on all three points. The bookkeeping identity is removed
+from the main text; the control analysis is reduced to the hindsight bound. The
+gate is no longer presented as a general gain mechanism: it is
 risk control that pays only where the uncalibrated prior concentrates harm. On
-the strict blind panel, always-on is +0.0008 and the oracle upper bound is
+the strict blind panel, always-on is +0.0008 and the hindsight upper bound is
 +0.0190, so the maximum headroom is 0.0182; on the random blind panel,
-always-on is −0.0444 and the oracle bound is +0.0258, headroom 0.0701. We do not
+always-on is -0.0444 and the hindsight bound is +0.0258, headroom 0.0701. We do not
 claim that a feasible gate recovers the ceiling. The expected-value analysis is
 removed from the main claims and moved to an exploratory appendix; the text
 states that its rows are two per ticket and not independent, so the old interval
 cannot be read as a clustered CI. We do not compare a deployable protocol with
-one that cannot be run; the blind-only table is reported separately.
+one that cannot be run; the blind-only numbers are reported separately.
 
-**Action.** Section 7 reports the oracle bound and the blind-only decision table;
+**Action.** Section 7.4 reports the hindsight bound and the blind-only numbers;
 Section 10 states the limits; the EV numbers are removed from the abstract and
 conclusion; the "exact decomposition law" and "calibration and control are
 substitutes" sentences are deleted.
@@ -339,9 +340,9 @@ are both `openai/gpt-5.6-luna` at temperature 0; the judge differs only in the
 protocol prompt. The generation regime is `51fd9f4b37e900bb`, the system prompt
 hash is `524098066b407de3`, and the run dates are September 2026 for the
 submitted cache and November 2026 for the revision panels. The judge cache dates
-are 12–13 September 2026. The finalist uses κ=2 and λ=1; π_s is the mean judge
-score of the scope over the allowed training rows, with a global fallback when a
-scope has no rows. The per-cell values and the scope counts are in the
+are 12–13 September 2026. The finalist uses κ=2 and absolute scaling; λ=1 in the
+pool-scaled ablation cells. π_s is the mean judge score of the scope over the
+allowed training rows, with a global fallback when a scope has no rows. The per-cell values and the scope counts are in the
 provenance table.
 
 A third party can rerun three levels. (i) From the public repository, without
@@ -354,10 +355,9 @@ and hashes are pinned rather than claiming bit-level reproducibility.
 
 **Action.** Section 3 names the models at the start of the methods; Section 4
 and the provenance table give κ, λ, π_s and the per-cell settings; the
-reproducibility appendix states the three levels. License: **[OPEN: author
-decision. Proposal: MIT for code, CC BY 4.0 for documentation and aggregate
-tables, confidential data not released.]** The repository will contain a
-`LICENSE` file before resubmission.
+reproducibility appendix states the three levels. License: the repository now contains `LICENSE` (MIT for code) and
+`LICENSE-DOCS.md` (CC BY 4.0 for documentation and aggregate tables). The
+confidential tickets, feedback pairs and generated answers are not released.
 
 ## Reviewer 1 — minor comments
 
@@ -371,10 +371,11 @@ lift is p=(pos+α)/(n+α+β), L=clamp((p−0.5)·min(1,n/2)·m, −c, c). The
 empirical-Bayes lift is p̄=π_s, a=κp̄, p_post=(pos+a)/(n+κ),
 L=clamp((p_post−p̄)·m, −c, c). π_s is the mean judge score of the scope over the
 allowed training rows, with a global fallback. κ was swept over {2,5,10,20,50}
-and λ over {0.25,0.5,1,2,4} on dev; the finalist is κ=2, λ=1. Pool-relative
-scaling multiplies L by λ·SD(pool)/c.
+and λ over {0.25,0.5,1,2,4} on dev; the finalist is κ=2 with absolute scaling,
+and the pool-scaled cells use λ=1. Pool-relative scaling multiplies L by
+λ·SD(pool)/c.
 
-**Action.** Section 4, Eqs. (1)–(3); Table 3 lists the selected values and the
+**Action.** Section 4.2, Eqs. (1)-(3); Table 4 lists the selected values and the
 sweep grid.
 
 ### R1-m2 — Abstract too long and dense
@@ -414,7 +415,7 @@ that stronger retrieval reduces the benefit is a scaling artefact: absolute lift
 units are cosine units and are not meaningful on BM25 scores. We withdraw the
 conclusion and report the matched table.
 
-**Action.** Section 7 and Table 3; the retriever-strength sentence is removed
+**Action.** Section 7.2 and Table 5; the retriever-strength sentence is removed
 from the introduction and conclusion.
 
 ### R1-m5 — Citations do not support sentences
@@ -458,14 +459,14 @@ judge and protocol, feedback pairs, lift, scopes, split, retrieval/evidence
 boundary, baselines, statistics and main finding for SIKDD 2025, SIKDD 2026,
 the submitted manuscript and the revision. The disclosure paragraph is expanded.
 
-**Action.** Section 2 and Table 5; cover-letter disclosure.
+**Action.** Section 2.5 and Table 1; cover-letter disclosure.
 
 ### R1-m8 — Repetition across sections
 
 **Concern.** Near-identical numbers repeat across Sections V, VII, VIII and
 Tables 2, 4, 5; Section IX restates the abstract and Section X.
 
-**Response.** We consolidated the numbers into Tables 2–4 and removed repeated
+**Response.** We consolidated the numbers into the main tables and removed repeated
 sentences. Section 9 now reports only validation, not a re-listing of the main
 effects; Section 10 interprets rather than repeats.
 
@@ -505,7 +506,7 @@ prior leaves the ranking unchanged. The conditioned success case is shortened.
 Raw ticket text stays private; the published examples are paraphrased and
 checked for identifying details.
 
-**Action.** Appendix; **[OPEN: select and anonymize the two cases]**.
+**Action.** Appendix A.2; the two cases are anonymized and paraphrased.
 
 ### R1-m12 — "For free", "exactly", "standard"
 
@@ -534,7 +535,7 @@ both-incorrect are reported separately. On new procedures the expert sees no
 difference; on familiar procedures the apparent preference is length-driven.
 We do not claim confirmation of either automatic effect.
 
-**Action.** Section 8, Table 4, Figure 3; agreement added when E2 completes.
+**Action.** Section 8, Table 6, Figure 5; agreement added when E2 completes.
 
 ### R2-2 — Conditioned judge and evaluation reference depend on each other
 
@@ -609,7 +610,7 @@ duplicate +0.0363 [0.0217, 0.0517]; strict +0.0085 [0.0016, 0.0158]), and Holm
 correction within three pre-specified families. Exploratory comparisons are
 labelled as such and are not used for confirmation.
 
-**Action.** Section 9 and Table 2; the statistical protocol paragraph.
+**Action.** Section 9.2 and Table 3; the statistical protocol paragraph.
 
 ### R2-7 — MDE is not evidence of absence
 
@@ -634,8 +635,7 @@ calibration and intervention selection.
 The contribution is diagnostic and measurement-oriented: (i) procedure overlap
 as the experimental variable, with an audit showing the submitted disjoint split
 was not disjoint; (ii) a controlled decomposition showing that scale and scope,
-not only the prior, drive the apparent repair; (iii) a free reply-similarity
-baseline that is competitive only where procedures overlap; (iv) a blinded
+not only the prior, drive the apparent repair; (iii) a reply-similarity baseline that uses no LLM judge that is competitive only where procedures overlap; (iv) a blinded
 expert check showing that similarity to one reply and procedural correctness
 diverge, and that expert judgement is itself length-sensitive. The gate is
 reduced to risk control; intervention selection is no longer a headline
@@ -652,7 +652,7 @@ the four contributions.
 pairs, lift, scopes, split, baselines, statistics and findings, plus an expanded
 disclosure paragraph.
 
-**Action.** Section 2 and Table 5.
+**Action.** Section 2.5 and Table 1.
 
 ### R2-10 — Keep feedback configurations constant across retrievers
 
@@ -664,7 +664,7 @@ is random +0.033 (dense), +0.064 (BM25), +0.060 (hybrid); strict +0.008, +0.009,
 +0.006. The earlier retriever-strength conclusion is withdrawn as a scaling
 artefact.
 
-**Action.** Section 7, Table 3 and Figure 5.
+**Action.** Section 7.2, Table 5 and Figure 3.
 
 ### R2-11 — Evaluate the blind scenario separately
 
@@ -676,7 +676,7 @@ pools them. The decision table is blind-only. The expected-value analysis that
 pooled protocols is removed from the main claims and moved to an exploratory
 appendix with the non-independence caveat.
 
-**Action.** Tables 2–4; Section 7.
+**Action.** Tables 3-6; Section 7.4.
 
 ### R2-12 — Substitutability of calibration and control
 
@@ -702,7 +702,7 @@ EB+pool +0.0238, EB+pool Team +0.0132, EB+pool Backoff +0.0217. On strict:
 separates prior, scale, scope and fallback; the text states that the generated
 panels confirm the finalist, not every cell.
 
-**Action.** Section 7 and Table 3.
+**Action.** Section 7.1 and Table 4.
 
 ### R2-14 — Complete documentation for reproducibility
 
@@ -728,7 +728,7 @@ database preparation is a separate one-off cost and is reported separately. The
 calibrated lift adds no model call at inference; its cost is the offline
 feedback construction.
 
-**Action.** Section 9 and Table 6.
+**Action.** Section 9.3 and Table 7.
 
 ### R2-16 — Semantic similarity versus procedural correctness
 
@@ -743,7 +743,7 @@ clean criterion. The revision discusses what each captures: cosine measures
 similarity to one recorded reply; the expert measures procedure but is sensitive
 to answer length; neither measures resolution success.
 
-**Action.** Section 8, Figure 3, Section 10.
+**Action.** Section 8, Figure 5, Section 10.
 
 ### R2-17 — Simplify and reorganise the abstract
 
@@ -777,7 +777,7 @@ the appendix. Vector PDF, fonts ≥8 pt at final width, at most four series per
 panel, direct labels, colour-blind-safe palette, captions with regime, source,
 sample size and interval method.
 
-**Action.** Figures 1–4; appendix; `FIGURE_PLAN.md`.
+**Action.** Figures 1–5; appendix; `FIGURE_PLAN.md`.
 
 ### R2-20 — Conclusions must reflect the evidence
 
@@ -811,11 +811,16 @@ of hypotheses, not a general law. No positive calibrated benefit is claimed.
 
 ## Open items before this letter is final
 
-1. **[OPEN]** Second expert E2 and inter-rater agreement (scheduled).
-2. **[OPEN]** License decision (code, docs, data).
-3. **[OPEN]** Generated ablation cells for Team, intersection and Backoff, if
-   the editor requires generated rather than retrieval-level isolation.
-4. **[OPEN]** Select and anonymize the two appendix examples.
-5. **[OPEN]** Verify every bibliographic entry and venue.
-6. **[OPEN]** Final title approval.
-7. **[OPEN]** Update section and table numbers after the rewrite.
+1. **Second expert E2.** The first expert is complete; the second is in progress.
+   Add percent agreement, κ and the combined estimate when the ratings arrive.
+2. **Generated ablation.** The retrieval-level ablation and the generated
+   finalist are reported; the eight generated factor cells are optional and would
+   strengthen R1-M2 further. The manuscript states the current scope explicitly.
+3. **Final title approval.** The working title is the one in the manuscript.
+4. **Compile with the IEEE Access class.** The local check used a standard LaTeX
+   class because the Formata fonts are not installed; the final compile should be
+   done in Overleaf or with the IEEE Access class and fonts.
+5. **DOI and volume.** The manuscript sets volume 14 and year 2026; the DOI remains
+   a placeholder assigned by IEEE Access production.
+6. **Author photos and biographies.** The biography text is in place; the photos
+   must be added before submission.

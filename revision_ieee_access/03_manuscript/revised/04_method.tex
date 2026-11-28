@@ -1,0 +1,102 @@
+% ============================================================================
+\section{Method}
+\label{sec:method}
+
+\subsection{Retrieval}
+For each query the retriever returns a pool of $K=100$ tickets from the allowed
+history $H$, and the generator receives the top $k=5$. The generator is called
+through the Hugging Face Transformers library \cite{b29}. The primary retriever is
+the frozen dense MiniLM bi-encoder \cite{b2,b28} over a FAISS index \cite{b3}; BM25
+\cite{b4} and hybrid reciprocal-rank fusion \cite{b5} are used in the matched
+comparison of Section~\ref{sec:repair}. All retrievers return pools of the same
+size. We do not compare retriever strength under different lift configurations,
+because absolute lift units are not comparable across score geometries.
+
+\subsection{Lift}
+Let $\mathrm{pos}$ and $\mathrm{neg}$ be the number of positive and negative judge
+scores for candidate $c$ in scope $s$, and $n=\mathrm{pos}+\mathrm{neg}$. The
+legacy Laplace lift is
+\begin{equation}
+p=\frac{\mathrm{pos}+\alpha}{n+\alpha+\beta},\qquad
+\ell_{\mathrm{L}}=\operatorname{clamp}_{[-c,c]}\!\left(
+(p-\tfrac12)\,\min\!\left(1,\tfrac{n}{2}\right)m\right),
+\label{eq:legacy}
+\end{equation}
+with $\alpha=\beta=1$, $m=0.80$ and $c=0.20$. The empirical-Bayes lift is
+\begin{equation}
+\bar p_s=\pi_s,\quad a=\kappa\pi_s,\quad
+p_{\mathrm{post}}=\frac{\mathrm{pos}+a}{n+\kappa},\qquad
+\ell_{\mathrm{EB}}=\operatorname{clamp}_{[-c,c]}\!\left(
+(p_{\mathrm{post}}-\pi_s)\,m\right),
+\label{eq:eb}
+\end{equation}
+where $\pi_s$ is the mean judge score of scope $s$ over the admissible training
+rows, with a global fallback when a scope has no rows. The finalist uses
+$\kappa=2$. Two differences from Eq.~\ref{eq:legacy} matter: the neutral point is
+the scope base rate rather than $0.5$, and the $n/2$ ramp is absent because the
+centring term already attenuates sparse evidence. The legacy ramp is one of the
+factors varied in the ablation, not an incidental implementation detail. A
+candidate with no evidence receives $\ell=0$.
+
+Pool-relative scaling expresses the bounded lift in retrieval-score units:
+\begin{equation}
+\ell'=\ell\cdot\frac{\lambda\,\sigma_{\mathrm{pool}}}{c},
+\label{eq:pool}
+\end{equation}
+where $\sigma_{\mathrm{pool}}$ is the standard deviation of the retrieval scores in
+the pool and $\lambda=1$ in the pool-scaled cells. The finalist uses absolute
+scaling, so Eq.~\ref{eq:pool} is applied only in the ablation. The clamp is applied
+before scaling. The parameters $\kappa$ and $\lambda$ were selected on dev over
+$\{2,5,10,20,50\}$ and $\{0.25,0.5,1,2,4\}$, respectively; the per-cell values are
+in the provenance table. The published legacy cell ($m=0.80$, $c=0.20$) is one
+cell in the same sweep, not a special default.
+
+\subsection{Scopes}
+The candidate lift is routed by the recorded resolving team and the reply-derived
+intent class. Global counts all training queries; Team restricts to the ticket's
+team; Class to its intent class; Team$\cap$Class to the intersection, the finest
+conventional scope; Backoff uses the finest scope with at least $k_{\min}=3$
+observations, falling back from intersection to team to class to Global. The
+finalist is Team$\cap$Class. The labels are held fixed across panels so that the
+manipulated factor is the data boundary. They are recorded outcomes, not
+predictions from the incoming ticket; results are therefore conditional on them,
+and Section~\ref{sec:discussion} states this limitation.
+
+\subsection{Control}
+The gate is a logistic model over four feature families: intervention shape (how
+many candidates the lift would promote, by how much, and the lift dispersion),
+baseline quality (top-1 and top-5 scores and margin), semantic evidence
+(query--candidate cosine statistics and score--lift correlations), and scope
+evidence (coverage and maximum lift per scope). It is trained with grouped
+cross-validation by ticket and frozen on dev. We report it as risk
+control, not as a source of gain. The hindsight bound applies feedback only when it
+helps on the observed outcome and therefore uses information no deployable policy
+has; it bounds the headroom, not the performance of a feasible gate. The gate
+numbers reported below are from the earlier evaluation on the familiar split; the
+strict panel supplies the always-on and hindsight-bound values, not a separately
+trained gate. The expected-value analysis is exploratory and is confined to the
+Appendix because its rows are two per ticket and are not independent.
+
+\subsection{Evaluation}
+The primary outcome is the per-ticket change in cosine between the generated first
+reply and the recorded reference reply, averaged over the evaluation tickets. For
+ticket $t$,
+\begin{equation}
+\Delta_t = \cos(\text{feedback reply}_t,\text{ref}_t)
+           - \cos(\text{baseline reply}_t,\text{ref}_t),
+\label{eq:delta}
+\end{equation}
+where $\text{ref}_t$ is the recorded reference reply. ROUGE-L \cite{b27} is
+reported as a secondary lexical metric. The expert assessment of
+Section~\ref{sec:expert} is the independent check of procedural correctness.
+Because the study sample contains changed pairs only, we report the conditional
+effect and the population effect, the latter as the changed share times the
+conditional effect; unchanged pairs have a difference of zero by construction.
+
+The automatic metric compares a generated reply with one recorded reply. It
+rewards similarity, not resolution success, and a ticket may admit several valid
+replies. BGE cosine \cite{b25} and BERTScore \cite{b26} were computed for the
+earlier evaluation; they are not recomputed for every history-only panel because the
+offline encoder is slow on CPU and the independent check in this article is the
+expert assessment. The Appendix states the difference in coverage. This is a
+limitation of the measurement, not a claim that cosine is a complete criterion.

@@ -1,0 +1,73 @@
+% ============================================================================
+\section{Validation}
+\label{sec:validation}
+
+\subsection{Secondary metric and seeds}
+ROUGE-L agrees in sign with cosine on all three panels, but on the strict
+conditioned panel its interval includes zero ($+0.0034$ $[-0.0036,+0.0105]$,
+$p=.47$), and on the strict blind panel it is $+0.0020$ $[-0.0049,+0.0093]$
+($p=.53$). We report it as a secondary metric, not as
+confirmation. The strict conditioned cosine interval excludes zero, but the lexical
+metric does not; this is one reason we call the effect metric-dependent.
+
+Five group-aware splits were generated for each structural rule. On the strict
+panel the legacy Laplace blind proxy is negative and significant in 4 of 5 splits,
+while the calibrated blind proxy is significant in 0 of 5; the calibrated point
+estimate remains slightly negative ($-0.0030$ to $-0.0005$). For conditioned
+feedback, the legacy Laplace proxy is significant in 0 of 5 strict splits, while
+the calibrated lift has a small positive point estimate in 2 of 5. The generated
+panels use seed 42; the other seeds test the retrieval-level conclusion and are not
+a second set of generated answers. The direction of the blind result is stable
+across seeds; the conditioned result is small enough that seed variation matters.
+
+\subsection{Power and multiplicity}
+The minimum detectable effect at 80\,\% power is 0.0103 for the strict conditioned
+cosine effect and 0.0101 for the strict protocol contrast. The observed values are
+0.0093 and 0.0085, so the design is not powered to estimate effects of that size
+precisely. We describe them as small and imprecise, not as evidence of absence. An
+equivalence claim would require a pre-specified margin and a corresponding test; we
+do not make one. Three families were fixed before adjustment (conditioned and blind
+across panels; reply similarity; protocol contrast) and Holm-corrected within
+family. The strict conditioned effect does not survive ($p=.1965$); the strict
+protocol contrast does ($p=.0322$) but lies below its MDE. The familiar blind harm
+survives ($p=.0009$), which is the one primary result that is both significant and
+above its MDE.
+
+\subsection{Cost}
+Table~\ref{tab:cost} reports end-to-end generation cost from the frozen runs.
+Generation takes 0.48--0.87 seconds per request on CPU, with two requests per ticket
+for baseline and feedback; a panel of 398--427 tickets takes 356--617 seconds. The
+calibrated lift adds no model call at inference; its cost is the offline feedback
+construction. Feedback-database preparation is a separate one-off cost and is not
+included. The cost is compatible with batch first-reply generation; it is not a
+real-time guarantee.
+
+\Table[!btp](width=\textwidth){End-to-end generation cost from the frozen runs
+(CPU, model loading and metric computation included). Each ticket uses two
+requests, baseline and feedback. Feedback-database preparation is a separate
+one-off cost.\label{tab:cost}}{
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Regime / source & Queries & Requests & Seconds & s/request \\
+\midrule
+Familiar / conditioned    & 398 & 709 & 616.6 & 0.87 \\
+Familiar / blind          & 398 & 749 & 363.0 & 0.48 \\
+Familiar / reply sim.     & 398 & 740 & 357.2 & 0.48 \\
+Duplicate / conditioned   & 398 & 671 & 564.0 & 0.84 \\
+Duplicate / blind         & 398 & 696 & 355.5 & 0.51 \\
+Duplicate / reply sim.    & 398 & 686 & 355.5 & 0.52 \\
+Strict / conditioned      & 427 & 625 & 532.0 & 0.85 \\
+Strict / blind            & 427 & 636 & 426.0 & 0.67 \\
+Strict / reply sim.       & 427 & 611 & 436.5 & 0.71 \\
+\bottomrule
+\end{tabular}}
+
+\subsection{What is not validated}
+This article does not have an external corpus, a second organization, real user
+feedback, or a completed second expert. BGE and BERTScore are not recomputed for
+every history-only panel; the independent check is the expert assessment, and it is one
+rater at the time of writing. The automatic metric compares to one recorded reply,
+and the routing labels are recorded outcomes rather than predictions. Hosted models
+can drift; the generation regime and hashes are pinned, but bit-level
+reproducibility is not claimed. These are limits on generalization and measurement,
+not implementation details, and Section~\ref{sec:discussion} states them as such.

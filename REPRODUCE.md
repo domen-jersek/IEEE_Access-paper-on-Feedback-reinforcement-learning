@@ -4,6 +4,13 @@ The current paper is the IEEE Access revision. Its commands are in **Revision**
 below. The P0–P6 sections document the submitted study and are kept for
 provenance; they are not the revision pipeline.
 
+The revised manuscript is `access_revision.tex`, assembled from
+`revision_ieee_access/03_manuscript/revised/`; the submitted `access.tex` is
+unchanged. Compile it with the IEEE Access class and the Formata fonts (for
+example in Overleaf). The local syntax check used a standard LaTeX class because
+the Formata fonts are not installed here; the article-level tables and figures
+were rendered and checked separately.
+
 All commands run from `paper_ieee_access/`. Every script writes an immutable
 `manifest_<run_id>.json`, updates `manifest_latest.json`, and appends a row to
 `results/registry.csv`. Set `USE_TF=0` once per shell to keep `transformers` from

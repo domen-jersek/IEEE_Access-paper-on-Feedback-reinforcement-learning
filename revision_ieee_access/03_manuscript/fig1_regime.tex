@@ -1,64 +1,64 @@
 % Figure 1 — data regime and allowed history.
 % Requires \usepackage{tikz}, \usetikzlibrary{positioning,fit,backgrounds,arrows.meta}
-% Include with \input{fig1_regime.tex} inside a figure environment.
 
 \begin{tikzpicture}[
     font=\footnotesize,
-    box/.style={draw, rounded corners=2pt, align=center, inner sep=4pt,
-                minimum height=8mm, fill=white},
+    box/.style={draw, rounded corners=2pt, align=center, inner sep=3pt,
+                minimum height=9mm, text width=3.1cm, fill=white},
     hist/.style={box, fill=blue!5},
     eval/.style={box, fill=orange!8},
-    note/.style={align=left, font=\scriptsize, text=black!70},
+    note/.style={align=left, font=\scriptsize, text=black!65},
     arr/.style={-{Latex[length=2mm]}, thick, black!65},
-    dash/.style={-{Latex[length=2mm]}, thick, dashed, black!45},
+    dashline/.style={-{Latex[length=2mm]}, thick, dashed, black!45},
     boundary/.style={draw=black!25, dashed, rounded corners=4pt}
 ]
 
-% Corpus and groups
-\node[box] (corpus) {1{,}595 canonical tickets\\37 teams, 17 intent classes};
-\node[box, right=8mm of corpus] (groups) {structural groups\\duplicate: 1{,}218 components\\prefix: 676 components};
-\node[box, right=8mm of groups] (split) {group-aware split\\duplicate 878/319/398\\prefix 856/312/427};
+% Top row: corpus -> groups -> split
+\node[box] (corpus) at (0,0) {1{,}595 canonical tickets\\37 teams, 17 intent classes};
+\node[box] (groups) at (4.2,0) {structural groups\\duplicate: 1{,}218 components\\prefix: 676 components};
+\node[box] (split) at (8.4,0) {group-aware split\\duplicate 878/319/398\\prefix 856/312/427};
 
 \draw[arr] (corpus) -- (groups);
 \draw[arr] (groups) -- (split);
 
-% History and evaluation partitions
-\node[hist, below=12mm of split, xshift=-22mm] (history) {allowed history $H$\\train partition only};
-\node[eval, below=12mm of split, xshift=24mm] (query) {evaluation ticket $q$\\$q \notin H$};
+% Partitions
+\node[hist] (history) at (5.6,-2.0) {allowed history $H$\\train partition only};
+\node[eval] (query) at (12.6,-2.0) {evaluation ticket $q$\\$q \notin H$};
 
-\draw[arr] (split.south) -- ++(0,-4mm) -| (history.north);
-\draw[arr] (split.south) -- ++(0,-4mm) -| (query.north);
+\draw[arr] (split.south) -- ++(0,-0.3) -| (history.north);
+\draw[arr] (split.south) -- ++(0,-0.3) -| (query.north);
 
 % What H feeds
-\node[hist, below=9mm of history, xshift=-30mm] (index) {dense index\\built from $H$};
-\node[hist, below=9mm of history] (bm25) {BM25 IDF\\estimated on $H$};
-\node[hist, below=9mm of history, xshift=30mm] (feedback) {feedback rows $(q',c')$\\$q',c' \in H$, $q' \neq c'$};
+\node[hist] (index) at (2.6,-4.0) {dense index\\built from $H$};
+\node[hist] (bm25) at (5.4,-4.0) {BM25 IDF\\estimated on $H$};
+\node[hist] (feedback) at (8.2,-4.0) {feedback rows $(q',c')$\\$q',c' \in H$, $q' \neq c'$};
+\node[hist] (priors) at (8.2,-5.6) {scope priors $\pi_s$\\from exactly those rows};
 
-\draw[arr] (history) -- (index);
-\draw[arr] (history) -- (bm25);
-\draw[arr] (history) -- (feedback);
-
-% Priors from the same rows
-\node[hist, below=7mm of feedback] (priors) {scope priors $\pi_s$\\from exactly those rows};
-\draw[arr] (feedback) -- (priors);
+\draw[arr] (history.south) -- ++(0,-0.3) -| (index.north);
+\draw[arr] (history.south) -- ++(0,-0.3) -| (bm25.north);
+\draw[arr] (history.south) -- ++(0,-0.3) -| (feedback.north);
+\draw[arr] (feedback.south) -- (priors.north);
 
 % Query path
-\node[eval, below=8mm of query] (retriever) {retriever and generator\\see $H$ only};
-\node[eval, right=7mm of retriever] (reference) {evaluation reference\\never read by retrieval,\\feedback or generation};
-\draw[arr] (query) -- (retriever);
-\draw[dash] (query) -- (reference);
+\node[eval] (retriever) at (12.6,-4.0) {retriever and generator\\see $H$ only};
+\node[eval] (reference) at (15.8,-4.0) {evaluation reference\\never read by retrieval,\\feedback or generation};
 
-% Feedback joins the query path
-\draw[arr] (feedback.east) -- ++(4mm,0) |- (retriever.east);
-\draw[arr] (priors.east) -- ++(2mm,0) |- (retriever.east);
+\draw[arr] (query.south) -- (retriever.north);
+\draw[dashline] (query.east) -- ++(0.4,0) |- (reference.north);
 
-% Boundary around history
+% Historical evidence joins the query path
+\draw[arr] (feedback.east) -- (retriever.west);
+\draw[arr] (priors.east) -| (retriever.south);
+
+% Boundary around training evidence
 \begin{scope}[on background layer]
-\node[boundary, fit=(history)(index)(bm25)(feedback)(priors), inner sep=4pt,
-      label={[font=\scriptsize, text=black!60]above:training evidence only}] {};
+\node[boundary, fit=(history)(index)(bm25)(feedback)(priors), inner sep=4pt] (trainbox) {};
 \end{scope}
+\node[note, rotate=90, anchor=south] at (0.55,-3.9) {training evidence only};
 
 % Note
-\node[note, below=4mm of bm25, xshift=-6mm] {The evaluated ticket's reference reply is outside the boundary.\\The conditioned judge sees a historical query's resolution, not $q$'s.};
+\node[note, text width=13.8cm, anchor=north west] at (0.2,-6.5)
+{The evaluated ticket's reference reply is outside the boundary. The conditioned
+judge sees a historical query's resolution, not $q$'s.};
 
 \end{tikzpicture}

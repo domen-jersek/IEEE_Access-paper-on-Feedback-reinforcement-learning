@@ -1,0 +1,18 @@
+% ============================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+The same reranking can look helpful or harmful depending on what the judge knows,
+but the larger determinant in our data is whether evaluation tickets share
+procedures or reply templates with the historical base. When they do not, the blind
+harm disappears, the calibrated gain is small and metric-dependent, and a free
+reply-similarity prior no longer matches the LLM judge. An expert assessment finds
+neither harm nor benefit on new procedures and shows that the familiar-procedure
+preference is explained by reply length. We conclude that feedback reranking gains
+reported on overlapping splits are partly borrowed from procedure overlap, that
+calibration removes harm without a confirmed gain, and that similarity to one
+recorded reply is not procedural correctness. The practical recipe is a set of
+hypotheses to test in other corpora, not a general law. The open questions are how
+the findings transfer to a second organization, to real user feedback, and to
+expert ratings from a larger and fully overlapped sample; the released artifacts
+and the frozen protocol make those replications directly comparable.

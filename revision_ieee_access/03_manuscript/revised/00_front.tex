@@ -1,0 +1,106 @@
+\documentclass{ieeeaccess}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{booktabs}
+\usepackage{flafter}
+\usepackage{url}
+\usepackage{stfloats}
+\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage{threeparttable}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit,backgrounds,arrows.meta}
+\setcounter{topnumber}{2}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.9}
+
+\usepackage{bm}
+\makeatletter
+\AtBeginDocument{\DeclareMathVersion{bold}
+\SetSymbolFont{operators}{bold}{T1}{times}{b}{n}
+\SetSymbolFont{NewLetters}{bold}{T1}{times}{b}{it}
+\SetMathAlphabet{\mathrm}{bold}{T1}{times}{b}{n}
+\SetMathAlphabet{\mathit}{bold}{T1}{times}{b}{it}
+\SetMathAlphabet{\mathbf}{bold}{T1}{times}{b}{n}
+\SetMathAlphabet{\mathtt}{bold}{OT1}{pcr}{b}{n}
+\SetSymbolFont{symbols}{bold}{OMS}{cmsy}{b}{n}
+\renewcommand\boldmath{\@nomath\boldmath\mathversion{bold}}}
+\makeatother
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+% ============================================================================
+% Revised manuscript for Access-2026-52910.
+% This file is a separate working copy. The submitted access.tex is untouched.
+% Numbers are frozen from the revision artifacts; tables and figures are
+% generated from the committed aggregate files.
+% ============================================================================
+
+\graphicspath{{paper_figures/}{./}{figures/}{revision_ieee_access/03_manuscript/figures/}}
+
+\begin{document}
+
+% Volume and year are updated for the resubmission; the DOI is assigned by
+% IEEE Access production and is left as a placeholder for review.
+\year{2026}
+\vol{14}
+\doi{10.1109/ACCESS.2026.XXXXXXX}
+
+\title{When Feedback Gains Are Borrowed: Procedure Overlap, Calibration, and the Limits of Similarity-Based Evaluation in RAG for IT Support}
+\author{\uppercase{Domen Jer\v{s}ek}\authorrefmark{1},
+\uppercase{Bla\v{z} Ka\v{z}i\v{c}}\authorrefmark{1}, AND \uppercase{Klemen Kenda}\authorrefmark{1}}
+
+\address[1]{ARTIFICIAL INTELLIGENCE DEPARTMENT - E3, Jo\v{z}ef Stefan Institute, Ljubljana, Slovenia
+(e-mail: domenjersek@gmail.com, blaz.kazic@ijs.si, klemen.kenda@ijs.si). ORCID: D. Jer\v{s}ek 0009-0009-1822-8277, B.
+Ka\v{z}i\v{c} 0000-0002-1335-7960, K. Kenda 0000-0002-4918-0650.}
+
+\tfootnote{This work has received funding from the European Union's Horizon Europe research
+and innovation programme under grant agreement No~101120218 (HumAIne). Views and opinions
+expressed are however those of the author(s) only and do not necessarily reflect those of the
+European Union or the granting authority. Neither the European Union nor the granting authority
+can be held responsible for them. The authors acknowledge the use of large language models for
+language editing and for the simulated feedback scoring described in the paper; all conceptual
+frameworks, analyses, and interpretations remain the sole responsibility of the authors.}
+
+\markboth
+{D. Jer\v{s}ek \headeretal: When Feedback Gains Are Borrowed}
+{D. Jer\v{s}ek \headeretal: When Feedback Gains Are Borrowed}
+
+\corresp{Corresponding author: Domen Jer\v{s}ek (e-mail: domenjersek@gmail.com).}
+
+\begin{abstract}
+Feedback from earlier ticket--candidate pairs is widely used to rerank retrieval
+candidates in retrieval-augmented generation for IT support. We show that the
+measured benefit depends less on the judge than on whether evaluation tickets share
+procedures with the historical base. Using 1,595 enterprise tickets, we rebuild the
+evaluation so that retrieval, feedback and priors use only the training partition,
+and compare familiar-procedure, duplicate-removed and strict
+procedure-disjoint regimes. Under strict disjointness, blind feedback no longer
+harms ($-0.044$ to $+0.001$) and the conditioned effect is small ($+0.009$),
+metric-dependent and not robust to multiplicity correction. A reply-similarity baseline that uses no LLM judge matches the LLM judge only
+when procedures overlap. A blinded expert
+assessment of 105 tickets finds no difference on new procedures; on familiar
+procedures the expert's apparent preference for feedback is explained by answer
+length, and expert and cosine metric disagree. Gains reported on overlapping splits
+are therefore partly borrowed from procedure overlap; calibration removes harm
+without a confirmed gain; and similarity to one recorded reply is not procedural
+correctness.
+\end{abstract}
+
+\begin{keywords}
+Feedback reranking, information retrieval, large language models,
+retrieval-augmented generation, evaluation validity, ticket resolution.
+\end{keywords}
+
+\titlepgskip=-21pt
+
+\maketitle

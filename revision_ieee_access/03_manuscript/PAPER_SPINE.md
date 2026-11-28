@@ -1,8 +1,9 @@
 # Paper spine — revision of Access-2026-52910
 
-**Status:** working document, 2026-11-25. Not the manuscript. It fixes the claim,
-the structure and the evidence before the sections are rewritten. The submitted
-`access.tex` is not modified.
+**Status:** working document, updated 2026-11-28. The revised manuscript draft is
+assembled in `access_revision.tex` from `revised/`; the submitted `access.tex` is
+untouched. The remaining work is the second expert, the optional generated
+ablation, the final compile with the IEEE Access fonts, and author approval.
 
 ## Title
 
@@ -145,7 +146,9 @@ sentence are updated. See `SIKDD_OVERLAP_AUDIT.md` and
 
 ## Artifacts prepared
 
-- `DRAFT_SECTIONS.md` — LaTeX-ready abstract, introduction, related-work additions,
+- `access_revision.tex` - assembled revised manuscript (submitted `access.tex`
+  untouched), built from `revised/00_front.tex` through `revised/14_bios.tex`.
+- `DRAFT_SECTIONS.md` - LaTeX-ready abstract, introduction, related-work additions,
   data regimes, method, results, repair, expert evaluation, validation, discussion
   and conclusion.
 - `TABLES.tex` — Tables 1–6 with numbers from the aggregate CSVs.

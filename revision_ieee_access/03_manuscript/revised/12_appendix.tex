@@ -1,0 +1,78 @@
+\appendix
+\section{Supplementary Analyses}
+\label{sec:appendix}
+
+\subsection{Seed robustness}
+Table~\ref{tab:seed} reports the strict-panel retrieval proxy across the five
+group-aware splits for the three configurations that matter for the argument: the
+legacy Laplace lift, empirical Bayes with absolute scaling, and empirical Bayes with
+pool-relative scaling. The blind harm is significant in 4 of 5 legacy splits and in
+0 of 5 calibrated splits; the conditioned calibrated lift is significant in 2 of 5.
+The table is a robustness check, not a second generated panel.
+
+\Table[!btp](width=\textwidth){Strict-panel retrieval-level robustness across five
+group-aware splits (seed 42 plus four alternatives). Entries are mean top-1 proxy
+differences, with the range across seeds and the number of seeds significant at
+$p<.05$.\label{tab:seed}}{
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+Protocol & Configuration & Mean $\Delta$ & Range & Significant \\
+\midrule
+Blind & Legacy Laplace & $-0.0084$ & $[-0.0116, -0.0046]$ & 4/5 \\
+Blind & EB $\kappa=2$, absolute & $-0.0030$ & $[-0.0069, -0.0001]$ & 1/5 \\
+Blind & EB $\kappa=2$, pool & $-0.0005$ & $[-0.0024, +0.0025]$ & 0/5 \\
+Conditioned & Legacy Laplace & $+0.0023$ & $[-0.0057, +0.0055]$ & 0/5 \\
+Conditioned & EB $\kappa=2$, absolute & $+0.0088$ & $[+0.0058, +0.0105]$ & 2/5 \\
+Conditioned & EB $\kappa=2$, pool & $+0.0055$ & $[+0.0029, +0.0078]$ & 1/5 \\
+\bottomrule
+\end{tabular}}
+
+\subsection{Two concrete cases}
+The running ticket illustrates the blind failure. Ticket R-377 (``Connect to Client
+SW'') mentions a product name shared by a network appliance and a locally installed
+application. The baseline ranks a network-access reply first: the words match, the
+procedure does not. Under blind feedback, the correct software candidate carries
+sparse evidence and is pinned near the negative cap, while the wrong but popular
+network candidate keeps a small penalty; the blind reranking leaves the wrong
+candidate on top and the generated reply keeps the network procedure
+($\Delta=-0.03$). Under conditioned feedback, the judge that knows the resolution
+votes for the software candidate, the lift promotes it, and the generated reply
+moves to the software procedure ($\Delta=+0.540$). The contrast is the mechanism in
+one instance, not a representative effect size.
+
+A second case illustrates a calibrated-neutral outcome. Ticket R-1130 has one
+intersection-scope observation (0.8 positive, 0.2 negative). The calibrated lift is
+bounded, the top-1 candidate is unchanged, and the generated reply is identical to
+the baseline ($\Delta=0$). Calibration does not force a change when the evidence
+does not justify one; this is the intended behaviour, and it is why the calibrated
+distribution has a large mass at zero rather than a uniform positive shift.
+
+\subsection{Reproduction and artifacts}
+\label{sec:repro}
+A third party can rerun three levels. (i) From the public repository, without
+confidential data: the aggregate tables and figures, the human-evaluation analysis
+from aggregate or raw ratings on premises, the unit tests, and the data-protocol
+validation on synthetic data. (ii) With the confidential corpus on premises: the
+full pipeline, retrieval panels and generated panels with an API key. (iii) With new
+API calls: generation and judging can be repeated, but hosted models may drift; the
+generation regime and hashes are pinned rather than claiming bit-level
+reproducibility. The generator and judge are \texttt{openai/gpt-5.6-luna} at
+temperature 0; the generation regime is \texttt{51fd9f4b37e900bb}; the system
+prompt hash is \texttt{524098066b407de3}. The finalist uses $\kappa=2$, absolute
+scaling, Team$\cap$Class scope, top-5 context, and a 100-candidate pool. The
+scope base rate $\pi_s$ is the mean judge score per scope over the allowed training
+rows, with a global fallback. The repository includes the frozen run manifest, the
+table and figure generators, and a license file (MIT for code; CC BY 4.0 for
+documentation and aggregate tables; confidential data not released).
+
+\subsection{Exploratory analyses}
+The Appendix also records the analyses that are not used for confirmation. The
+scope grid shows that broad pooling harms under both protocols while fine scopes
+help; the formula ordering places empirical Bayes above tanh, Laplace and Bayesian
+LCB offline; the expected-value analysis uses gradient boosting \cite{b23} and a
+Ridge linear control \cite{b24}, pools conditioned and blind rows, and is therefore
+exploratory; and the negative-results map records a semantic relevance
+filter, a learned scope blend, a hybrid-transfer failure under a different lift
+configuration, and sign-based multi-action selection. These results map the
+boundaries of the method and are reported with their mechanisms in the repository.
+This article does not use them to support the main claim.

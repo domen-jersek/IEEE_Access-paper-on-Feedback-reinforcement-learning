@@ -19,9 +19,9 @@ print size, main results separate from exploratory panels.
 |---|---|---|---|
 | **F1** | Data-regime schematic: corpus → structural groups → group-aware split → allowed history; what the retriever, feedback rows and priors may see | design; no data | submitted F1 (judge schematic), redrawn |
 | **F2** | Generated effects: three regimes × three evidence sources, forest plot with 95 % intervals; protocol contrast as a second panel | `tables/generated_deltas.csv`, `tables/generated_protocol_contrast.csv` | submitted F2 (reversal) |
-| **F3** | Expert evaluation: (a) correctness difference with intervals, (b) length-matched vs unmatched, (c) expert vs cosine scatter | human notebook / `results/alberto/` | none (new) |
+| **F5** | Expert evaluation: (a) correctness difference with intervals, (b) length-matched vs unmatched, (c) expert vs cosine scatter | human notebook / `results/alberto/` | none (new) |
 | **F4** | Lift saturation: score distribution and share at the cap for n votes; scope base rates in a small inset | `LIFT_DIAGNOSTICS.md`, `tables/score_distribution.csv`, `vote_saturation.csv` | submitted F5 (mechanism), relabelled |
-| **F5** | Matched retrievers: feedback gain under one configuration for dense, BM25, hybrid, absolute vs pool-std | `tables/matched_retrievers.csv` | submitted F4 (retriever) |
+| **F3** | Matched retrievers: feedback gain under one configuration for dense, BM25, hybrid | `tables/matched_retrievers.csv` | submitted F4 (retriever) |
 | **F6** | Calibrated null (appendix): effect with intervals for legacy and calibrated cells on the strict panel | `tables/generated_deltas.csv` | submitted F11, relabelled |
 
 ## What happens to the submitted figures
@@ -31,7 +31,7 @@ print size, main results separate from exploratory panels.
 | F1 judge/protocol | Redraw as the data-regime schematic (F1). |
 | F2 reversal | Replace with the regime forest (F2); the legacy reversal moves to a table. |
 | F3 scope | Keep in the appendix, relabelled; the scope ablation table is the main evidence. |
-| F4 retriever | Replace with matched retrievers (F5); the submitted version confounded lift settings. |
+| F4 retriever | Replace with matched retrievers (F3); the submitted version confounded lift settings. |
 | F5 mechanism | Keep, relabel as F4; add the measured score distribution. |
 | F6 rescue | Appendix only; one example is not a result. |
 | F7 negatives | Appendix; keep the negative-results map. |

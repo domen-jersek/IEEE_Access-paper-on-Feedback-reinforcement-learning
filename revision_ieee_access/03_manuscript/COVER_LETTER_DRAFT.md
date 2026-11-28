@@ -33,7 +33,7 @@ statistics, feedback rows and scope priors to the training partition. The
 submitted "procedure-disjoint" split shares an identical reply for 12.8 % and a
 reply opening for 53.3 % of its evaluation tickets with training; the new strict
 panel shares neither. Under that control, blind harm disappears, the conditioned
-effect is small and metric-dependent, and a free reply-similarity baseline is
+effect is small and metric-dependent, and a reply-similarity baseline that uses no LLM judge is
 competitive only where procedure overlap remains.
 
 We also add the controlled one-factor ablation, the tuned Laplace baseline, the
@@ -43,8 +43,8 @@ blinded expert assessment of procedural correctness on 105 changed pairs. The
 expert study is reported as a validity check, not as confirmation: on new
 procedures it finds no difference; on familiar procedures the apparent preference
 for feedback is explained by answer length, and expert and cosine judgement
-diverge. One expert has completed the sample; the second has been scheduled, and
-inter-rater agreement will be added before publication.
+diverge. One expert has completed the sample; the second is in progress, and inter-rater
+agreement will be added before publication.
 
 The revised claims are narrower and, we believe, more useful. Procedure overlap
 explains part of the gain reported on random splits; calibration removes harm
@@ -65,8 +65,8 @@ text, tables or figures are reused.
 The code and aggregate tables are available in the public repository. The ticket
 text, feedback pairs and generated answers remain confidential under the data
 agreement; the manuscript states exactly what a third party can rerun and what
-requires on-premises access. A license file is included: [code: MIT; documentation
-and aggregate tables: CC BY 4.0; data not released]. The expert evaluation used
+requires on-premises access. The code is released under MIT; documentation and aggregate tables under CC BY
+4.0; the confidential data are not released. The expert evaluation used
 anonymized tickets and stored only aggregate ratings; no ticket text or raw
 ratings are released.
 

@@ -1,0 +1,135 @@
+% ============================================================================
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Retrieval-augmented generation and reranking}
+Retrieval-augmented generation conditions a generator on retrieved evidence
+\cite{b1}, and dense bi-encoders such as Sentence-BERT made semantic retrieval
+practical \cite{b2,b28}; Facebook AI Similarity Search (FAISS) provides the
+nearest-neighbour infrastructure at scale \cite{b3}. Sparse retrieval remains a
+strong baseline \cite{b4}, hybrid fusion by reciprocal rank fusion (RRF) is a
+common robustness measure \cite{b5}, and cross-encoder reranking improves the top
+of the ranking at higher cost \cite{b6}. Dense passage retrieval established the
+two-stage recipe we follow \cite{b7}. All of this machinery is fixed in our study;
+the object of study is the feedback signal applied on top of it. Reranking matters
+most where the first stage is imperfect: a cross-encoder sees the query and
+candidate jointly and can correct ordering errors that a bi-encoder cannot
+\cite{b6}. RAG evaluation, in turn, separates retrieval quality from answer
+quality \cite{b1,b40,b41}, a distinction that our proxy-versus-generated
+divergence reproduces.
+
+\subsection{Learning to rank from feedback signals}
+Relevance feedback is one of the oldest ideas in information retrieval:
+Rocchio-style query modification moves the query toward relevant documents
+\cite{b8}, and relevance-based language models estimate a query model from feedback
+documents \cite{b9}. Learning-to-rank inherits the same assumption---that logged
+interactions carry usable relevance signal. Two questions that this literature
+often leaves implicit are the ones we make explicit: \emph{what the feedback source
+knows}, and \emph{how its evidence is converted into a score}. Feedback in
+recommender systems, for instance, is known to carry popularity and base-rate bias
+\cite{b10}; we show an analogous pathology in judge-driven ticket feedback,
+identify its arithmetic cause, and repair it without labels. A second strand studies
+implicit feedback and click models, where exposure and position bias must be
+corrected before interactions can be treated as relevance \cite{b34,b37}. Our
+setting removes exposure bias by judging every candidate in a pool, but it
+introduces a different pathology: the judge's evidence is sparse and zero-heavy,
+and the score construction amplifies that sparsity.
+
+\subsection{LLM-as-judge validity}
+Large language models are increasingly used as relevance and quality judges
+\cite{b11,b12,b35,b36}. Their known failure modes include position bias, verbosity
+bias, and self-preference \cite{b13,b14}. Our protocols differ from ordinary LLM
+judging in one decisive respect: the conditioned judge receives the historical
+resolution of the training query, which makes it a \emph{resolution-informed}
+judge and an upper bound on what resolution-aware evidence can buy. It is
+deployable for historical pairs: both tickets in a historical pair have known
+resolutions, so the conditioned votes can be precomputed for the historical base.
+At inference on a new ticket, however, no resolution exists yet, so only blind
+votes can be generated for that ticket. We therefore report both protocols side by side, state exactly
+what each judge and metric sees, and add an expert assessment of the generated
+answers (Section~\ref{sec:expert}). Judge agreement is usually reported in
+aggregate; the earlier evaluation found low per-ticket agreement between its
+independent judge and the automatic metric, which we treat as a limitation of the
+measurement rather than as evidence against the aggregate signal.
+
+\subsection{Calibration, selective prediction, and abstention}
+Converting scores into calibrated quantities is a classical problem
+\cite{b15,b16,b17}, and empirical Bayes provides a standard way to stabilize rate
+estimates built from few observations \cite{b18,b19,b38,b39}. Decision theory
+prescribes abstention when expected utility is negative \cite{b20}; selective
+prediction operationalizes this for classifiers \cite{b21}, and cost-sensitive
+learning makes the trade-off explicit \cite{b22}. Our gate is a selective predictor
+over tickets. Bayesian smoothing with a Beta or Dirichlet prior is standard in
+language modelling and information retrieval \cite{b18,b19}; our empirical-Bayes
+lift is a direct application of that idea to a per-candidate rate estimated from
+very few votes. We do not claim the smoother as a methodological contribution; the
+contribution is the demonstration that it removes harm without creating a confirmed
+gain once procedure overlap is controlled.
+
+\subsection{Relationship to prior work}
+\label{sec:prior}
+Two earlier papers by the authors are the direct starting point. \cite{b31}
+introduced the retrieval and generation pipeline for first-reply generation;
+\cite{b32} added LLM-judge feedback as a retrieval modifier and reported an
+exploratory, conditioned-only analysis on 250 leave-one-out queries with a
+different judge, in which no always-on method was significant and retrieval-score
+gates were indistinguishable from always-on. The present article re-uses the
+pipeline and the legacy lift formula as fixed components. Its contribution is
+different: it treats the data regime as the experimental variable, audits the
+earlier split, restricts retrieval, feedback and priors to an allowed history,
+isolates the components of the calibration repair, adds a free reply-similarity
+baseline and a matched-retriever comparison, and reports a blinded expert
+assessment of procedural correctness. Table~\ref{tab:prior} compares the studies
+side by side. No text, tables or figures are reused; the overlap is limited to the
+cited background, and the connection is disclosed here as required for expanded
+conference versions.
+
+\Table[!btp](width=\textwidth){Relationship to the authors' prior conference
+papers and to the earlier evaluation of the same pipeline. This article shares the
+corpus and the base pipeline; the data-regime control, split audit, controlled
+repair, reply baseline, matched retrievers, statistical sensitivity analysis and
+expert evaluation are new.\label{tab:prior}}{
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}p{0.15\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+ & SIKDD 2025 & SIKDD 2026 & Earlier evaluation & This article \\
+\midrule
+Role & Retrieval + generation pipeline & Exploratory feedback-aware retrieval & Protocol as experimental variable & Data regime and measurement validity \\
+Corpus & Enterprise IT tickets & 1,596 tickets, 37 teams & 1,595 tickets, 37 teams, 17 classes & Same 1,595; canonical IDs unchanged \\
+Evaluation queries & --- & 250 leave-one-out & 878/319/398 + 5 seeds; 390 ``disjoint'' eval & Same legacy splits; history-only 398/398/427 \\
+Judge & --- & gpt-4o-mini, conditioned only & gpt-5.6-luna, conditioned and blind & Same two protocols, restricted to history \\
+Feedback pairs & --- & 102,722 conditioned & 175,600 per protocol & 94,913 / 52,321 / 58,826 admissible \\
+Lift & --- & Laplace, $m=0.80$, cap $0.20$ & Legacy Laplace as object of study & Tuned Laplace, EB, scaling, scope, backoff \\
+Procedure-disjoint & No & No & Claimed, 390 eval; not actually disjoint & Versioned groups; duplicate and prefix panels; 5 seeds \\
+History-only evidence & No & No & No & Yes: index, BM25, feedback rows, priors \\
+Reply-similarity baseline & No & No & No & Exact and BGE reply similarity \\
+Matched retrievers & No & No & Confounded lift settings & One configuration; dense, BM25, hybrid \\
+Human evaluation & No & No & No & 105 blinded items; E1 complete, E2 pending \\
+Statistics & --- & Bootstrap CIs; no always-on significance & Dev-frozen thresholds; 39 runs; no multiplicity correction & Pre-specified families, Holm, MDE, exact McNemar \\
+Main finding & Pipeline works & Conditioned feedback helps weak baselines; gates fail & Same reranking helps conditioned, harms blind & Harm is overlap-driven; calibrated gain small and metric-dependent; expert and cosine diverge \\
+\bottomrule
+\end{tabularx}}
+
+\subsection{Gap}
+Across these literatures, the information available to the feedback source is
+rarely separated from the mechanism that converts evidence into scores, and the
+overlap between evaluation tickets and the historical base is rarely measured.
+This makes ``feedback helps'' and ``feedback hurts'' results hard to reconcile.
+It is also rare to report where a control mechanism removes harm and where it
+merely removes no-ops. This paper separates the two axes experimentally and asks
+whether the gain survives a strict data boundary. A practical consequence,
+developed in Section~\ref{sec:repair}, is that calibration and control should be
+compared as tested configurations rather than assumed to be independent
+improvements.
+
+\subsection{RAG evaluation and procedural correctness}
+RAG evaluation suites score faithfulness, answer relevance and context relevance
+against retrieved evidence \cite{b40,b41,b42}, and retrieval benchmarks provide
+zero-shot comparisons across domains \cite{b43}. Those measures answer whether an
+answer is supported by its context; they do not answer whether the answer describes
+the procedure that resolves the ticket. A reply can be faithful to a retrieved
+passage and still recommend the wrong form, redirect or action. Our expert
+assessment is a reminder that the two questions are different. The saturation
+diagnostic we develop---the share of candidates pinned at the lift cap and the
+share of exact-zero judge scores---is cheap to compute on any feedback source and
+can be used as a pre-deployment check even when no expert is available.
