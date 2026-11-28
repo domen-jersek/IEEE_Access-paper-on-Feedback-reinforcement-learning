@@ -93,6 +93,8 @@ python experiments/30_decision_and_cost.py
 python experiments/34_lift_diagnostics.py --panel disjoint_prefix
 python experiments/36_revision_figures.py
 python experiments/37_flatten_submission.py
+# optional generated ablation, only after the six cells exist:
+# python experiments/38_generated_ablation.py --panel disjoint_prefix --split dev
 ```
 
 `28_` runs one feedback configuration across dense, BM25 and hybrid retrieval.

@@ -5,9 +5,9 @@
 The reviewers asked for generated-answer confirmation of the factor isolation, not
 only the retrieval-level proxy. The revision currently has:
 
-- a one-factor dev ablation at retrieval level (Table 3A), and
+- a one-factor dev ablation at retrieval level (Table 4), and
 - generated answers for the frozen finalist (EB κ=2, intersection, absolute
-  scaling) on all three data regimes (Table 2).
+  scaling) on all three data regimes (Table 3).
 
 That is enough to show which configuration was selected and to confirm the
 finalist, but it does not literally provide generated answers for EB + pool
@@ -25,11 +25,12 @@ On the prefix panel, dev split (312 queries), both protocols:
 | 3 | Laplace | Backoff | absolute | fallback effect without EB |
 | 4 | EB κ=2 | Team∩Class | absolute | finalist reference (already generated on eval; dev is new) |
 
-Four cells × two protocols = **8 runs**. The baseline answer is identical across
-cells and should be served from the generation cache; only the feedback answer is
-new. The retrieval-level ablation already covers the duplicate panel; if the
-editor requires generated duplicate-panel cells, repeat the same 8 runs with
-`--panel disjoint_duplicate` (16 runs total).
+Six required runs: the first three cells, each for conditioned and blind. The
+EB-absolute reference is optional (two more runs). The baseline answer is
+identical across cells and should be served from the generation cache; only the
+feedback answer is new. The retrieval-level ablation already covers the duplicate
+panel; if the editor requires generated duplicate-panel cells, repeat the same
+six runs with `--panel disjoint_duplicate`.
 
 ## Commands
 
@@ -70,33 +71,39 @@ python experiments/23_revision_evaluate.py --panel disjoint_prefix --split dev `
 ```
 
 Run the conditioned and blind commands sequentially or with a small concurrency
-limit; each run already uses six concurrent requests.
+limit; each run already uses six concurrent requests. The optional EB-absolute
+reference cells use `--tag ebabs_m4`.
+
+After the runs, aggregate them with:
+
+```powershell
+python experiments/38_generated_ablation.py --panel disjoint_prefix --split dev
+```
 
 ## Cost
 
 - 312 queries per run × 2 requests (baseline + feedback) = 624 requests per run.
-- Baseline requests are shared across the four cells and should hit the cache;
+- Baseline requests are shared across the cells and should hit the cache;
   assume 312 new feedback requests per run plus cache misses for the first
-  baseline, i.e. roughly **2,500–3,000 new requests for 8 runs**.
-- At 0.48–0.87 s per request, **20–45 minutes of wall-clock time** on the same
+  baseline, i.e. roughly **1,900–2,300 new requests for the six required runs**.
+- At 0.48–0.87 s per request, **15–35 minutes of wall-clock time** on the same
   CPU setup, plus model latency.
 - API cost depends on the current `openai/gpt-5.6-luna` price and the prompt
   length; it cannot be estimated reliably from the repository. The last nine
   generated panels (3,513 prompts) are the closest reference.
 
-**Decision needed:** approve the 8 strict-panel dev runs (recommended), approve
-both panels (16 runs), or keep the retrieval-level ablation and state the
-limitation explicitly. If approved, the runs should be executed before the
-manuscript rewrite so Table 3 can include generated cells.
+**Decision needed:** approve the six required strict-panel dev runs (recommended),
+add the two EB-absolute reference runs, approve both panels, or keep the
+retrieval-level ablation and state the limitation explicitly. If approved, the
+runs should be executed before submission so Table 4 can include generated cells.
 
 ## Analysis
 
 The existing `experiments/26_generated_panels.py` reads the fixed
 `M4_intersection_eval_{source}_rev_{panel}` folders and does not know the `_abl_`
-suffix. Add a `--tag`/`--pattern` option or a small `37_generated_ablation.py`
-that:
+suffix. `experiments/38_generated_ablation.py` reads the six `_abl_` folders and:
 
-1. locates the eight `*_abl_*` details files;
+1. locates the six `*_abl_*` details files (eight with the optional reference);
 2. aligns by `ticket_id` across cells and protocols;
 3. computes paired Δ cosine with ticket-level bootstrap intervals;
 4. writes one table with cell × protocol, plus the direct conditioned−blind
