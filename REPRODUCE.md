@@ -92,6 +92,7 @@ python experiments/29_power_multiplicity.py
 python experiments/30_decision_and_cost.py
 python experiments/34_lift_diagnostics.py --panel disjoint_prefix
 python experiments/36_revision_figures.py
+python experiments/37_flatten_submission.py
 ```
 
 `28_` runs one feedback configuration across dense, BM25 and hybrid retrieval.
