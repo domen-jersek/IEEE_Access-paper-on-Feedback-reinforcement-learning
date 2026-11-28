@@ -41,7 +41,7 @@ matched feedback configuration across dense, BM25 and hybrid retrieval, direct
 protocol contrasts with Holm correction and minimum detectable effects, and a
 blinded expert assessment of procedural correctness on 105 changed pairs. The
 expert study is reported as a validity check, not as confirmation: on new
-procedures it finds no difference; on familiar procedures the apparent preference
+procedures it does not confirm a difference; on familiar procedures the apparent preference
 for feedback is explained by answer length, and expert and cosine judgement
 diverge. One expert has completed the sample; the second is in progress, and inter-rater
 agreement will be added before publication.

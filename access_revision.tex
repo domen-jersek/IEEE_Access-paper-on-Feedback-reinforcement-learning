@@ -88,7 +88,7 @@ procedure-disjoint regimes. Under strict disjointness, blind feedback no longer
 harms ($-0.044$ to $+0.001$) and the conditioned effect is small ($+0.009$),
 metric-dependent and not robust to multiplicity correction. A reply-similarity baseline that uses no LLM judge matches the LLM judge only
 when procedures overlap. A blinded expert
-assessment of 105 tickets finds no difference on new procedures; on familiar
+assessment of 105 tickets does not confirm a difference on new procedures; on familiar
 procedures the expert's apparent preference for feedback is explained by answer
 length, and expert and cosine metric disagree. Gains reported on overlapping splits
 are therefore partly borrowed from procedure overlap; calibration removes harm
@@ -159,7 +159,7 @@ from procedures and reply templates that the evaluation ticket shares with
 history.
 
 A blinded expert assessment of 105 changed pairs completes the picture. On new
-procedures the expert sees no difference between baseline and feedback (strict
+procedures the expert does not confirm a difference between baseline and feedback (strict
 blind $-0.030$ $[-0.121,+0.061]$; strict conditioned $0.000$
 $[-0.088,+0.088]$). On familiar procedures the expert prefers feedback by $+0.147$
 $[0.000,+0.294]$, but the feedback replies are 173 characters longer, the
@@ -193,7 +193,7 @@ metric-dependent, and no cell survives multiplicity correction with a magnitude
 above the design's detection threshold. A free reply-similarity prior is
 competitive only where procedure overlap remains.
 \item \textbf{An expert validity check separates procedure from similarity.} The
-blinded assessment finds no difference on new procedures; on familiar procedures
+blinded assessment does not confirm a difference on new procedures; on familiar procedures
 the apparent preference for feedback is explained by answer length, and expert and
 cosine judgements diverge. This is direct evidence that the automatic metric and
 the human judgement capture different things, and that neither is a clean
@@ -953,8 +953,8 @@ point in opposite directions.}
 \label{fig:expert}
 \end{figure*}
 
-Three results matter. First, on the strict panels the expert sees no benefit and no
-harm: both intervals include zero and the point estimates are within $\pm0.03$,
+Three results matter. First, on the strict panels the expert does not confirm
+benefit or harm: both intervals include zero and the point estimates are within $\pm0.03$,
 matching the small automatic effects there. Second, the familiar arm shows a raw
 $+0.147$, but the feedback replies are 173 characters longer and the expert
 preference tracks that difference (Spearman $+0.63$); among pairs whose lengths
@@ -1175,7 +1175,7 @@ but the larger determinant in our data is whether evaluation tickets share
 procedures or reply templates with the historical base. When they do not, the blind
 harm disappears, the calibrated gain is small and metric-dependent, and a free
 reply-similarity prior no longer matches the LLM judge. An expert assessment finds
-neither harm nor benefit on new procedures and shows that the familiar-procedure
+does not confirm harm or benefit on new procedures and shows that the familiar-procedure
 preference is explained by reply length. We conclude that feedback reranking gains
 reported on overlapping splits are partly borrowed from procedure overlap, that
 calibration removes harm without a confirmed gain, and that similarity to one

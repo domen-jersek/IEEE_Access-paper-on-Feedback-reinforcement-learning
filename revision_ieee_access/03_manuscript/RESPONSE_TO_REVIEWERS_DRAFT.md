@@ -279,7 +279,7 @@ discordant pairs per arm, this is a validity check, not a confirmatory test; we
 do not claim that the expert confirms either harm or benefit.
 
 **Action.** New Section 8, Table 6 and Figure 5; the abstract and conclusion say
-that the expert finds no difference on new procedures and that the
+that the expert does not confirm a difference on new procedures and that the
 familiar-procedure preference is length-driven. Inter-rater agreement will be
 added when the second expert completes; the analysis reports percent agreement,
 Cohen's κ with bootstrap interval, weighted κ, and PABAK/AC1 on the common items.
