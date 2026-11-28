@@ -71,8 +71,8 @@ not significant, and the effect is below the 80 % MDE (0.0103). The calibrated
 gain is therefore not confirmed. The title, abstract, RQ1 and conclusion are
 rewritten around this result.
 
-**Action.** New title and abstract; new RQ1; Section 5 documents the legacy
-result and its scope; Section 6 makes the strict panel primary; Section 10
+**Action.** New title and abstract; new RQ1; Section 5 documents the random-split
+baseline and its scope; Section 6 makes the strict panel primary; Section 10
 states that no calibrated gain is claimed. The words "opposite sign" and
 "for free" are removed where they imply a causal or confirmed benefit.
 
