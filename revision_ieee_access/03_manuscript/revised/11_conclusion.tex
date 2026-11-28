@@ -5,10 +5,10 @@
 The same reranking can look helpful or harmful depending on what the judge knows,
 but the larger determinant in our data is whether evaluation tickets share
 procedures or reply templates with the historical base. When they do not, the blind
-harm disappears, the calibrated gain is small and metric-dependent, and a free
-reply-similarity prior no longer matches the LLM judge. An expert assessment finds
-does not confirm harm or benefit on new procedures and shows that the familiar-procedure
-preference is explained by reply length. We conclude that feedback reranking gains
+harm disappears, the calibrated gain is small and metric-dependent, and a
+reply-similarity prior that uses no LLM judge no longer matches the LLM judge. The
+expert assessment does not confirm harm or benefit on new procedures and shows that
+the familiar-procedure preference is explained by reply length. We conclude that feedback reranking gains
 reported on overlapping splits are partly borrowed from procedure overlap, that
 calibration removes harm without a confirmed gain, and that similarity to one
 recorded reply is not procedural correctness. The practical recipe is a set of

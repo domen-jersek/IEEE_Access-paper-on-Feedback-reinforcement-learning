@@ -19,7 +19,7 @@ legacy cell ($m=0.80$, cap $=0.20$) ranks 9/25 on duplicate and 23/25 on
 prefix.\label{tab:ablation}}{
 \begin{tabular}{@{}llrrrrr@{}}
 \toprule
-Configuration & Scope & $\Delta$ top-1 [95\,\% CI] & $p$ & Cap (\%) & Zero (\%) & Ratio \\
+Configuration & Scope & Change in top-1 [95\,\% CI] & $p$ & Cap (\%) & Zero (\%) & Ratio \\
 \midrule
 \multicolumn{7}{@{}l}{\emph{Duplicate panel (398 tickets; 319 dev queries)}} \\
 Legacy Laplace            & Team$\cap$Class & $+0.0370$ $[+0.0180, +0.0567]$ & .013 & 42.5 & 17.5 & 2.30 \\
@@ -66,7 +66,7 @@ families. Brackets are 95\,\% bootstrap intervals. Absolute scaling is omitted
 because lift units are not comparable across retrievers.\label{tab:matched}}{
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
-Retriever & Familiar $\Delta$ & $p$ & Strict $\Delta$ & $p$ \\
+Retriever & Familiar change & $p$ & Strict change & $p$ \\
 \midrule
 Dense MiniLM & $+0.0334$ $[+0.0202, +0.0475]$ & $<.001$ & $+0.0078$ $[+0.0030, +0.0137]$ & .131 \\
 BM25         & $+0.0641$ $[+0.0466, +0.0821]$ & $<.001$ & $+0.0088$ $[+0.0021, +0.0167]$ & .054 \\

@@ -5,8 +5,8 @@ This folder contains a flat copy of the revised manuscript and its figures:
 ```
 access_revision.tex   clean manuscript source
 ieeeaccess.cls        IEEE Access class used by the submitted version
-fig1_regime.tex       TikZ data-regime schematic
 figures/
+  fig1_regime.pdf     data-regime schematic
   fig2_generated.pdf  generated-answer effects
   fig3_matched.pdf    matched-retriever comparison
   fig4_saturation.pdf lift saturation
@@ -19,13 +19,10 @@ The submitted `access.tex` is not included and is not modified.
 
 Use the official IEEE Access LaTeX template and fonts (the class expects the
 Formata fonts and `IEEEtran.cls`). The simplest route is the IEEE Access Overleaf
-template: replace its `access.tex` with `access_revision.tex`, upload `figures/`
-and `fig1_regime.tex`, and compile with pdfLaTeX. A vanilla TeX Live installation
+template: replace its `access.tex` with `access_revision.tex`, upload `figures/`,
+and compile with pdfLaTeX. A vanilla TeX Live installation
 may fail on the Formata fonts; that is a template-font issue, not a manuscript
 error.
-
-The manuscript uses `tikz` with `positioning`, `fit`, `backgrounds` and
-`arrows.meta`; these are in a standard TeX installation.
 
 ## Before upload
 

@@ -7,13 +7,10 @@
 \usepackage{booktabs}
 \usepackage{flafter}
 \usepackage{url}
-\usepackage{stfloats}
 \usepackage{hyperref}
 \usepackage{xurl}
 \usepackage{threeparttable}
 \usepackage{tabularx}
-\usepackage{tikz}
-\usetikzlibrary{positioning,fit,backgrounds,arrows.meta}
 \setcounter{topnumber}{2}
 \setcounter{bottomnumber}{2}
 \setcounter{totalnumber}{4}
@@ -190,8 +187,8 @@ stronger retrieval reduces the benefit is a scaling artefact.
 \item \textbf{The calibrated outcome is a harm removal, not a confirmed gain.} On
 strict history, the blind harm disappears, the conditioned effect is small and
 metric-dependent, and no cell survives multiplicity correction with a magnitude
-above the design's detection threshold. A free reply-similarity prior is
-competitive only where procedure overlap remains.
+above the design's detection threshold. A reply-similarity prior that uses no LLM
+judge is competitive only where procedure overlap remains.
 \item \textbf{An expert validity check separates procedure from similarity.} The
 blinded assessment does not confirm a difference on new procedures; on familiar procedures
 the apparent preference for feedback is explained by answer length, and expert and
@@ -291,8 +288,8 @@ gates were indistinguishable from always-on. The present article re-uses the
 pipeline and the legacy lift formula as fixed components. Its contribution is
 different: it treats the data regime as the experimental variable, audits the
 earlier split, restricts retrieval, feedback and priors to an allowed history,
-isolates the components of the calibration repair, adds a free reply-similarity
-baseline and a matched-retriever comparison, and reports a blinded expert
+isolates the components of the calibration repair, adds a reply-similarity
+baseline that uses no LLM judge and a matched-retriever comparison, and reports a blinded expert
 assessment of procedural correctness. Table~\ref{tab:prior} compares the studies
 side by side. No text, tables or figures are reused; the overlap is limited to the
 cited background, and the connection is disclosed here as required for expanded
@@ -444,7 +441,7 @@ data flow.
 
 \begin{figure*}[!t]
 \centering
-\input{fig1_regime.tex}
+\includegraphics[width=\textwidth]{figures/fig1_regime.pdf}
 \caption{Data regime and allowed history. The retriever, BM25 statistics, feedback
 rows and scope priors see only the training partition $H$; the evaluation ticket's
 reference reply stays outside the boundary. The conditioned judge uses a historical
@@ -467,7 +464,7 @@ judge on historical pairs versus a ticket-only judge.
 Each protocol scores 878 training queries $\times$ 200 candidates $=$ 175,600
 pairs at temperature 0 with a pinned model and run date. Each training query is
 judged against 200 candidates, twice the evaluation pool, so that narrow scopes
-retain enough documented evidence. The judge is \texttt{openai/gpt-5.6-luna} at
+retain enough documented evidence. The judge is the \texttt{gpt-5.6-luna} model at
 temperature 0; the system prompt hash is \texttt{524098066b407de3}; the judging
 cache dates are 12--13 September 2026. The same model is used for both protocols,
 so the manipulation is what the judge sees, not which model judges.
@@ -480,10 +477,10 @@ property of the evidence, not of the lift formula, and it drives the saturation
 analysis in Section~\ref{sec:repair}.
 
 \subsection{Generation regime and provenance}
-All primary runs share one generation regime: \texttt{openai/gpt-5.6-luna} at
-temperature 0, system prompt hash \texttt{524098066b407de3}, regime identifier
-\texttt{51fd9f4b37e900bb}, and a warm response cache. The history-only panels were
-generated on 12 November 2026. Baseline answers are identical across sources of the
+All primary runs share one generation regime: the \texttt{gpt-5.6-luna} model at
+temperature 0. The system prompt hash is \texttt{524098066b407de3}; the regime
+identifier is \texttt{51fd9f4b37e900bb}; and the response cache is warm. The
+history-only panels were generated on 12 November 2026. Baseline answers are identical across sources of the
 same panel; the freeze record in the repository verifies this ticket by ticket. The
 cross-generator experiment in the earlier evaluation used a different model and is
 not pooled with this study; the claims are within one regime. Because
@@ -542,17 +539,21 @@ Let $\mathrm{pos}$ and $\mathrm{neg}$ be the number of positive and negative jud
 scores for candidate $c$ in scope $s$, and $n=\mathrm{pos}+\mathrm{neg}$. The
 legacy Laplace lift is
 \begin{equation}
-p=\frac{\mathrm{pos}+\alpha}{n+\alpha+\beta},\qquad
-\ell_{\mathrm{L}}=\operatorname{clamp}_{[-c,c]}\!\left(
+\begin{aligned}
+p &= \frac{\mathrm{pos}+\alpha}{n+\alpha+\beta},\\
+\ell_{\mathrm{L}} &= \operatorname{clamp}_{[-c,c]}\!\left(
 (p-\tfrac12)\,\min\!\left(1,\tfrac{n}{2}\right)m\right),
+\end{aligned}
 \label{eq:legacy}
 \end{equation}
 with $\alpha=\beta=1$, $m=0.80$ and $c=0.20$. The empirical-Bayes lift is
 \begin{equation}
-\bar p_s=\pi_s,\quad a=\kappa\pi_s,\quad
-p_{\mathrm{post}}=\frac{\mathrm{pos}+a}{n+\kappa},\qquad
-\ell_{\mathrm{EB}}=\operatorname{clamp}_{[-c,c]}\!\left(
+\begin{aligned}
+\bar p_s &= \pi_s,\qquad a=\kappa\pi_s,\\
+p_{\mathrm{post}} &= \frac{\mathrm{pos}+a}{n+\kappa},\\
+\ell_{\mathrm{EB}} &= \operatorname{clamp}_{[-c,c]}\!\left(
 (p_{\mathrm{post}}-\pi_s)\,m\right),
+\end{aligned}
 \label{eq:eb}
 \end{equation}
 where $\pi_s$ is the mean judge score of scope $s$ over the admissible training
@@ -772,7 +773,7 @@ legacy cell ($m=0.80$, cap $=0.20$) ranks 9/25 on duplicate and 23/25 on
 prefix.\label{tab:ablation}}{
 \begin{tabular}{@{}llrrrrr@{}}
 \toprule
-Configuration & Scope & $\Delta$ top-1 [95\,\% CI] & $p$ & Cap (\%) & Zero (\%) & Ratio \\
+Configuration & Scope & Change in top-1 [95\,\% CI] & $p$ & Cap (\%) & Zero (\%) & Ratio \\
 \midrule
 \multicolumn{7}{@{}l}{\emph{Duplicate panel (398 tickets; 319 dev queries)}} \\
 Legacy Laplace            & Team$\cap$Class & $+0.0370$ $[+0.0180, +0.0567]$ & .013 & 42.5 & 17.5 & 2.30 \\
@@ -819,7 +820,7 @@ families. Brackets are 95\,\% bootstrap intervals. Absolute scaling is omitted
 because lift units are not comparable across retrievers.\label{tab:matched}}{
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
-Retriever & Familiar $\Delta$ & $p$ & Strict $\Delta$ & $p$ \\
+Retriever & Familiar change & $p$ & Strict change & $p$ \\
 \midrule
 Dense MiniLM & $+0.0334$ $[+0.0202, +0.0475]$ & $<.001$ & $+0.0078$ $[+0.0030, +0.0137]$ & .131 \\
 BM25         & $+0.0641$ $[+0.0466, +0.0821]$ & $<.001$ & $+0.0088$ $[+0.0021, +0.0167]$ & .054 \\
@@ -933,7 +934,7 @@ zero among length-matched pairs. The second expert is in progress; agreement is 
 yet reported.\label{tab:expert}}{
 \begin{tabular}{@{}lrrrrr@{}}
 \toprule
-Arm & $n$ & Baseline & Feedback & $\Delta$ [95\,\% CI] & $p$ \\
+Arm & $n$ & Baseline & Feedback & Difference [95\,\% CI] & $p$ \\
 \midrule
 Familiar, blind       & 34 & 0.647 & 0.794 & $+0.147$ $[0.000, +0.294]$ & .25 \\
 Strict, blind         & 33 & 0.545 & 0.515 & $-0.030$ $[-0.121, +0.061]$ & 1.00 \\
@@ -1173,10 +1174,10 @@ corpora, not a guarantee.
 The same reranking can look helpful or harmful depending on what the judge knows,
 but the larger determinant in our data is whether evaluation tickets share
 procedures or reply templates with the historical base. When they do not, the blind
-harm disappears, the calibrated gain is small and metric-dependent, and a free
-reply-similarity prior no longer matches the LLM judge. An expert assessment finds
-does not confirm harm or benefit on new procedures and shows that the familiar-procedure
-preference is explained by reply length. We conclude that feedback reranking gains
+harm disappears, the calibrated gain is small and metric-dependent, and a
+reply-similarity prior that uses no LLM judge no longer matches the LLM judge. The
+expert assessment does not confirm harm or benefit on new procedures and shows that
+the familiar-procedure preference is explained by reply length. We conclude that feedback reranking gains
 reported on overlapping splits are partly borrowed from procedure overlap, that
 calibration removes harm without a confirmed gain, and that similarity to one
 recorded reply is not procedural correctness. The practical recipe is a set of
@@ -1204,7 +1205,7 @@ differences, with the range across seeds and the number of seeds significant at
 $p<.05$.\label{tab:seed}}{
 \begin{tabular}{@{}llrrr@{}}
 \toprule
-Protocol & Configuration & Mean $\Delta$ & Range & Significant \\
+Protocol & Configuration & Mean change & Range & Significant \\
 \midrule
 Blind & Legacy Laplace & $-0.0084$ & $[-0.0116, -0.0046]$ & 4/5 \\
 Blind & EB $\kappa=2$, absolute & $-0.0030$ & $[-0.0069, -0.0001]$ & 1/5 \\
@@ -1244,8 +1245,9 @@ validation on synthetic data. (ii) With the confidential corpus on premises: the
 full pipeline, retrieval panels and generated panels with an API key. (iii) With new
 API calls: generation and judging can be repeated, but hosted models may drift; the
 generation regime and hashes are pinned rather than claiming bit-level
-reproducibility. The generator and judge are \texttt{openai/gpt-5.6-luna} at
-temperature 0; the generation regime is \texttt{51fd9f4b37e900bb}; the system
+reproducibility. The generator and judge are the \texttt{gpt-5.6-luna} model at
+temperature 0; the full API identifier is \mbox{\texttt{openai/gpt-5.6-luna}}.
+The generation regime is \texttt{51fd9f4b37e900bb}; the system
 prompt hash is \texttt{524098066b407de3}. The finalist uses $\kappa=2$, absolute
 scaling, Team$\cap$Class scope, top-5 context, and a 100-candidate pool. The
 scope base rate $\pi_s$ is the mean judge score per scope over the allowed training
@@ -1364,7 +1366,12 @@ central to the study's methodology is a described experimental component
 of use in the main text. All conceptual framing, analysis, and interpretation are
 the authors' own.
 
-% TODO (Overleaf): short biographies for all authors are required by IEEE Access.
+% TODO (Overleaf): add the three author photos. Replace
+%   \begin{IEEEbiography}{Name}
+% with
+%   \begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{photo.jpg}}]{Name}
+% and upload the photos with the manuscript. The class inserts "PLACE PHOTO HERE"
+% when the optional photo argument is absent.
 \newpage
 
 \begin{IEEEbiography}{Domen Jer\v{s}ek} is currently completing an undergraduate degree in Applied

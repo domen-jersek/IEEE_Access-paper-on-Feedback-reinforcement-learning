@@ -93,7 +93,7 @@ data flow.
 
 \begin{figure*}[!t]
 \centering
-\input{revision_ieee_access/03_manuscript/fig1_regime.tex}
+\includegraphics[width=\textwidth]{revision_ieee_access/03_manuscript/figures/fig1_regime.pdf}
 \caption{Data regime and allowed history. The retriever, BM25 statistics, feedback
 rows and scope priors see only the training partition $H$; the evaluation ticket's
 reference reply stays outside the boundary. The conditioned judge uses a historical
@@ -116,7 +116,7 @@ judge on historical pairs versus a ticket-only judge.
 Each protocol scores 878 training queries $\times$ 200 candidates $=$ 175,600
 pairs at temperature 0 with a pinned model and run date. Each training query is
 judged against 200 candidates, twice the evaluation pool, so that narrow scopes
-retain enough documented evidence. The judge is \texttt{openai/gpt-5.6-luna} at
+retain enough documented evidence. The judge is the \texttt{gpt-5.6-luna} model at
 temperature 0; the system prompt hash is \texttt{524098066b407de3}; the judging
 cache dates are 12--13 September 2026. The same model is used for both protocols,
 so the manipulation is what the judge sees, not which model judges.
@@ -129,10 +129,10 @@ property of the evidence, not of the lift formula, and it drives the saturation
 analysis in Section~\ref{sec:repair}.
 
 \subsection{Generation regime and provenance}
-All primary runs share one generation regime: \texttt{openai/gpt-5.6-luna} at
-temperature 0, system prompt hash \texttt{524098066b407de3}, regime identifier
-\texttt{51fd9f4b37e900bb}, and a warm response cache. The history-only panels were
-generated on 12 November 2026. Baseline answers are identical across sources of the
+All primary runs share one generation regime: the \texttt{gpt-5.6-luna} model at
+temperature 0. The system prompt hash is \texttt{524098066b407de3}; the regime
+identifier is \texttt{51fd9f4b37e900bb}; and the response cache is warm. The
+history-only panels were generated on 12 November 2026. Baseline answers are identical across sources of the
 same panel; the freeze record in the repository verifies this ticket by ticket. The
 cross-generator experiment in the earlier evaluation used a different model and is
 not pooled with this study; the claims are within one regime. Because

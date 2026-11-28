@@ -16,7 +16,7 @@ differences, with the range across seeds and the number of seeds significant at
 $p<.05$.\label{tab:seed}}{
 \begin{tabular}{@{}llrrr@{}}
 \toprule
-Protocol & Configuration & Mean $\Delta$ & Range & Significant \\
+Protocol & Configuration & Mean change & Range & Significant \\
 \midrule
 Blind & Legacy Laplace & $-0.0084$ & $[-0.0116, -0.0046]$ & 4/5 \\
 Blind & EB $\kappa=2$, absolute & $-0.0030$ & $[-0.0069, -0.0001]$ & 1/5 \\
@@ -56,8 +56,9 @@ validation on synthetic data. (ii) With the confidential corpus on premises: the
 full pipeline, retrieval panels and generated panels with an API key. (iii) With new
 API calls: generation and judging can be repeated, but hosted models may drift; the
 generation regime and hashes are pinned rather than claiming bit-level
-reproducibility. The generator and judge are \texttt{openai/gpt-5.6-luna} at
-temperature 0; the generation regime is \texttt{51fd9f4b37e900bb}; the system
+reproducibility. The generator and judge are the \texttt{gpt-5.6-luna} model at
+temperature 0; the full API identifier is \mbox{\texttt{openai/gpt-5.6-luna}}.
+The generation regime is \texttt{51fd9f4b37e900bb}; the system
 prompt hash is \texttt{524098066b407de3}. The finalist uses $\kappa=2$, absolute
 scaling, Team$\cap$Class scope, top-5 context, and a 100-candidate pool. The
 scope base rate $\pi_s$ is the mean judge score per scope over the allowed training

@@ -41,3 +41,8 @@ results/M4_intersection_eval_*_rev_*/
 # Raw human-study ratings stay local; aggregate results are committed.
 revision_ieee_access/02_human_study/evaluation_*/
 study_bundle.zip
+
+# Official IEEE Access template assets (Formata fonts) are local-only; do not
+# redistribute them from the public repository.
+revision_ieee_access/05_overleaf/
+revision_ieee_access/ACCESS_revision_overleaf.zip

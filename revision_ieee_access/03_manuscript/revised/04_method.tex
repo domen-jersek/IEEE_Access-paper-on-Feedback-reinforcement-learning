@@ -17,17 +17,21 @@ Let $\mathrm{pos}$ and $\mathrm{neg}$ be the number of positive and negative jud
 scores for candidate $c$ in scope $s$, and $n=\mathrm{pos}+\mathrm{neg}$. The
 legacy Laplace lift is
 \begin{equation}
-p=\frac{\mathrm{pos}+\alpha}{n+\alpha+\beta},\qquad
-\ell_{\mathrm{L}}=\operatorname{clamp}_{[-c,c]}\!\left(
+\begin{aligned}
+p &= \frac{\mathrm{pos}+\alpha}{n+\alpha+\beta},\\
+\ell_{\mathrm{L}} &= \operatorname{clamp}_{[-c,c]}\!\left(
 (p-\tfrac12)\,\min\!\left(1,\tfrac{n}{2}\right)m\right),
+\end{aligned}
 \label{eq:legacy}
 \end{equation}
 with $\alpha=\beta=1$, $m=0.80$ and $c=0.20$. The empirical-Bayes lift is
 \begin{equation}
-\bar p_s=\pi_s,\quad a=\kappa\pi_s,\quad
-p_{\mathrm{post}}=\frac{\mathrm{pos}+a}{n+\kappa},\qquad
-\ell_{\mathrm{EB}}=\operatorname{clamp}_{[-c,c]}\!\left(
+\begin{aligned}
+\bar p_s &= \pi_s,\qquad a=\kappa\pi_s,\\
+p_{\mathrm{post}} &= \frac{\mathrm{pos}+a}{n+\kappa},\\
+\ell_{\mathrm{EB}} &= \operatorname{clamp}_{[-c,c]}\!\left(
 (p_{\mathrm{post}}-\pi_s)\,m\right),
+\end{aligned}
 \label{eq:eb}
 \end{equation}
 where $\pi_s$ is the mean judge score of scope $s$ over the admissible training

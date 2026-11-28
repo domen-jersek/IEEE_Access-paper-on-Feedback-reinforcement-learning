@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """37_flatten_submission.py — build a flat Overleaf/submission package.
 
-Copies the assembled manuscript, the IEEE Access class, the TikZ figure and the
-four generated PDFs into revision_ieee_access/04_submission/, rewriting the
-figure paths so the folder can be uploaded as-is. No model or API call.
+Copies the assembled manuscript, the IEEE Access class and the five generated
+PDFs into revision_ieee_access/04_submission/, rewriting the figure paths so the
+folder can be uploaded as-is. No model or API call.
 """
 from __future__ import annotations
 
@@ -25,11 +25,8 @@ def main() -> int:
         "\\graphicspath{{paper_figures/}{./}{figures/}{revision_ieee_access/03_manuscript/figures/}}",
         "\\graphicspath{{figures/}{./}}",
     )
-    text = text.replace(
-        "\\input{revision_ieee_access/03_manuscript/fig1_regime.tex}",
-        "\\input{fig1_regime.tex}",
-    )
     mapping = {
+        "revision_ieee_access/03_manuscript/figures/fig1_regime.pdf": "figures/fig1_regime.pdf",
         "revision_ieee_access/03_manuscript/figures/fig2_generated_effects.pdf": "figures/fig2_generated.pdf",
         "revision_ieee_access/03_manuscript/figures/fig5_matched_retrievers.pdf": "figures/fig3_matched.pdf",
         "revision_ieee_access/03_manuscript/figures/fig4_lift_saturation.pdf": "figures/fig4_saturation.pdf",
@@ -42,9 +39,8 @@ def main() -> int:
     (OUT / "access_revision.tex").write_text(text, encoding="utf-8")
 
     shutil.copy2(ROOT / "ieeeaccess.cls", OUT / "ieeeaccess.cls")
-    shutil.copy2(ROOT / "revision_ieee_access" / "03_manuscript" / "fig1_regime.tex",
-                 OUT / "fig1_regime.tex")
     for src, dst in {
+        "revision_ieee_access/03_manuscript/figures/fig1_regime.pdf": FIGS / "fig1_regime.pdf",
         "revision_ieee_access/03_manuscript/figures/fig2_generated_effects.pdf": FIGS / "fig2_generated.pdf",
         "revision_ieee_access/03_manuscript/figures/fig5_matched_retrievers.pdf": FIGS / "fig3_matched.pdf",
         "revision_ieee_access/03_manuscript/figures/fig4_lift_saturation.pdf": FIGS / "fig4_saturation.pdf",
